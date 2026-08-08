@@ -1067,7 +1067,7 @@ input[type="number"] { -moz-appearance: textfield; }
     </div>
 
     <p class="footer-copy">
-      © 2027 — حقوق التطوير محفوظة لشركة <span class="uniral-text">UNIRAL</span> ومنصة الأستاذ محمد شحاتة للعلوم الشرعية
+      © <span id="year">2027</span> — حقوق التطوير محفوظة لشركة <span class="uniral-text">UNIRAL</span> ومنصة الأستاذ محمد شحاتة للعلوم الشرعية
     </p>
   </div>
 </footer>
@@ -1435,7 +1435,8 @@ function initParticles() {
   window.addEventListener("resize", () => { resize(); createParticles(); });
 }
 
-document.getElementById("year").textContent = new Date().getFullYear();
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 initCustomCursor();
 initParticles();
 // اشتراك لحظي في إحصائيات الطلاب — يتحدّث تلقائياً عند كل تسجيل جديد
