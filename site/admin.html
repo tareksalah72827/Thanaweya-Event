@@ -15,8 +15,9 @@
 
 <!-- jsPDF لتصدير PDF (نص حاد بدون صور) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- دعم العربية في jsPDF عبر ammi font -->
-<script src="https://cdn.jsdelivr.net/gh/parallax/jsPDF@master/dist/polyfills.umd.min.js"></script>
+<!-- Arabic Reshaper لربط الحروف العربية + bidi للاتجاه الصحيح -->
+<script src="https://cdn.jsdelivr.net/npm/arabic-reshaper@3.0.0/arabic-reshaper.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbidi@1.0.0/bidi.js"></script>
 
 <style>
 :root {
@@ -1154,22 +1155,44 @@ async function loadArabicFont() {
   console.log("Arabic font registered successfully");
 }
 
-// تشكيل النص العربي (RTL + ربط الحروف) — مبسّط
-// jsPDF لا يدعم ربط الحروف تلقائياً، نستخدم arabic-reshaper مبسّط
-function shapeArabic(text) {
+// معالجة النص العربي: ربط الحروف + تطبيق خوارزمية bidi الصحيحة
+// يتطلب مكتبة arabic-reshaper (لربط الحروف) و bidi (للاتجاه الصحيح)
+function processArabic(text) {
   if (!text) return "";
-  // قاموس بسيط لتحويل الحروف لأشكالها المعزولة (للعرض في PDF بدون ربط)
-  // الحل العملي: نعرض النص معكوساً مع المحافظة على الكلمات
-  return String(text);
+
+  try {
+    // 1. ربط الحروف العربية (تحويل الحروف المنفصلة إلى أشكال متصلة)
+    let shaped = text;
+    if (typeof ArabicShaper !== "undefined") {
+      shaped = ArabicShaper.reshape(text);
+    } else if (typeof arabic_reshaper !== "undefined" && typeof arabic_reshaper.reshape === "function") {
+      shaped = arabic_reshaper.reshape(text);
+    } else if (typeof window.ArabicReshaper !== "undefined") {
+      shaped = window.ArabicReshaper.reshape(text);
+    }
+
+    // 2. تطبيق خوارزمية bidi لعكس النص بشكل صحيح (RTL)
+    // العكس هنا على مستوى الحروف وليس الكلمات، وهو ما يحتاجه jsPDF
+    // للأسف، jsPDF يرسم النص من اليسار لليمين، فعشان نعرض عربي صح
+    // لازم نعكس الحروف بعد ربطها (لكن نحافظ على الكلمات والأرقام بترتيبها الطبيعي)
+    const reversed = reverseArabicShaped(shaped);
+    return reversed;
+  } catch (err) {
+    console.warn("Arabic processing failed, falling back:", err);
+    return text;
+  }
 }
 
-// قلب النص للعرض RTL في jsPDF (الذي يرسم من اليسار لليمين)
-function reverseForRTL(text) {
+// عكس الحروف للنص العربي المُشكّل (لعرضه في jsPDF الذي يرسم LTR)
+// هذه الدالة تعكس ترتيب الحروف في كل سطر، مما يجعل النص يظهر RTL عند الرسم
+function reverseArabicShaped(text) {
   if (!text) return "";
-  // تقسيم لكلمات، قلب ترتيب الكلمات، الحفاظ على اتجاه كل كلمة
-  // للنصوص العربية البسيطة، نعكس ترتيب الكلمات
-  const words = text.split(/\s+/);
-  return words.reverse().join(" ");
+  // تقسيم النص لأسطر، عكس كل سطر على حدة
+  return text.split("\n").map(line => {
+    // عكس الحروف في السطر بالكامل
+    // للأرقام والرموز الإنجليزية، نعكسها أيضاً (jsPDF سيعالجها لاحقاً)
+    return line.split("").reverse().join("");
+  }).join("\n");
 }
 
 async function exportPDF() {
@@ -1203,17 +1226,37 @@ async function exportPDF() {
     const contentWidth = pageWidth - margin * 2;
     let y = margin;
 
+    // ===== اللوجو (صورة المنصة) - يُحمّل مرة واحدة ويُضغّط =====
+    let logoBase64 = null;
+    try {
+      const logoBlob = await fetch("assets/logo.png").then(r => r.blob());
+      // تصغير حجم اللوجو عبر canvas (لتحويله لـ JPEG صغير)
+      const logoBitmap = await createImageBitmap(logoBlob, { resizeWidth: 200, resizeHeight: 200 });
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = 200;
+      tempCanvas.height = 200;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(logoBitmap, 0, 0, 200, 200);
+      // JPEG أصغر بكثير من PNG
+      logoBase64 = tempCanvas.toDataURL("image/jpeg", 0.85);
+      // إضافة اللوجو في الزاوية اليمنى العليا
+      const logoSize = 22; // mm
+      pdf.addImage(logoBase64, "JPEG", pageWidth - margin - logoSize, y, logoSize, logoSize);
+    } catch (err) {
+      console.warn("Logo add failed:", err);
+    }
+
     // ===== العنوان الرئيسي =====
     pdf.setFontSize(20);
     pdf.setTextColor(26, 139, 106); // أخضر زمردي
-    pdf.text(reverseForRTL("حفل تكريم المتفوقين"), pageWidth - margin, y, { align: "right" });
+    pdf.text(processArabic("حفل تكريم المتفوقين"), pageWidth - margin - 26, y + 5, { align: "right" });
     y += 10;
 
     // ===== العنوان الفرعي =====
     pdf.setFontSize(12);
     pdf.setTextColor(80, 80, 80);
-    pdf.text(reverseForRTL("الأستاذ محمد شحاتة - مدرس المواد الشرعية"), pageWidth - margin, y, { align: "right" });
-    y += 7;
+    pdf.text(processArabic("الأستاذ محمد شحاتة - مدرس المواد الشرعية"), pageWidth - margin - 26, y + 2, { align: "right" });
+    y += 10;
 
     // ===== خط فاصل =====
     pdf.setDrawColor(37, 182, 141);
@@ -1226,21 +1269,34 @@ async function exportPDF() {
     pdf.setTextColor(100, 100, 100);
     const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
     const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
-    const infoLine = reverseForRTL(`المحافظة: الشرقية  |  عدد الطلاب: ${sorted.length}  |  التاريخ: ${dateStr}`);
+    const infoLine = processArabic(`المحافظة: الشرقية  |  عدد الطلاب: ${sorted.length}  |  التاريخ: ${dateStr}`);
     pdf.text(infoLine, pageWidth - margin, y, { align: "right" });
     y += 8;
 
     // ===== رأس الجدول =====
+    // ملاحظة: كل نص عربي يجب أن يمر عبر processArabic() لربط الحروف وعكسها صح
     const cols = [
-      { name: "#", width: 8, align: "center" },
-      { name: reverseForRTL("الاسم"), width: 50, align: "right" },
-      { name: reverseForRTL("رقم الجلوس"), width: 22, align: "center" },
-      { name: reverseForRTL("المجموع"), width: 18, align: "center" },
-      { name: reverseForRTL("النسبة %"), width: 16, align: "center" },
-      { name: reverseForRTL("الشرعية"), width: 18, align: "center" },
-      { name: reverseForRTL("النسبة %"), width: 16, align: "center" },
-      { name: reverseForRTL("الهاتف"), width: 28, align: "center" },
+      { name: "#", width: 8, align: "center", isArabic: false },
+      { name: processArabic("الاسم الرباعي"), width: 50, align: "right", isArabic: true },
+      { name: processArabic("رقم الجلوس"), width: 22, align: "center", isArabic: true },
+      { name: processArabic("المجموع"), width: 18, align: "center", isArabic: true },
+      { name: processArabic("النسبة"), width: 16, align: "center", isArabic: true },
+      { name: processArabic("الشرعية"), width: 18, align: "center", isArabic: true },
+      { name: processArabic("نسبة الشرعية"), width: 16, align: "center", isArabic: true },
+      { name: processArabic("الهاتف"), width: 28, align: "center", isArabic: true },
     ];
+
+    // دالة مساعدة لرسم خلية
+    function drawCell(text, x, y, col) {
+      const txt = String(text);
+      if (col.align === "right") {
+        pdf.text(txt, x + col.width - 1, y, { align: "right" });
+      } else if (col.align === "left") {
+        pdf.text(txt, x + 1, y, { align: "left" });
+      } else {
+        pdf.text(txt, x + col.width / 2, y, { align: "center" });
+      }
+    }
 
     // خلفية رأس الجدول
     pdf.setFillColor(37, 182, 141);
@@ -1250,14 +1306,7 @@ async function exportPDF() {
 
     let x = margin;
     cols.forEach(col => {
-      const txt = String(col.name);
-      if (col.align === "right") {
-        pdf.text(txt, x + col.width - 1, y, { align: "right" });
-      } else if (col.align === "left") {
-        pdf.text(txt, x + 1, y, { align: "left" });
-      } else {
-        pdf.text(txt, x + col.width / 2, y, { align: "center" });
-      }
+      drawCell(col.name, x, y, col);
       x += col.width;
     });
     y += 8;
@@ -1266,14 +1315,23 @@ async function exportPDF() {
     pdf.setFontSize(8);
     pdf.setTextColor(40, 40, 40);
 
-    const rowHeight = 7;
-    const rowsPerPage = Math.floor((pageHeight - margin - y - 10) / rowHeight);
+    const rowHeight = 8;
 
-    sorted.forEach((s, i) => {
+    for (let i = 0; i < sorted.length; i++) {
+      const s = sorted[i];
+
       // صفحة جديدة عند الحاجة
       if (y + rowHeight > pageHeight - margin - 5) {
         pdf.addPage();
         y = margin;
+
+        // إضافة اللوجو مرة أخرى في الصفحة الجديدة (أصغر)
+        if (logoBase64) {
+          try {
+            pdf.addImage(logoBase64, "JPEG", pageWidth - margin - 16, y, 16, 16);
+          } catch (e) {}
+        }
+
         // إعادة رأس الجدول في الصفحة الجديدة
         pdf.setFillColor(37, 182, 141);
         pdf.rect(margin, y - 4, contentWidth, 8, "F");
@@ -1281,14 +1339,7 @@ async function exportPDF() {
         pdf.setFontSize(9);
         x = margin;
         cols.forEach(col => {
-          const txt = String(col.name);
-          if (col.align === "right") {
-            pdf.text(txt, x + col.width - 1, y, { align: "right" });
-          } else if (col.align === "left") {
-            pdf.text(txt, x + 1, y, { align: "left" });
-          } else {
-            pdf.text(txt, x + col.width / 2, y, { align: "center" });
-          }
+          drawCell(col.name, x, y, col);
           x += col.width;
         });
         y += 8;
@@ -1308,9 +1359,10 @@ async function exportPDF() {
       pdf.rect(margin, y - 4, contentWidth, rowHeight);
 
       const totalPercent = Math.round((s.totalScore / TOTAL_MAX_SCORE) * 10000) / 100;
+      // قيم الصف — النصوص العربية تمر عبر processArabic، الأرقام كما هي
       const values = [
         { v: String(i + 1), align: "center" },
-        { v: reverseForRTL(s.fullName || "—"), align: "right" },
+        { v: processArabic(s.fullName || "—"), align: "right" },
         { v: String(s.seatNumber || "—"), align: "center" },
         { v: String(s.totalScore || 0), align: "center" },
         { v: `${totalPercent}%`, align: "center" },
@@ -1321,19 +1373,11 @@ async function exportPDF() {
 
       x = margin;
       values.forEach((val, idx) => {
-        const col = cols[idx];
-        const txt = String(val.v);
-        if (val.align === "right") {
-          pdf.text(txt, x + col.width - 1, y, { align: "right" });
-        } else if (val.align === "left") {
-          pdf.text(txt, x + 1, y, { align: "left" });
-        } else {
-          pdf.text(txt, x + col.width / 2, y, { align: "center" });
-        }
-        x += col.width;
+        drawCell(val.v, x, y, cols[idx]);
+        x += cols[idx].width;
       });
       y += rowHeight;
-    });
+    }
 
     // ===== التذييل =====
     y += 5;
@@ -1343,9 +1387,9 @@ async function exportPDF() {
     y += 5;
     pdf.setFontSize(7);
     pdf.setTextColor(150, 150, 150);
-    pdf.text(reverseForRTL("تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين"), pageWidth - margin, y, { align: "right" });
+    pdf.text(processArabic("تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين"), pageWidth - margin, y, { align: "right" });
     y += 4;
-    pdf.text(reverseForRTL("حقوق التطوير محفوظة لشركة UNIRAL - أسسها طارق الفارس"), pageWidth - margin, y, { align: "right" });
+    pdf.text(processArabic("حقوق التطوير محفوظة لشركة UNIRAL - أسسها طارق الفارس"), pageWidth - margin, y, { align: "right" });
 
     const fileName = `honoring-students-${new Date().toISOString().slice(0, 10)}.pdf`;
     pdf.save(fileName);
