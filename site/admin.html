@@ -1148,7 +1148,7 @@ document.getElementById("confirm-modal").addEventListener("click", (e) => {
 });
 
 // === تصدير PDF عبر window.print() — نص حقيقي قابل للبحث والنسخ + دعم عربي كامل ===
-function exportPDF() {
+async function exportPDF() {
   if (allStudents.length === 0) {
     toast("لا يوجد طلاب للتصدير", "error");
     return;
@@ -1161,6 +1161,20 @@ function exportPDF() {
   try {
     const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
     const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
+
+    // تحميل اللوجو كـ base64 ليعمل في النافذة المنبثقة (about:blank)
+    let logoDataUrl = "";
+    try {
+      const logoBlob = await fetch("assets/logo-white.png").then(r => r.blob());
+      logoDataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(logoBlob);
+      });
+    } catch (e) {
+      console.warn("Logo load failed:", e);
+    }
 
     // بناء صفوف الجدول
     const rowsHtml = sorted.map((s, i) => {
@@ -1266,7 +1280,7 @@ function exportPDF() {
 <body>
   <div class="header">
     <div class="header-right">
-      <img src="assets/logo-white.png" alt="اللوجو">
+      ${logoDataUrl ? `<img src="${logoDataUrl}" alt="اللوجو">` : ""}
       <div class="header-text">
         <h1>حفل تكريم المتفوقين</h1>
         <p class="subtitle">الأستاذ محمد شحاتة — مدرس المواد الشرعية</p>
