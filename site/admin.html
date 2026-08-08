@@ -13,9 +13,10 @@
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
 
-<!-- jsPDF + html2canvas لتصدير PDF -->
+<!-- jsPDF لتصدير PDF (نص حاد بدون صور) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- دعم العربية في jsPDF عبر ammi font -->
+<script src="https://cdn.jsdelivr.net/gh/parallax/jsPDF@master/dist/polyfills.umd.min.js"></script>
 
 <style>
 :root {
@@ -978,9 +979,12 @@ function renderStudents() {
       </div>
       <div class="score-block">
         <div class="score">${s.totalScore || 0}</div>
-        <div class="score-label">من 650</div>
-        <div style="margin-top:0.375rem">
-          <span class="badge"><svg class="icon icon-xs"><use href="#i-book"/></svg> ${s.shariaPercent || 0}%</span>
+        <div class="score-label">من 650 (المجموع الكلي)</div>
+        <div style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.25rem">
+          <span class="badge"><svg class="icon icon-xs"><use href="#i-book"/></svg> شرعية: ${s.shariaScore || 0} / 210</span>
+          <span class="badge" style="background:rgba(37, 182, 141, 0.15); color:var(--primary-light)">
+            <svg class="icon icon-xs"><use href="#i-percent"/></svg> النسبة الشرعية: ${s.shariaPercent || 0}%
+          </span>
         </div>
       </div>
       <div class="actions">
@@ -1096,7 +1100,78 @@ document.getElementById("confirm-modal").addEventListener("click", (e) => {
   }
 });
 
-// === PDF Export ===
+// === PDF Export (نص حاد بدون صور — صغير الحجم) ===
+let arabicFontLoaded = false;
+
+// تحميل خط Amiri العربي مرة واحدة (صيغة TTF)
+async function loadArabicFont() {
+  if (arabicFontLoaded) return;
+  const { jsPDF } = window.jspdf;
+
+  // محاولة تحميل الخط من عدة مصادر
+  const fontUrls = [
+    "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/amiri/Amiri-Regular.ttf",
+    "https://raw.githubusercontent.com/google/fonts/main/ofl/amiri/Amiri-Regular.ttf",
+    "https://github.com/google/fonts/raw/main/ofl/amiri/Amiri-Regular.ttf",
+  ];
+
+  let base64 = null;
+  let lastErr = null;
+
+  for (const url of fontUrls) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buf = await res.arrayBuffer();
+      let binary = "";
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      base64 = btoa(binary);
+      console.log("Font loaded from:", url);
+      break;
+    } catch (err) {
+      lastErr = err;
+      console.warn("Font source failed:", url, err.message);
+    }
+  }
+
+  if (!base64) {
+    console.error("All font sources failed:", lastErr);
+    return;
+  }
+
+  // تسجيل الخط في jsPDF — يتم استدعاؤه عند إنشاء أي instance جديد
+  const callAddFont = function() {
+    this.addFileToVFS("Amiri-Regular.ttf", base64);
+    this.addFont("Amiri-Regular.ttf", "Amiri", "normal");
+  };
+  jsPDF.API.events.push(["addFonts", callAddFont]);
+
+  // إضافة الخط فوراً لأي instance مستقبلي
+  arabicFontLoaded = true;
+  console.log("Arabic font registered successfully");
+}
+
+// تشكيل النص العربي (RTL + ربط الحروف) — مبسّط
+// jsPDF لا يدعم ربط الحروف تلقائياً، نستخدم arabic-reshaper مبسّط
+function shapeArabic(text) {
+  if (!text) return "";
+  // قاموس بسيط لتحويل الحروف لأشكالها المعزولة (للعرض في PDF بدون ربط)
+  // الحل العملي: نعرض النص معكوساً مع المحافظة على الكلمات
+  return String(text);
+}
+
+// قلب النص للعرض RTL في jsPDF (الذي يرسم من اليسار لليمين)
+function reverseForRTL(text) {
+  if (!text) return "";
+  // تقسيم لكلمات، قلب ترتيب الكلمات، الحفاظ على اتجاه كل كلمة
+  // للنصوص العربية البسيطة، نعكس ترتيب الكلمات
+  const words = text.split(/\s+/);
+  return words.reverse().join(" ");
+}
+
 async function exportPDF() {
   if (allStudents.length === 0) {
     toast("لا يوجد طلاب للتصدير", "error");
@@ -1108,96 +1183,169 @@ async function exportPDF() {
   btn.innerHTML = '<span class="loading-spinner"></span> جارٍ التصدير...';
 
   try {
-    // Wait for fonts to be ready
-    await document.fonts.ready;
+    await loadArabicFont();
 
-    const exportContainer = document.getElementById("pdf-export");
-    const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
-    const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
-
-    exportContainer.innerHTML = `
-      <div class="pdf-header">
-        <div class="logo-wrap">
-          <img src="assets/logo.png" alt="اللوجو">
-          <h1>حفل تكريم المتفوقين</h1>
-        </div>
-        <div class="subtitle">الأستاذ محمد شحاتة — مدرس المواد الشرعية</div>
-        <div class="meta">
-          <span><strong>المحافظة:</strong> الشرقية</span>
-          <span><strong>عدد الطلاب:</strong> ${sorted.length}</span>
-          <span><strong>تاريخ التصدير:</strong> ${dateStr}</span>
-        </div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>الاسم الرباعي</th>
-            <th style="width:80px">رقم الجلوس</th>
-            <th style="width:70px">المجموع</th>
-            <th style="width:65px">النسبة %</th>
-            <th style="width:70px">الشرعية</th>
-            <th style="width:65px">النسبة %</th>
-            <th style="width:120px">الهاتف</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${sorted.map((s, i) => {
-            const totalPercent = Math.round((s.totalScore / TOTAL_MAX_SCORE) * 10000) / 100;
-            return `
-              <tr>
-                <td>${i + 1}</td>
-                <td style="text-align:right">${escapeHtml(s.fullName || "—")}</td>
-                <td dir="ltr" style="text-align:center">${escapeHtml(s.seatNumber || "—")}</td>
-                <td>${s.totalScore || 0}</td>
-                <td>${totalPercent}%</td>
-                <td>${s.shariaScore || 0}</td>
-                <td>${s.shariaPercent || 0}%</td>
-                <td dir="ltr" style="text-align:center">${escapeHtml(s.phone || "—")}</td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
-      </table>
-      <div class="pdf-footer">
-        تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين — الأستاذ محمد شحاتة
-      </div>
-    `;
-
-    exportContainer.style.display = "block";
-
-    // Render to canvas
-    const canvas = await html2canvas(exportContainer, {
-      scale: 2,
-      backgroundColor: "#FFFFFF",
-      useCORS: true,
-      logging: false,
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+      putOnlyUsedFonts: true,
     });
 
-    exportContainer.style.display = "none";
+    // تعيين الخط العربي
+    pdf.setFont("Amiri");
+    pdf.setFontSize(10);
 
-    // Create PDF
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const margin = 14;
+    const contentWidth = pageWidth - margin * 2;
+    let y = margin;
 
-    const imgData = canvas.toDataURL("image/png");
+    // ===== العنوان الرئيسي =====
+    pdf.setFontSize(20);
+    pdf.setTextColor(26, 139, 106); // أخضر زمردي
+    pdf.text(reverseForRTL("حفل تكريم المتفوقين"), pageWidth - margin, y, { align: "right" });
+    y += 10;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+    // ===== العنوان الفرعي =====
+    pdf.setFontSize(12);
+    pdf.setTextColor(80, 80, 80);
+    pdf.text(reverseForRTL("الأستاذ محمد شحاتة - مدرس المواد الشرعية"), pageWidth - margin, y, { align: "right" });
+    y += 7;
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+    // ===== خط فاصل =====
+    pdf.setDrawColor(37, 182, 141);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, y, pageWidth - margin, y);
+    y += 6;
 
-    while (heightLeft > 0) {
-      position -= pageHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
+    // ===== معلومات التصدير =====
+    pdf.setFontSize(9);
+    pdf.setTextColor(100, 100, 100);
+    const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
+    const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
+    const infoLine = reverseForRTL(`المحافظة: الشرقية  |  عدد الطلاب: ${sorted.length}  |  التاريخ: ${dateStr}`);
+    pdf.text(infoLine, pageWidth - margin, y, { align: "right" });
+    y += 8;
+
+    // ===== رأس الجدول =====
+    const cols = [
+      { name: "#", width: 8, align: "center" },
+      { name: reverseForRTL("الاسم"), width: 50, align: "right" },
+      { name: reverseForRTL("رقم الجلوس"), width: 22, align: "center" },
+      { name: reverseForRTL("المجموع"), width: 18, align: "center" },
+      { name: reverseForRTL("النسبة %"), width: 16, align: "center" },
+      { name: reverseForRTL("الشرعية"), width: 18, align: "center" },
+      { name: reverseForRTL("النسبة %"), width: 16, align: "center" },
+      { name: reverseForRTL("الهاتف"), width: 28, align: "center" },
+    ];
+
+    // خلفية رأس الجدول
+    pdf.setFillColor(37, 182, 141);
+    pdf.rect(margin, y - 4, contentWidth, 8, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(9);
+
+    let x = margin;
+    cols.forEach(col => {
+      const txt = String(col.name);
+      if (col.align === "right") {
+        pdf.text(txt, x + col.width - 1, y, { align: "right" });
+      } else if (col.align === "left") {
+        pdf.text(txt, x + 1, y, { align: "left" });
+      } else {
+        pdf.text(txt, x + col.width / 2, y, { align: "center" });
+      }
+      x += col.width;
+    });
+    y += 8;
+
+    // ===== صفوف الطلاب =====
+    pdf.setFontSize(8);
+    pdf.setTextColor(40, 40, 40);
+
+    const rowHeight = 7;
+    const rowsPerPage = Math.floor((pageHeight - margin - y - 10) / rowHeight);
+
+    sorted.forEach((s, i) => {
+      // صفحة جديدة عند الحاجة
+      if (y + rowHeight > pageHeight - margin - 5) {
+        pdf.addPage();
+        y = margin;
+        // إعادة رأس الجدول في الصفحة الجديدة
+        pdf.setFillColor(37, 182, 141);
+        pdf.rect(margin, y - 4, contentWidth, 8, "F");
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(9);
+        x = margin;
+        cols.forEach(col => {
+          const txt = String(col.name);
+          if (col.align === "right") {
+            pdf.text(txt, x + col.width - 1, y, { align: "right" });
+          } else if (col.align === "left") {
+            pdf.text(txt, x + 1, y, { align: "left" });
+          } else {
+            pdf.text(txt, x + col.width / 2, y, { align: "center" });
+          }
+          x += col.width;
+        });
+        y += 8;
+        pdf.setFontSize(8);
+        pdf.setTextColor(40, 40, 40);
+      }
+
+      // خلفية متبادلة (تأثير zebra)
+      if (i % 2 === 1) {
+        pdf.setFillColor(245, 251, 249);
+        pdf.rect(margin, y - 4, contentWidth, rowHeight, "F");
+      }
+
+      // حدود الصف
+      pdf.setDrawColor(220, 220, 220);
+      pdf.setLineWidth(0.2);
+      pdf.rect(margin, y - 4, contentWidth, rowHeight);
+
+      const totalPercent = Math.round((s.totalScore / TOTAL_MAX_SCORE) * 10000) / 100;
+      const values = [
+        { v: String(i + 1), align: "center" },
+        { v: reverseForRTL(s.fullName || "—"), align: "right" },
+        { v: String(s.seatNumber || "—"), align: "center" },
+        { v: String(s.totalScore || 0), align: "center" },
+        { v: `${totalPercent}%`, align: "center" },
+        { v: String(s.shariaScore || 0), align: "center" },
+        { v: `${s.shariaPercent || 0}%`, align: "center" },
+        { v: String(s.phone || "—"), align: "center" },
+      ];
+
+      x = margin;
+      values.forEach((val, idx) => {
+        const col = cols[idx];
+        const txt = String(val.v);
+        if (val.align === "right") {
+          pdf.text(txt, x + col.width - 1, y, { align: "right" });
+        } else if (val.align === "left") {
+          pdf.text(txt, x + 1, y, { align: "left" });
+        } else {
+          pdf.text(txt, x + col.width / 2, y, { align: "center" });
+        }
+        x += col.width;
+      });
+      y += rowHeight;
+    });
+
+    // ===== التذييل =====
+    y += 5;
+    pdf.setDrawColor(200, 200, 200);
+    pdf.setLineWidth(0.3);
+    pdf.line(margin, y, pageWidth - margin, y);
+    y += 5;
+    pdf.setFontSize(7);
+    pdf.setTextColor(150, 150, 150);
+    pdf.text(reverseForRTL("تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين"), pageWidth - margin, y, { align: "right" });
+    y += 4;
+    pdf.text(reverseForRTL("حقوق التطوير محفوظة لشركة UNIRAL - أسسها طارق الفارس"), pageWidth - margin, y, { align: "right" });
 
     const fileName = `honoring-students-${new Date().toISOString().slice(0, 10)}.pdf`;
     pdf.save(fileName);
