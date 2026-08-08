@@ -13,9 +13,7 @@
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
 
-<!-- jsPDF + html2canvas لتصدير PDF بدعم عربي كامل -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- لا حاجة لمكتبات خارجية — نستخدم window.print() لدعم عربي كامل -->
 
 <style>
 :root {
@@ -1149,8 +1147,8 @@ document.getElementById("confirm-modal").addEventListener("click", (e) => {
   }
 });
 
-// === PDF Export بدعم عربي كامل (html2canvas + jsPDF) ===
-async function exportPDF() {
+// === تصدير PDF عبر window.print() — نص حقيقي قابل للبحث والنسخ + دعم عربي كامل ===
+function exportPDF() {
   if (allStudents.length === 0) {
     toast("لا يوجد طلاب للتصدير", "error");
     return;
@@ -1158,140 +1156,179 @@ async function exportPDF() {
 
   const btn = document.getElementById("export-btn");
   btn.disabled = true;
-  btn.innerHTML = '<span class="loading-spinner"></span> جارٍ التصدير...';
+  btn.innerHTML = '<span class="loading-spinner"></span> جارٍ التحضير...';
 
   try {
-    // انتظار تحميل الخطوط
-    await document.fonts.ready;
-    await new Promise(r => setTimeout(r, 200));
-
-    const exportContainer = document.getElementById("pdf-export");
     const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
     const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
 
-    // بناء HTML مُنسّق احترافياً
+    // بناء صفوف الجدول
     const rowsHtml = sorted.map((s, i) => {
       const totalPercent = Math.round((s.totalScore / TOTAL_MAX_SCORE) * 10000) / 100;
       return `
         <tr>
-          <td>${i + 1}</td>
-          <td class="name-cell">${escapeHtml(s.fullName || "—")}</td>
-          <td dir="ltr">${escapeHtml(s.seatNumber || "—")}</td>
-          <td class="score-cell">${s.totalScore || 0}</td>
+          <td class="num">${i + 1}</td>
+          <td class="name">${escapeHtml(s.fullName || "—")}</td>
+          <td class="ltr">${escapeHtml(s.seatNumber || "—")}</td>
+          <td class="score">${s.totalScore || 0}</td>
           <td>${totalPercent}%</td>
-          <td class="sharia-cell">${s.shariaScore || 0}</td>
+          <td class="sharia">${s.shariaScore || 0}</td>
           <td>${s.shariaPercent || 0}%</td>
-          <td dir="ltr">${escapeHtml(s.phone || "—")}</td>
+          <td class="ltr">${escapeHtml(s.phone || "—")}</td>
         </tr>
       `;
     }).join("");
 
-    exportContainer.innerHTML = `
-      <div class="pdf-header">
-        <div class="header-right">
-          <div class="logo-wrap">
-            <img src="assets/logo-white.png" alt="اللوجو">
-          </div>
-          <div class="header-text">
-            <h1>حفل تكريم المتفوقين</h1>
-            <p class="subtitle">الأستاذ محمد شحاتة — مدرس المواد الشرعية</p>
-          </div>
-        </div>
-        <div class="header-left">
-          <div class="info-item"><strong>المحافظة:</strong> الشرقية</div>
-          <div class="info-item"><strong>المرحلة:</strong> الثانوية الأزهرية</div>
-          <div class="info-item"><strong>عدد الطلاب:</strong> ${sorted.length}</div>
-          <div class="info-item"><strong>التاريخ:</strong> ${dateStr}</div>
-        </div>
-      </div>
-
-      <div class="pdf-info-bar">
-        <div class="info-item">المجموع الكلي من 650</div>
-        <div class="info-item">•</div>
-        <div class="info-item">المواد الشرعية من 210</div>
-        <div class="info-item">•</div>
-        <div class="info-item">جميع الطلاب من محافظة الشرقية</div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>الاسم الرباعي</th>
-            <th style="width:90px">رقم الجلوس</th>
-            <th style="width:75px">المجموع</th>
-            <th style="width:70px">النسبة %</th>
-            <th style="width:75px">الشرعية</th>
-            <th style="width:75px">النسبة %</th>
-            <th style="width:120px">الهاتف</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHtml}
-        </tbody>
-      </table>
-
-      <div class="pdf-footer">
-        <div class="footer-line">تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين — الأستاذ محمد شحاتة</div>
-        <div class="footer-line">حقوق التطوير محفوظة لشركة <span class="uniral">UNIRAL</span> — أسسها طارق الفارس</div>
-      </div>
-    `;
-
-    exportContainer.style.display = "block";
-
-    // انتظار تحميل صورة اللوجو
-    const logoImg = exportContainer.querySelector(".logo-wrap img");
-    if (logoImg) {
-      await new Promise((resolve) => {
-        if (logoImg.complete) resolve();
-        else {
-          logoImg.onload = resolve;
-          logoImg.onerror = resolve;
-        }
-      });
+    // فتح نافذة طباعة جديدة بـ HTML كامل
+    const printWin = window.open("", "_blank");
+    if (!printWin) {
+      toast("الرجاء السماح بالنوافذ المنبثقة لتصدير PDF", "error");
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-file-down"/></svg> تصدير PDF';
+      return;
     }
 
-    // تحويل HTML لـ canvas بجودة عالية (scale=2 لنص حاد)
-    const canvas = await html2canvas(exportContainer, {
-      scale: 2,
-      backgroundColor: "#FFFFFF",
-      useCORS: true,
-      logging: false,
-      windowWidth: 1100,
-    });
+    printWin.document.write(`
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تقرير الطلاب - حفل تكريم المتفوقين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #FFFFFF;
+    color: #0A1F1A;
+    padding: 30px;
+    direction: rtl;
+  }
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; padding-bottom: 20px; margin-bottom: 24px;
+    border-bottom: 4px solid #25B68D;
+  }
+  .header-right { display: flex; align-items: center; gap: 18px; }
+  .header-right img { width: 90px; height: 90px; border-radius: 12px; background: #FFFFFF; }
+  .header-text h1 {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 28px; color: #1A8B6A; margin: 0 0 6px 0; font-weight: 700;
+  }
+  .header-text .subtitle { font-size: 14px; color: #555; margin: 0; }
+  .header-left { text-align: left; font-size: 12px; color: #555; }
+  .header-left .info-item { margin-bottom: 4px; }
+  .header-left .info-item strong { color: #1A8B6A; }
 
-    exportContainer.style.display = "none";
-    exportContainer.innerHTML = "";
+  .info-bar {
+    background: #F0F8F5; border: 1px solid #C8E6D5;
+    border-radius: 8px; padding: 12px 18px; margin-bottom: 20px;
+    display: flex; justify-content: space-around;
+    font-size: 13px; color: #1A8B6A; font-weight: 600;
+  }
+  .info-bar .info-item { display: flex; align-items: center; gap: 6px; }
 
-    // إنشاء PDF بـ A4
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 0;
-    const imgWidth = pageWidth - margin * 2;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; background: white;
+  }
+  thead { display: table-header-group; }
+  tr { page-break-inside: avoid; }
+  th {
+    background: #25B68D; color: white;
+    padding: 12px 8px; border: 1px solid #1A8B6A;
+    font-weight: 700; text-align: center; font-size: 13px;
+  }
+  td {
+    padding: 10px 8px; border: 1px solid #DDD; text-align: center;
+    color: #333; font-size: 12px;
+  }
+  td.name { text-align: right; padding-right: 12px; font-weight: 600; }
+  td.ltr { direction: ltr; }
+  td.score { font-weight: 700; color: #1A8B6A; }
+  td.sharia { font-weight: 700; color: #D4AF37; }
+  tr:nth-child(even) td { background: #F5FBF9; }
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+  .footer {
+    margin-top: 30px; text-align: center; font-size: 11px; color: #888;
+    border-top: 2px solid #DDD; padding-top: 14px;
+  }
+  .footer .footer-line { margin-bottom: 4px; }
+  .footer .uniral { color: #1A8B6A; font-weight: 700; }
 
-    // إضافة الصفحة الأولى
-    let heightLeft = imgHeight;
-    let position = margin;
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { padding: 0; }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-right">
+      <img src="assets/logo-white.png" alt="اللوجو">
+      <div class="header-text">
+        <h1>حفل تكريم المتفوقين</h1>
+        <p class="subtitle">الأستاذ محمد شحاتة — مدرس المواد الشرعية</p>
+      </div>
+    </div>
+    <div class="header-left">
+      <div class="info-item"><strong>المحافظة:</strong> الشرقية</div>
+      <div class="info-item"><strong>المرحلة:</strong> الثانوية الأزهرية</div>
+      <div class="info-item"><strong>عدد الطلاب:</strong> ${sorted.length}</div>
+      <div class="info-item"><strong>التاريخ:</strong> ${dateStr}</div>
+    </div>
+  </div>
 
-    pdf.addImage(imgData, "JPEG", margin, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+  <div class="info-bar">
+    <div class="info-item">المجموع الكلي من 650</div>
+    <div class="info-item">•</div>
+    <div class="info-item">المواد الشرعية من 210</div>
+    <div class="info-item">•</div>
+    <div class="info-item">جميع الطلاب من محافظة الشرقية</div>
+  </div>
 
-    // إضافة صفحات إضافية عند الحاجة
-    while (heightLeft > 0) {
-      position = margin - (imgHeight - heightLeft);
-      pdf.addPage();
-      pdf.addImage(imgData, "JPEG", margin, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
+  <table>
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>الاسم الرباعي</th>
+        <th style="width:90px">رقم الجلوس</th>
+        <th style="width:75px">المجموع</th>
+        <th style="width:70px">النسبة %</th>
+        <th style="width:75px">الشرعية</th>
+        <th style="width:75px">النسبة %</th>
+        <th style="width:120px">الهاتف</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rowsHtml}
+    </tbody>
+  </table>
 
-    const fileName = `honoring-students-${new Date().toISOString().slice(0, 10)}.pdf`;
-    pdf.save(fileName);
-    toast("تم تصدير ملف PDF بنجاح", "success");
+  <div class="footer">
+    <div class="footer-line">تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين — الأستاذ محمد شحاتة</div>
+    <div class="footer-line">حقوق التطوير محفوظة لشركة <span class="uniral">UNIRAL</span> — أسسها طارق الفارس</div>
+  </div>
+</body>
+</html>
+    `);
+
+    printWin.document.close();
+
+    // انتظار تحميل الصفحة والخطوط ثم فتح نافذة الطباعة
+    printWin.onload = () => {
+      setTimeout(() => {
+        printWin.focus();
+        printWin.print();
+        // إغلاق النافذة بعد الطباعة (بعض المتصفحات تحتاج وقت)
+        setTimeout(() => {
+          if (!printWin.closed) printWin.close();
+        }, 500);
+      }, 800);
+    };
+
+    toast("جارٍ فتح نافذة الطباعة — اختر \"حفظ كـ PDF\"", "success");
   } catch (err) {
     console.error("PDF export error:", err);
     toast("تعذّر تصدير ملف PDF", "error");
