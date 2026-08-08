@@ -705,15 +705,23 @@ body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getDatabase,
+  ref,
+  get,
+  remove,
+  onValue,
+  off
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA7S6uZ1uFWuUsgVXYk9P_uNSLujdHS9eM",
+  authDomain: "party-thanawiah.firebaseapp.com",
+  databaseURL: "https://party-thanawiah-default-rtdb.firebaseio.com",
+  projectId: "party-thanawiah",
+  storageBucket: "party-thanawiah.firebasestorage.app",
+  messagingSenderId: "255296878383",
+  appId: "1:255296878383:web:583ab8f5e3e2bc13c7d3da"
 };
 
 const COLLECTION_NAME = "students";
@@ -723,17 +731,16 @@ const TOTAL_MAX_SCORE = 650;
 
 let db = null;
 let firebaseReady = false;
+let realtimeListener = null; // مرجع لمستمع التحديث اللحظي
 
 try {
-  if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_")) {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    firebaseReady = true;
-    console.log("Firebase متصل");
-  } else {
-    console.warn("Firebase غير مُعد — استخدام التخزين المحلي");
-  }
-} catch (err) { console.error("Firebase init error:", err); }
+  const app = initializeApp(firebaseConfig);
+  db = getDatabase(app);
+  firebaseReady = true;
+  console.log("Firebase متصل");
+} catch (err) {
+  console.error("Firebase init error:", err);
+}
 
 const LOCAL_KEY = "students_local";
 const SESSION_KEY = "admin_session";
@@ -747,20 +754,52 @@ function deleteLocalStudent(id) {
   localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
 }
 
+// جلب البيانات لمرة واحدة (للتصدير)
 async function fetchStudents() {
   if (firebaseReady) {
     try {
-      const q = query(collection(db, COLLECTION_NAME), orderBy("totalScore", "desc"));
-      const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } catch (err) { console.error(err); return []; }
+      const snap = await get(ref(db, COLLECTION_NAME));
+      if (!snap.exists()) return [];
+      const data = snap.val();
+      return Object.entries(data).map(([id, v]) => ({ id, ...v }));
+    } catch (err) {
+      console.error("Fetch error:", err);
+      return [];
+    }
   }
   return getLocalStudents().sort((a, b) => b.totalScore - a.totalScore);
 }
 
+// الاشتراك اللحظي في التحديثات (Real-time sync)
+function subscribeToStudents(callback) {
+  if (!firebaseReady) {
+    // Fallback: تحقق دوري من localStorage
+    callback(getLocalStudents());
+    const interval = setInterval(() => callback(getLocalStudents()), 3000);
+    return () => clearInterval(interval);
+  }
+
+  const studentsRef = ref(db, COLLECTION_NAME);
+  const handler = (snap) => {
+    if (!snap.exists()) {
+      callback([]);
+      return;
+    }
+    const data = snap.val();
+    const list = Object.entries(data).map(([id, v]) => ({ id, ...v }));
+    callback(list);
+  };
+
+  onValue(studentsRef, handler);
+  return () => off(studentsRef, "value", handler);
+}
+
 async function deleteStudent(id) {
-  if (firebaseReady) await deleteDoc(doc(db, COLLECTION_NAME, id));
-  else deleteLocalStudent(id);
+  if (firebaseReady) {
+    await remove(ref(db, COLLECTION_NAME + "/" + id));
+  } else {
+    deleteLocalStudent(id);
+  }
 }
 
 function toast(message, type = "info") {
@@ -785,11 +824,22 @@ function isLoggedIn() {
     return data.loggedIn === true && data.exp > Date.now();
   } catch { return false; }
 }
+let allStudents = [];
+let currentTab = "students";
+let searchQuery = "";
+let sortMode = "newest";
+let pendingDeleteId = null;
+let unsubscribe = null; // دالة إلغاء الاشتراك اللحظي
+
 function login() {
   const exp = Date.now() + 24 * 60 * 60 * 1000;
   sessionStorage.setItem(SESSION_KEY, JSON.stringify({ loggedIn: true, exp }));
 }
 function logout() {
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
   sessionStorage.removeItem(SESSION_KEY);
   location.reload();
 }
@@ -819,13 +869,28 @@ function showAdmin() {
   loadAll();
 }
 
-let allStudents = [];
-let currentTab = "students";
-let searchQuery = "";
-let sortMode = "newest";
-let pendingDeleteId = null;
+// تحميل واشتراك لحظي
+function loadAll() {
+  // إلغاء الاشتراك السابق إن وُجد
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
 
-async function loadAll() {
+  // اشتراك لحظي — كل ما يتغير في قاعدة البيانات ينعكس فوراً
+  unsubscribe = subscribeToStudents((list) => {
+    allStudents = list || [];
+    renderStudents();
+    renderTop();
+    renderStats();
+  });
+}
+
+document.getElementById("refresh-btn").addEventListener("click", async () => {
+  const btn = document.getElementById("refresh-btn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading-spinner"></span>';
+  // في الـ Realtime DB، البيانات تتحدّث تلقائياً، لكن نُجبر إعادة جلب
   try {
     allStudents = await fetchStudents();
     renderStudents();
@@ -833,15 +898,7 @@ async function loadAll() {
     renderStats();
   } catch (err) {
     console.error(err);
-    toast("تعذّر تحميل البيانات", "error");
   }
-}
-
-document.getElementById("refresh-btn").addEventListener("click", async () => {
-  const btn = document.getElementById("refresh-btn");
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading-spinner"></span>';
-  await loadAll();
   btn.disabled = false;
   btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-rotate"/></svg> تحديث';
   toast("تم تحديث البيانات", "success");
