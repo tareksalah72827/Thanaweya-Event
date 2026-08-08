@@ -1082,6 +1082,8 @@ import {
   set,
   get,
   child,
+  onValue,
+  off,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -1247,7 +1249,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     updatePercentages();
     toast("تم تسجيل الطالب بنجاح!", "success");
     setTimeout(() => { document.getElementById("success-message").style.display = "none"; }, 6000);
-    loadStats();
+    // الإحصائيات تتحدّث تلقائياً عبر اشتراك onValue — لا حاجة لاستدعاء يدوي
   } catch (err) {
     console.error(err);
     toast("حدث خطأ أثناء التسجيل. حاول مرة أخرى.", "error");
@@ -1257,18 +1259,58 @@ document.getElementById("registration-form").addEventListener("submit", async (e
   }
 });
 
-async function loadStats() {
-  try {
-    const students = await fetchStudents();
-    const total = students.length;
-    const avgScore = total > 0 ? students.reduce((s, x) => s + x.totalScore, 0) / total : 0;
-    const avgSharia = total > 0 ? students.reduce((s, x) => s + (x.shariaPercent || 0), 0) / total : 0;
-    const topScore = total > 0 ? Math.max(...students.map(s => s.totalScore)) : 0;
+// ====== الإحصائيات: تحديث لحظي (Real-time) ======
+// نخلي العدّاد المتحرك يشتغل بس أول مرة، وبعدها نحدّث القيمم مباشرة عشان منعش الإزعاج
+let statsFirstLoad = true;
+let statsUnsubscribe = null;
+
+function subscribeToStats() {
+  // إلغاء أي اشتراك سابق
+  if (statsUnsubscribe) {
+    statsUnsubscribe();
+    statsUnsubscribe = null;
+  }
+
+  if (firebaseReady) {
+    const studentsRef = ref(db, COLLECTION_NAME);
+    const handler = (snap) => {
+      let students = [];
+      if (snap.exists()) {
+        const data = snap.val();
+        students = Object.entries(data).map(([id, v]) => ({ id, ...v }));
+      }
+      updateStatsUI(students);
+    };
+    onValue(studentsRef, handler);
+    statsUnsubscribe = () => off(studentsRef, "value", handler);
+  } else {
+    // Fallback: تحقق دوري من localStorage
+    updateStatsUI(getLocalStudents());
+    const interval = setInterval(() => updateStatsUI(getLocalStudents()), 3000);
+    statsUnsubscribe = () => clearInterval(interval);
+  }
+}
+
+function updateStatsUI(students) {
+  const total = students.length;
+  const avgScore = total > 0 ? students.reduce((s, x) => s + (x.totalScore || 0), 0) / total : 0;
+  const avgSharia = total > 0 ? students.reduce((s, x) => s + (x.shariaPercent || 0), 0) / total : 0;
+  const topScore = total > 0 ? Math.max(...students.map(s => s.totalScore || 0)) : 0;
+
+  if (statsFirstLoad) {
+    // أول مرة: حركة سلسة من 0 للقيمة
     animateCounter("stat-total", total);
     animateCounter("stat-avg-score", Math.round(avgScore * 100) / 100);
     animateCounter("stat-avg-sharia", `${Math.round(avgSharia * 100) / 100}%`);
     animateCounter("stat-top-score", topScore);
-  } catch (err) { console.error("Stats error:", err); }
+    statsFirstLoad = false;
+  } else {
+    // التحديثات اللاحقة: عرض القيمة مباشرة (بدون أنميشن)
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-avg-score").textContent = Math.round(avgScore * 100) / 100;
+    document.getElementById("stat-avg-sharia").textContent = `${Math.round(avgSharia * 100) / 100}%`;
+    document.getElementById("stat-top-score").textContent = topScore;
+  }
 }
 
 function animateCounter(id, target) {
@@ -1396,8 +1438,8 @@ function initParticles() {
 document.getElementById("year").textContent = new Date().getFullYear();
 initCustomCursor();
 initParticles();
-loadStats();
-setInterval(loadStats, 10000);
+// اشتراك لحظي في إحصائيات الطلاب — يتحدّث تلقائياً عند كل تسجيل جديد
+subscribeToStats();
 </script>
 </body>
 </html>
