@@ -1075,15 +1075,24 @@ input[type="number"] { -moz-appearance: textfield; }
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  get,
+  child,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA7S6uZ1uFWuUsgVXYk9P_uNSLujdHS9eM",
+  authDomain: "party-thanawiah.firebaseapp.com",
+  databaseURL: "https://party-thanawiah-default-rtdb.firebaseio.com",
+  projectId: "party-thanawiah",
+  storageBucket: "party-thanawiah.firebasestorage.app",
+  messagingSenderId: "255296878383",
+  appId: "1:255296878383:web:583ab8f5e3e2bc13c7d3da"
 };
 
 const COLLECTION_NAME = "students";
@@ -1094,15 +1103,13 @@ let db = null;
 let firebaseReady = false;
 
 try {
-  if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_")) {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    firebaseReady = true;
-    console.log("Firebase متصل");
-  } else {
-    console.warn("Firebase غير مُعد — استخدام التخزين المحلي");
-  }
-} catch (err) { console.error("Firebase init error:", err); }
+  const app = initializeApp(firebaseConfig);
+  db = getDatabase(app);
+  firebaseReady = true;
+  console.log("Firebase متصل");
+} catch (err) {
+  console.error("Firebase init error:", err);
+}
 
 const LOCAL_KEY = "students_local";
 function getLocalStudents() {
@@ -1117,8 +1124,13 @@ function addLocalStudent(student) {
 
 async function saveStudent(data) {
   if (firebaseReady) {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), { ...data, createdAt: serverTimestamp() });
-    return { id: docRef.id, ...data };
+    // حفظ في Realtime Database باستخدام push (مفتاح فريد تلقائي)
+    const newRef = push(ref(db, COLLECTION_NAME));
+    await set(newRef, {
+      ...data,
+      createdAt: serverTimestamp()
+    });
+    return { id: newRef.key, ...data };
   } else {
     addLocalStudent(data);
     return { id: Date.now().toString(), ...data };
@@ -1128,10 +1140,14 @@ async function saveStudent(data) {
 async function fetchStudents() {
   if (firebaseReady) {
     try {
-      const q = query(collection(db, COLLECTION_NAME), orderBy("totalScore", "desc"));
-      const snap = await getDocs(q);
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } catch { return []; }
+      const snap = await get(child(ref(db), COLLECTION_NAME));
+      if (!snap.exists()) return [];
+      const data = snap.val();
+      return Object.entries(data).map(([id, v]) => ({ id, ...v }));
+    } catch (err) {
+      console.error("Fetch error:", err);
+      return [];
+    }
   }
   return getLocalStudents().sort((a, b) => b.totalScore - a.totalScore);
 }
