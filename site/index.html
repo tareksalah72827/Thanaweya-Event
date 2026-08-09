@@ -483,6 +483,95 @@ section { padding: 6rem 0; position: relative; }
 .footer-meta-item .value.accent { color: var(--primary-light); }
 .footer-copy { text-align: center; font-size: 0.75rem; color: rgba(232, 245, 240, 0.4); margin-top: 2rem; }
 
+/* === Countdown Timer === */
+.countdown-section {
+  margin: 3rem auto 0;
+  max-width: 700px;
+  text-align: center;
+  padding: 1.75rem 1.25rem;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(37, 182, 141, 0.25);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+.countdown-section .countdown-title {
+  font-size: 0.875rem;
+  color: var(--primary-light);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.countdown-section .countdown-status {
+  font-size: 1.125rem;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+.countdown-section .countdown-status.ended { color: var(--danger); }
+.countdown-section .countdown-status.active { color: var(--gold-light); }
+.countdown-section .countdown-status.waiting { color: var(--primary-light); }
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.countdown-box {
+  background: rgba(5, 30, 24, 0.6);
+  border: 1px solid rgba(37, 182, 141, 0.3);
+  border-radius: 0.875rem;
+  padding: 0.875rem 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.countdown-box::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.08), transparent);
+  pointer-events: none;
+}
+.countdown-box .value {
+  font-family: var(--font-reem);
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  line-height: 1;
+  margin-bottom: 0.375rem;
+}
+.countdown-box .label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+@media (max-width: 480px) {
+  .countdown-box .value { font-size: 1.5rem; }
+  .countdown-box .label { font-size: 0.625rem; }
+  .countdown-grid { gap: 0.5rem; }
+}
+.countdown-ended-msg {
+  font-size: 1.125rem;
+  color: var(--danger);
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  border-radius: 0.625rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
 /* === Developer Section === */
 .footer-developer {
   margin-top: 2rem; padding-top: 2rem;
@@ -696,6 +785,9 @@ input[type="number"] { -moz-appearance: textfield; }
   <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
   </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </symbol>
   <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
     <line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/>
@@ -801,13 +893,13 @@ input[type="number"] { -moz-appearance: textfield; }
     <div class="gold-divider"></div>
 
     <p>
-      يسعدنا أن نُكرّم طلابنا الأعزّاء المتفوقين في <span class="gold-text">الثانوية الأزهرية</span>،
+      يسعدنا أن نُكرّم المتفوقين في <span class="gold-text">الثانوية الأزهرية</span>،
       على يد الأستاذ <span class="name">محمد شحاتة</span> — مدرس المواد الشرعية.
       سجّل بياناتك لتكون ضمن قائمة المُكرَّمين.
     </p>
 
     <div class="hero-actions">
-      <button class="btn btn-primary btn-large" onclick="scrollToForm()">
+      <button class="btn btn-primary btn-large" onclick="scrollToForm()" id="heroRegisterBtn">
         <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
         <span>املأ استمارة التسجيل</span>
         <svg class="icon icon-sm"><use href="#i-arrow-left"/></svg>
@@ -816,6 +908,33 @@ input[type="number"] { -moz-appearance: textfield; }
         <svg class="icon icon-sm"><use href="#i-search"/></svg>
         تعرّف على الحفل
       </a>
+    </div>
+
+    <!-- عدّاد تنازلي للتسجيل -->
+    <div class="countdown-section" id="countdownSection">
+      <div class="countdown-title">
+        <svg class="icon icon-sm"><use href="#i-clock"/></svg>
+        <span id="countdownTitle">مواعيد التسجيل</span>
+      </div>
+      <div class="countdown-status" id="countdownStatus">جارٍ التحضير...</div>
+      <div class="countdown-grid" id="countdownGrid">
+        <div class="countdown-box">
+          <div class="value" id="cdDays">0</div>
+          <div class="label">يوم</div>
+        </div>
+        <div class="countdown-box">
+          <div class="value" id="cdHours">0</div>
+          <div class="label">ساعة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="value" id="cdMinutes">0</div>
+          <div class="label">دقيقة</div>
+        </div>
+        <div class="countdown-box">
+          <div class="value" id="cdSeconds">0</div>
+          <div class="label">ثانية</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -833,7 +952,7 @@ input[type="number"] { -moz-appearance: textfield; }
       <h2><span class="accent">لحظة</span> تخليد التفوّق</h2>
       <div class="gold-divider"></div>
       <p>
-        بفضل الله تعالى تحقّقت النتائج المشرّفة لطلابنا في الثانوية الأزهرية،
+        بفضل الله تعالى تحقّقت النتائج المشرّفة لطلاب الثانوية الأزهرية،
         وها نحن نحتفل بهم في حفل تكريمي يليق بمكانتهم العلمية.
       </p>
     </div>
@@ -857,7 +976,7 @@ input[type="number"] { -moz-appearance: textfield; }
       <div class="feature-card">
         <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-star"/></svg></div>
         <h3>حضور مميّز</h3>
-        <p>حفل يحضره أولياء الأمور والمشايخ والأعلام، ليكون حافزاً لأبنائنا على مواصلة التفوّق.</p>
+        <p>حفل يحضره أولياء الأمور والمشايخ والأعلام، ليكون حافزاً للطلاب على مواصلة التفوّق.</p>
       </div>
     </div>
 
@@ -871,8 +990,8 @@ input[type="number"] { -moz-appearance: textfield; }
         <h3>الأستاذ / محمد شحاتة</h3>
         <p>
           مدرس المواد الشرعية للمرحلة الثانوية بمعاهد الأزهر الشريف،
-          يكرّم طلابه المتفوقين تشجيعاً لهم على مواصلة درب العلم النافع،
-          وحفاظاً على مكانة علوم الشريعة في قلوب أبنائنا.
+          يكرّم طلاب الثانوية الأزهرية المتفوقين تشجيعاً لهم على مواصلة درب العلم النافع،
+          وحفاظاً على مكانة علوم الشريعة في قلوب الطلاب.
         </p>
       </div>
     </div>
@@ -1223,6 +1342,19 @@ function validateForm(data) {
 
 document.getElementById("registration-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // التحقق من فترة التسجيل
+  const { startDate, endDate } = getRegistrationSchedule();
+  const now = new Date();
+  if (now < startDate) {
+    toast("لم يبدأ التسجيل بعد", "error");
+    return;
+  }
+  if (now >= endDate) {
+    toast("انتهت فترة التسجيل — يبدأ الحفل يوم الأربعاء", "error");
+    return;
+  }
+
   const data = {
     fullName: document.getElementById("fullName").value.trim(),
     totalScore: parseFloat(document.getElementById("totalScore").value),
@@ -1441,6 +1573,140 @@ initCustomCursor();
 initParticles();
 // اشتراك لحظي في إحصائيات الطلاب — يتحدّث تلقائياً عند كل تسجيل جديد
 subscribeToStats();
+
+// =========================================================
+// ⏰ مواعيد التسجيل: مفتوح دلوقتي وينتهي بداية يوم الأربعاء
+// =========================================================
+
+// إعدادات المواعيد — يتم حسابها ديناميكياً
+// بداية التسجيل: فات — التسجيل مفتوح دلوقتي
+// نهاية التسجيل: بداية يوم الأربعاء القادم (00:00 منتصف الليل)
+function getRegistrationSchedule() {
+  const now = new Date();
+
+  // 0=الأحد، 1=الإثنين، 2=الثلاثاء، 3=الأربعاء، 4=الخميس، 5=الجمعة، 6=السبت
+  const currentDay = now.getDay();
+  const WEDNESDAY = 3;
+
+  // نهاية التسجيل: بداية يوم الأربعاء القادم (00:00:00)
+  // - لو حالياً قبل الأربعاء (أحد/إثنين/ثلاثاء) → الأربعاء القادم ده هو نهايتنا
+  // - لو حالياً أربعاء أو بعده → الأربعاء اللي بعده هو نهايتنا (التسجيل فات خلاص ومفيش جديد)
+  let daysUntilWednesday = (WEDNESDAY - currentDay + 7) % 7;
+
+  let endDate = new Date(now);
+  endDate.setDate(now.getDate() + daysUntilWednesday);
+  endDate.setHours(0, 0, 0, 0); // بداية اليوم (00:00 منتصف الليل)
+
+  // بداية التسجيل: التسجيل مفتوح دلوقتي، نستخدم تاريخ قبل كده كبداية
+  // بنستخدم أول الأسبوع (السبت أو حد) كبداية رمزية
+  let startDate = new Date(now);
+  startDate.setDate(now.getDate() - 7); // أسبوع قبل — التسجيل فات ومفتوح
+  startDate.setHours(0, 0, 0, 0);
+
+  return { startDate, endDate, now };
+}
+
+// تنسيق الأرقام بعلامة صفر بادية
+function pad(n) { return String(n).padStart(2, "0"); }
+
+// تحديث العدّاد التنازلي
+function updateCountdown() {
+  const { startDate, endDate } = getRegistrationSchedule();
+  const now = new Date();
+
+  const statusEl = document.getElementById("countdownStatus");
+  const titleEl = document.getElementById("countdownTitle");
+  const gridEl = document.getElementById("countdownGrid");
+  const heroBtn = document.getElementById("heroRegisterBtn");
+  const submitBtn = document.getElementById("submitBtn");
+  const formSection = document.getElementById("form");
+
+  if (now < startDate) {
+    // === مرحلة قبل بدء التسجيل ===
+    const diff = startDate - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("cdDays").textContent = days;
+    document.getElementById("cdHours").textContent = pad(hours);
+    document.getElementById("cdMinutes").textContent = pad(minutes);
+    document.getElementById("cdSeconds").textContent = pad(seconds);
+
+    if (titleEl) titleEl.textContent = "يبدأ التسجيل خلال";
+    if (statusEl) {
+      statusEl.textContent = `التسجيل يبدأ يوم الأربعاء ${startDate.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })} الساعة 12 ظهراً`;
+      statusEl.className = "countdown-status waiting";
+    }
+    if (gridEl) gridEl.style.display = "grid";
+
+    // تعطيل زر التسجيل
+    if (heroBtn) {
+      heroBtn.disabled = true;
+      heroBtn.style.opacity = "0.5";
+      heroBtn.style.cursor = "not-allowed";
+    }
+    if (submitBtn) submitBtn.disabled = true;
+  } else if (now >= startDate && now < endDate) {
+    // === مرحلة التسجيل المفتوح ===
+    const diff = endDate - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("cdDays").textContent = days;
+    document.getElementById("cdHours").textContent = pad(hours);
+    document.getElementById("cdMinutes").textContent = pad(minutes);
+    document.getElementById("cdSeconds").textContent = pad(seconds);
+
+    if (titleEl) titleEl.textContent = "ينتهي التسجيل خلال";
+    if (statusEl) {
+      // بنعرض تاريخ يوم الثلاثاء (اليوم اللي قبل الأربعاء) لأن نهاية التسجيل هي بداية الأربعاء
+      const lastDay = new Date(endDate);
+      lastDay.setDate(lastDay.getDate() - 1); // الثلاثاء (اليوم اللي قبل الأربعاء)
+      statusEl.textContent = `التسجيل مفتوح حتى نهاية يوم ${lastDay.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })}`;
+      statusEl.className = "countdown-status active";
+    }
+    if (gridEl) gridEl.style.display = "grid";
+
+    // تفعيل زر التسجيل
+    if (heroBtn) {
+      heroBtn.disabled = false;
+      heroBtn.style.opacity = "";
+      heroBtn.style.cursor = "";
+    }
+    if (submitBtn) submitBtn.disabled = false;
+  } else {
+    // === مرحلة انتهاء التسجيل ===
+    if (titleEl) titleEl.textContent = "انتهى التسجيل";
+    if (statusEl) {
+      statusEl.textContent = "انتهت فترة التسجيل — شكراً لكل الطلاب المُكرَّمين";
+      statusEl.className = "countdown-status ended";
+    }
+    if (gridEl) {
+      gridEl.innerHTML = `
+        <div class="countdown-ended-msg" style="grid-column: 1 / -1">
+          <svg class="icon icon-md"><use href="#i-lock"/></svg>
+          <span>التسجيل مغلق</span>
+        </div>
+      `;
+    }
+
+    // تعطيل زر التسجيل
+    if (heroBtn) {
+      heroBtn.disabled = true;
+      heroBtn.style.opacity = "0.5";
+      heroBtn.style.cursor = "not-allowed";
+    }
+    if (submitBtn) submitBtn.disabled = true;
+  }
+}
+
+// تحديث العدّاد كل ثانية
+updateCountdown();
+setInterval(updateCountdown, 1000);
 </script>
 </body>
 </html>
