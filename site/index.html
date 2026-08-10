@@ -6,6 +6,14 @@
 <meta name="description" content="حفل تكريم الطلاب المتفوقين في الثانوية الأزهرية - الأستاذ محمد شحاتة مدرس المواد الشرعية - محافظة الشرقية">
 <title>حفل تكريم المتفوقين | الأستاذ محمد شحاتة</title>
 
+<!-- ============================================================
+     🔐 Security Headers (CSP + Hardening)
+     ============================================================ -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://us-central1-party-thanawiah.cloudfunctions.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -865,7 +873,7 @@ input[type="number"] { -moz-appearance: textfield; }
         <a href="#contact"><svg class="icon icon-sm"><use href="#i-phone"/></svg> تواصل</a>
       </nav>
       <div class="header-actions">
-        <button class="btn btn-primary" onclick="scrollToForm()"><svg class="icon icon-sm"><use href="#i-sparkles"/></svg> سجّل الآن</button>
+        <button class="btn btn-primary" id="navRegisterBtn"><svg class="icon icon-sm"><use href="#i-sparkles"/></svg> سجّل الآن</button>
       </div>
     </div>
   </div>
@@ -899,7 +907,7 @@ input[type="number"] { -moz-appearance: textfield; }
     </p>
 
     <div class="hero-actions">
-      <button class="btn btn-primary btn-large" onclick="scrollToForm()" id="heroRegisterBtn">
+      <button class="btn btn-primary btn-large" id="heroRegisterBtn">
         <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
         <span>املأ استمارة التسجيل</span>
         <svg class="icon icon-sm"><use href="#i-arrow-left"/></svg>
@@ -1015,7 +1023,7 @@ input[type="number"] { -moz-appearance: textfield; }
             <svg class="icon icon-sm"><use href="#i-user"/></svg>
             الاسم الرباعي <span class="required">*</span>
           </label>
-          <input type="text" id="fullName" class="form-input" placeholder="مثال: محمد أحمد علي حسن" required minlength="8">
+          <input type="text" id="fullName" class="form-input" placeholder="مثال: محمد أحمد علي حسن" required minlength="8" maxlength="100" autocomplete="off">
           <div class="form-error" id="fullName-error" style="display:none"></div>
         </div>
 
@@ -1025,7 +1033,7 @@ input[type="number"] { -moz-appearance: textfield; }
               <svg class="icon icon-sm"><use href="#i-chart"/></svg>
               المجموع الكلي (من 650) <span class="required">*</span>
             </label>
-            <input type="number" id="totalScore" class="form-input" placeholder="مثال: 580" step="0.5" min="0" max="650" required>
+            <input type="number" id="totalScore" class="form-input" placeholder="مثال: 580" step="0.5" min="0" max="650" required inputmode="decimal" autocomplete="off">
             <div class="form-error" id="totalScore-error" style="display:none"></div>
           </div>
 
@@ -1047,7 +1055,7 @@ input[type="number"] { -moz-appearance: textfield; }
               <svg class="icon icon-sm"><use href="#i-book"/></svg>
               مجموع المواد الشرعية (من 210) <span class="required">*</span>
             </label>
-            <input type="number" id="shariaScore" class="form-input" placeholder="مثال: 180" step="0.5" min="0" max="210" required>
+            <input type="number" id="shariaScore" class="form-input" placeholder="مثال: 180" step="0.5" min="0" max="210" required inputmode="decimal" autocomplete="off">
             <div class="form-error" id="shariaScore-error" style="display:none"></div>
           </div>
 
@@ -1068,7 +1076,7 @@ input[type="number"] { -moz-appearance: textfield; }
             <svg class="icon icon-sm"><use href="#i-hash"/></svg>
             رقم الجلوس <span class="required">*</span>
           </label>
-          <input type="text" id="seatNumber" class="form-input" placeholder="مثال: 123456" required dir="ltr" style="text-align: right">
+          <input type="text" id="seatNumber" class="form-input" placeholder="مثال: 123456" required dir="ltr" pattern="^[0-9]{4,10}$" maxlength="10" inputmode="numeric" autocomplete="off" style="text-align: right">
           <div class="form-error" id="seatNumber-error" style="display:none"></div>
         </div>
 
@@ -1077,7 +1085,7 @@ input[type="number"] { -moz-appearance: textfield; }
             <svg class="icon icon-sm"><use href="#i-whatsapp"/></svg>
             رقم الهاتف <span class="required">*</span>
           </label>
-          <input type="tel" id="phone" class="form-input" placeholder="مثال: 01012345678" required dir="ltr" style="text-align: right">
+          <input type="tel" id="phone" class="form-input" placeholder="مثال: 01012345678" required dir="ltr" pattern="^01[0125][0-9]{8}$" maxlength="11" inputmode="numeric" autocomplete="tel" style="text-align: right">
           <div class="form-hint">
             <svg class="icon icon-xs"><use href="#i-whatsapp"/></svg>
             يجب أن يكون الرقم مرتبطاً بواتساب لاستلام تأكيد التسجيل.
@@ -1090,7 +1098,7 @@ input[type="number"] { -moz-appearance: textfield; }
             <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
             ملاحظات (اختياري)
           </label>
-          <textarea id="notes" class="form-textarea" placeholder="أي ملاحظات تودّ إضافتها..." rows="3"></textarea>
+          <textarea id="notes" class="form-textarea" placeholder="أي ملاحظات تودّ إضافتها..." rows="3" maxlength="500"></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary btn-large btn-full" id="submitBtn">
@@ -1199,13 +1207,15 @@ import {
   ref,
   push,
   set,
-  get,
-  child,
   onValue,
   off,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+// ============================================================
+// 🔐 تكوين Firebase — هذه المفاتيح عامة بحكم تصميم Firebase
+// الحماية الحقيقية في Security Rules + Cloud Functions
+// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyA7S6uZ1uFWuUsgVXYk9P_uNSLujdHS9eM",
   authDomain: "party-thanawiah.firebaseapp.com",
@@ -1217,69 +1227,70 @@ const firebaseConfig = {
 };
 
 const COLLECTION_NAME = "students";
+const STATS_NODE = "stats";
 const SHARIA_MAX_SCORE = 210;
 const TOTAL_MAX_SCORE = 650;
 
 let db = null;
 let firebaseReady = false;
 
+// ============================================================
+// 🔒 Logger آمن — يُخفي التفاصيل في الإنتاج
+// ============================================================
+const isProd = !location.hostname.includes("localhost") && !location.hostname.includes("127.0.0.1");
+const logger = {
+  log:   (...args) => { if (!isProd) console.log(...args); },
+  error: (...args) => { if (!isProd) console.error(...args); },
+  warn:  (...args) => { if (!isProd) console.warn(...args); }
+};
+
 try {
   const app = initializeApp(firebaseConfig);
   db = getDatabase(app);
   firebaseReady = true;
-  console.log("Firebase متصل");
+  logger.log("Firebase متصل");
 } catch (err) {
-  console.error("Firebase init error:", err);
+  logger.error("Firebase init error:", err.message);
 }
 
-const LOCAL_KEY = "students_local";
-function getLocalStudents() {
-  try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); }
-  catch { return []; }
-}
-function addLocalStudent(student) {
-  const list = getLocalStudents();
-  list.push({ ...student, id: Date.now().toString(), createdAt: new Date().toISOString() });
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
-}
-
+// ============================================================
+// 🔒 saveStudent — يحفظ في Firebase فقط (لا fallback لـ localStorage)
+// السبب: لا نخزّن PII في المتصفح إطلاقاً
+// ============================================================
 async function saveStudent(data) {
-  if (firebaseReady) {
-    // حفظ في Realtime Database باستخدام push (مفتاح فريد تلقائي)
-    const newRef = push(ref(db, COLLECTION_NAME));
-    await set(newRef, {
-      ...data,
-      createdAt: serverTimestamp()
-    });
-    return { id: newRef.key, ...data };
-  } else {
-    addLocalStudent(data);
-    return { id: Date.now().toString(), ...data };
+  if (!firebaseReady) {
+    throw new Error("خدمة التسجيل غير متاحة حالياً. حاول مرة أخرى لاحقاً.");
   }
+  const newRef = push(ref(db, COLLECTION_NAME));
+  await set(newRef, {
+    fullName: data.fullName,
+    totalScore: data.totalScore,
+    shariaScore: data.shariaScore,
+    shariaPercent: data.shariaPercent,
+    seatNumber: data.seatNumber,
+    governorate: data.governorate,
+    phone: data.phone,
+    notes: data.notes || null,
+    createdAt: serverTimestamp()
+  });
+  return { id: newRef.key, ...data };
 }
 
-async function fetchStudents() {
-  if (firebaseReady) {
-    try {
-      const snap = await get(child(ref(db), COLLECTION_NAME));
-      if (!snap.exists()) return [];
-      const data = snap.val();
-      return Object.entries(data).map(([id, v]) => ({ id, ...v }));
-    } catch (err) {
-      console.error("Fetch error:", err);
-      return [];
-    }
-  }
-  return getLocalStudents().sort((a, b) => b.totalScore - a.totalScore);
-}
-
-// Toast
+// ============================================================
+// 🔒 Toast — تم إصلاح ثغرة XSS باستخدام textContent للنص المتغير
+// ============================================================
 function toast(message, type = "info") {
   const container = document.getElementById("toast-container");
+  if (!container) return;
   const el = document.createElement("div");
   el.className = `toast ${type}`;
   const iconId = type === "success" ? "i-check-circle" : type === "error" ? "i-x-circle" : "i-info";
-  el.innerHTML = `<svg class="icon icon-sm"><use href="#${iconId}"/></svg><span>${message}</span>`;
+  // الأيقونة ثابتة — آمن مع innerHTML
+  el.innerHTML = `<svg class="icon icon-sm"><use href="#${iconId}"/></svg>`;
+  // ✅ النص المتغير — آمن مع textContent
+  const span = document.createElement("span");
+  span.textContent = String(message);
+  el.appendChild(span);
   container.appendChild(el);
   setTimeout(() => {
     el.style.opacity = "0";
@@ -1288,10 +1299,18 @@ function toast(message, type = "info") {
   }, 3500);
 }
 
-window.scrollToForm = function() {
-  document.getElementById("form").scrollIntoView({ behavior: "smooth", block: "start" });
-};
+// ============================================================
+// 🔒 scrollToForm — مرتبطة عبر addEventListener بدلاً من onclick
+// ============================================================
+function scrollToForm() {
+  const formEl = document.getElementById("form");
+  if (formEl) formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+window.scrollToForm = scrollToForm;
 
+// ============================================================
+// تحديث النسب المئوية للحقول
+// ============================================================
 function updatePercentages() {
   const totalVal = parseFloat(document.getElementById("totalScore").value);
   const shariaVal = parseFloat(document.getElementById("shariaScore").value);
@@ -1314,11 +1333,13 @@ function updatePercentages() {
     document.getElementById("shariaBar").style.width = "0%";
   }
 }
-document.getElementById("totalScore").addEventListener("input", updatePercentages);
-document.getElementById("shariaScore").addEventListener("input", updatePercentages);
 
+// ============================================================
+// التحقق من الحقول
+// ============================================================
 function showError(field, message) {
   const el = document.getElementById(`${field}-error`);
+  if (!el) return;
   el.textContent = message;
   el.style.display = "flex";
 }
@@ -1331,15 +1352,37 @@ function clearErrors() {
 function validateForm(data) {
   clearErrors();
   let valid = true;
-  if (!data.fullName || data.fullName.trim().length < 8) { showError("fullName", "الرجاء إدخال الاسم الرباعي كاملاً"); valid = false; }
-  if (isNaN(data.totalScore) || data.totalScore < 0 || data.totalScore > TOTAL_MAX_SCORE) { showError("totalScore", `المجموع يجب أن يكون بين 0 و ${TOTAL_MAX_SCORE}`); valid = false; }
-  if (isNaN(data.shariaScore) || data.shariaScore < 0 || data.shariaScore > SHARIA_MAX_SCORE) { showError("shariaScore", `مجموع المواد الشرعية يجب أن يكون بين 0 و ${SHARIA_MAX_SCORE}`); valid = false; }
-  if (!data.seatNumber || !/^\d{4,10}$/.test(data.seatNumber.trim())) { showError("seatNumber", "رقم الجلوس يجب أن يكون من 4 إلى 10 أرقام"); valid = false; }
+  if (!data.fullName || data.fullName.trim().length < 8 || data.fullName.trim().length > 100) {
+    showError("fullName", "الرجاء إدخال الاسم الرباعي كاملاً (8-100 حرف)");
+    valid = false;
+  }
+  if (isNaN(data.totalScore) || data.totalScore < 0 || data.totalScore > TOTAL_MAX_SCORE) {
+    showError("totalScore", `المجموع يجب أن يكون بين 0 و ${TOTAL_MAX_SCORE}`);
+    valid = false;
+  }
+  if (isNaN(data.shariaScore) || data.shariaScore < 0 || data.shariaScore > SHARIA_MAX_SCORE) {
+    showError("shariaScore", `مجموع المواد الشرعية يجب أن يكون بين 0 و ${SHARIA_MAX_SCORE}`);
+    valid = false;
+  }
+  if (!data.seatNumber || !/^\d{4,10}$/.test(data.seatNumber.trim())) {
+    showError("seatNumber", "رقم الجلوس يجب أن يكون من 4 إلى 10 أرقام");
+    valid = false;
+  }
   const phoneRegex = /^01[0125][0-9]{8}$/;
-  if (!data.phone || !phoneRegex.test(data.phone.replace(/\s/g, ""))) { showError("phone", "رقم هاتف غير صحيح (مثال: 01012345678)"); valid = false; }
+  if (!data.phone || !phoneRegex.test(data.phone.replace(/\s/g, ""))) {
+    showError("phone", "رقم هاتف غير صحيح (مثال: 01012345678)");
+    valid = false;
+  }
+  if (data.notes && data.notes.length > 500) {
+    showError("notes", "الملاحظات يجب ألا تتجاوز 500 حرف");
+    valid = false;
+  }
   return valid;
 }
 
+// ============================================================
+// 🔒 معالجة إرسال النموذج — تم إصلاح XSS في innerHTML
+// ============================================================
 document.getElementById("registration-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -1367,12 +1410,17 @@ document.getElementById("registration-form").addEventListener("submit", async (e
   };
   data.shariaPercent = Math.round((data.shariaScore / SHARIA_MAX_SCORE) * 10000) / 100;
 
-  if (!validateForm(data)) { toast("الرجاء تصحيح الأخطاء في النموذج", "error"); return; }
+  if (!validateForm(data)) {
+    toast("الرجاء تصحيح الأخطاء في النموذج", "error");
+    return;
+  }
 
   const submitBtn = document.getElementById("submitBtn");
   const submitText = document.getElementById("submitText");
   submitBtn.disabled = true;
-  submitText.innerHTML = '<span class="loading-spinner"></span> جارٍ التسجيل...';
+  // ✅ إصلاح XSS: نص ثابت آمن
+  submitText.innerHTML = '<span class="loading-spinner"></span>';
+  submitText.appendChild(Object.assign(document.createElement("span"), { textContent: " جارٍ التسجيل..." }));
 
   try {
     await saveStudent(data);
@@ -1381,68 +1429,78 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     updatePercentages();
     toast("تم تسجيل الطالب بنجاح!", "success");
     setTimeout(() => { document.getElementById("success-message").style.display = "none"; }, 6000);
-    // الإحصائيات تتحدّث تلقائياً عبر اشتراك onValue — لا حاجة لاستدعاء يدوي
+    // الإحصائيات تتحدّث تلقائياً عبر اشتراك onValue على /stats
   } catch (err) {
-    console.error(err);
-    toast("حدث خطأ أثناء التسجيل. حاول مرة أخرى.", "error");
+    logger.error("Register error:", err.message);
+    // ✅ لا نكشف تفاصيل الخطأ الداخلي للمستخدم
+    const userMsg = err && err.code === "permission-denied"
+      ? "لا تملك صلاحية التسجيل حالياً"
+      : "حدث خطأ أثناء التسجيل. حاول مرة أخرى.";
+    toast(userMsg, "error");
   } finally {
     submitBtn.disabled = false;
-    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    // ✅ إصلاح XSS: نص ثابت آمن
+    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg>';
+    submitText.appendChild(Object.assign(document.createElement("span"), { textContent: " تسجيل الطالب" }));
   }
 });
 
-// ====== الإحصائيات: تحديث لحظي (Real-time) ======
-// نخلي العدّاد المتحرك يشتغل بس أول مرة، وبعدها نحدّث القيمم مباشرة عشان منعش الإزعاج
+// ============================================================
+// 🔒 الإحصائيات: قراءة من /stats فقط (لا نقرأ بيانات الطلاب)
+// إذا لم يوجد /stats (مثلاً لم تُنشر Cloud Function بعد)، نعرض "—"
+// ============================================================
 let statsFirstLoad = true;
 let statsUnsubscribe = null;
 
 function subscribeToStats() {
-  // إلغاء أي اشتراك سابق
   if (statsUnsubscribe) {
     statsUnsubscribe();
     statsUnsubscribe = null;
   }
 
-  if (firebaseReady) {
-    const studentsRef = ref(db, COLLECTION_NAME);
-    const handler = (snap) => {
-      let students = [];
-      if (snap.exists()) {
-        const data = snap.val();
-        students = Object.entries(data).map(([id, v]) => ({ id, ...v }));
-      }
-      updateStatsUI(students);
-    };
-    onValue(studentsRef, handler);
-    statsUnsubscribe = () => off(studentsRef, "value", handler);
-  } else {
-    // Fallback: تحقق دوري من localStorage
-    updateStatsUI(getLocalStudents());
-    const interval = setInterval(() => updateStatsUI(getLocalStudents()), 3000);
-    statsUnsubscribe = () => clearInterval(interval);
+  if (!firebaseReady) {
+    updateStatsUIEmpty();
+    return;
   }
+
+  const statsRef = ref(db, STATS_NODE);
+  const handler = (snap) => {
+    if (!snap.exists()) {
+      updateStatsUIEmpty();
+      return;
+    }
+    const s = snap.val();
+    if (statsFirstLoad) {
+      animateCounter("stat-total",       s.total || 0);
+      animateCounter("stat-avg-score",   Math.round((s.avgScore || 0) * 100) / 100);
+      animateCounter("stat-avg-sharia",  `${Math.round((s.avgSharia || 0) * 100) / 100}%`);
+      animateCounter("stat-top-score",   s.topScore || 0);
+      statsFirstLoad = false;
+    } else {
+      document.getElementById("stat-total").textContent = s.total || 0;
+      document.getElementById("stat-avg-score").textContent = Math.round((s.avgScore || 0) * 100) / 100;
+      document.getElementById("stat-avg-sharia").textContent = `${Math.round((s.avgSharia || 0) * 100) / 100}%`;
+      document.getElementById("stat-top-score").textContent = s.topScore || 0;
+    }
+  };
+
+  const errorCallback = (error) => {
+    logger.error("Stats subscribe error:", error.message);
+    updateStatsUIEmpty();
+  };
+
+  // onValue يستخدم مرة واحدة بدون return لإبقاء الاشتراك حياً
+  // off لاحقاً عبر statsUnsubscribe
+  const unsubscribeFn = onValue(statsRef, handler, errorCallback);
+  // firebase v10 onValue returns unsubscribe function
+  statsUnsubscribe = typeof unsubscribeFn === "function" ? unsubscribeFn : (() => off(statsRef, "value", handler));
 }
 
-function updateStatsUI(students) {
-  const total = students.length;
-  const avgScore = total > 0 ? students.reduce((s, x) => s + (x.totalScore || 0), 0) / total : 0;
-  const avgSharia = total > 0 ? students.reduce((s, x) => s + (x.shariaPercent || 0), 0) / total : 0;
-  const topScore = total > 0 ? Math.max(...students.map(s => s.totalScore || 0)) : 0;
-
-  if (statsFirstLoad) {
-    // أول مرة: حركة سلسة من 0 للقيمة
-    animateCounter("stat-total", total);
-    animateCounter("stat-avg-score", Math.round(avgScore * 100) / 100);
-    animateCounter("stat-avg-sharia", `${Math.round(avgSharia * 100) / 100}%`);
-    animateCounter("stat-top-score", topScore);
-    statsFirstLoad = false;
-  } else {
-    // التحديثات اللاحقة: عرض القيمة مباشرة (بدون أنميشن)
-    document.getElementById("stat-total").textContent = total;
-    document.getElementById("stat-avg-score").textContent = Math.round(avgScore * 100) / 100;
-    document.getElementById("stat-avg-sharia").textContent = `${Math.round(avgSharia * 100) / 100}%`;
-    document.getElementById("stat-top-score").textContent = topScore;
-  }
+function updateStatsUIEmpty() {
+  document.getElementById("stat-total").textContent = "—";
+  document.getElementById("stat-avg-score").textContent = "—";
+  document.getElementById("stat-avg-sharia").textContent = "—";
+  document.getElementById("stat-top-score").textContent = "—";
 }
 
 function animateCounter(id, target) {
@@ -1504,6 +1562,7 @@ function initCustomCursor() {
 
 function initParticles() {
   const canvas = document.getElementById("particle-canvas");
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
   let particles = [];
   function resize() {
@@ -1567,6 +1626,14 @@ function initParticles() {
   window.addEventListener("resize", () => { resize(); createParticles(); });
 }
 
+// ============================================================
+// 🔒 Event Listeners بدلاً من onclick
+// ============================================================
+document.getElementById("totalScore").addEventListener("input", updatePercentages);
+document.getElementById("shariaScore").addEventListener("input", updatePercentages);
+document.getElementById("navRegisterBtn").addEventListener("click", scrollToForm);
+document.getElementById("heroRegisterBtn").addEventListener("click", scrollToForm);
+
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 initCustomCursor();
@@ -1578,38 +1645,26 @@ subscribeToStats();
 // ⏰ مواعيد التسجيل: مفتوح دلوقتي وينتهي بداية يوم الأربعاء
 // =========================================================
 
-// إعدادات المواعيد — يتم حسابها ديناميكياً
-// بداية التسجيل: فات — التسجيل مفتوح دلوقتي
-// نهاية التسجيل: بداية يوم الأربعاء القادم (00:00 منتصف الليل)
 function getRegistrationSchedule() {
   const now = new Date();
-
-  // 0=الأحد، 1=الإثنين، 2=الثلاثاء، 3=الأربعاء، 4=الخميس، 5=الجمعة، 6=السبت
   const currentDay = now.getDay();
   const WEDNESDAY = 3;
 
-  // نهاية التسجيل: بداية يوم الأربعاء القادم (00:00:00)
-  // - لو حالياً قبل الأربعاء (أحد/إثنين/ثلاثاء) → الأربعاء القادم ده هو نهايتنا
-  // - لو حالياً أربعاء أو بعده → الأربعاء اللي بعده هو نهايتنا (التسجيل فات خلاص ومفيش جديد)
   let daysUntilWednesday = (WEDNESDAY - currentDay + 7) % 7;
 
   let endDate = new Date(now);
   endDate.setDate(now.getDate() + daysUntilWednesday);
-  endDate.setHours(0, 0, 0, 0); // بداية اليوم (00:00 منتصف الليل)
+  endDate.setHours(0, 0, 0, 0);
 
-  // بداية التسجيل: التسجيل مفتوح دلوقتي، نستخدم تاريخ قبل كده كبداية
-  // بنستخدم أول الأسبوع (السبت أو حد) كبداية رمزية
   let startDate = new Date(now);
-  startDate.setDate(now.getDate() - 7); // أسبوع قبل — التسجيل فات ومفتوح
+  startDate.setDate(now.getDate() - 7);
   startDate.setHours(0, 0, 0, 0);
 
   return { startDate, endDate, now };
 }
 
-// تنسيق الأرقام بعلامة صفر بادية
 function pad(n) { return String(n).padStart(2, "0"); }
 
-// تحديث العدّاد التنازلي
 function updateCountdown() {
   const { startDate, endDate } = getRegistrationSchedule();
   const now = new Date();
@@ -1622,7 +1677,6 @@ function updateCountdown() {
   const formSection = document.getElementById("form");
 
   if (now < startDate) {
-    // === مرحلة قبل بدء التسجيل ===
     const diff = startDate - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -1641,7 +1695,6 @@ function updateCountdown() {
     }
     if (gridEl) gridEl.style.display = "grid";
 
-    // تعطيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = true;
       heroBtn.style.opacity = "0.5";
@@ -1649,7 +1702,6 @@ function updateCountdown() {
     }
     if (submitBtn) submitBtn.disabled = true;
   } else if (now >= startDate && now < endDate) {
-    // === مرحلة التسجيل المفتوح ===
     const diff = endDate - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -1663,15 +1715,13 @@ function updateCountdown() {
 
     if (titleEl) titleEl.textContent = "ينتهي التسجيل خلال";
     if (statusEl) {
-      // بنعرض تاريخ يوم الثلاثاء (اليوم اللي قبل الأربعاء) لأن نهاية التسجيل هي بداية الأربعاء
       const lastDay = new Date(endDate);
-      lastDay.setDate(lastDay.getDate() - 1); // الثلاثاء (اليوم اللي قبل الأربعاء)
+      lastDay.setDate(lastDay.getDate() - 1);
       statusEl.textContent = `التسجيل مفتوح حتى نهاية يوم ${lastDay.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })}`;
       statusEl.className = "countdown-status active";
     }
     if (gridEl) gridEl.style.display = "grid";
 
-    // تفعيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = false;
       heroBtn.style.opacity = "";
@@ -1679,22 +1729,16 @@ function updateCountdown() {
     }
     if (submitBtn) submitBtn.disabled = false;
   } else {
-    // === مرحلة انتهاء التسجيل ===
     if (titleEl) titleEl.textContent = "انتهى التسجيل";
     if (statusEl) {
       statusEl.textContent = "انتهت فترة التسجيل — شكراً لكل الطلاب المُكرَّمين";
       statusEl.className = "countdown-status ended";
     }
     if (gridEl) {
-      gridEl.innerHTML = `
-        <div class="countdown-ended-msg" style="grid-column: 1 / -1">
-          <svg class="icon icon-md"><use href="#i-lock"/></svg>
-          <span>التسجيل مغلق</span>
-        </div>
-      `;
+      // ✅ النص ثابت آمن
+      gridEl.innerHTML = '<div class="countdown-ended-msg" style="grid-column: 1 / -1"><svg class="icon icon-md"><use href="#i-lock"/></svg><span>التسجيل مغلق</span></div>';
     }
 
-    // تعطيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = true;
       heroBtn.style.opacity = "0.5";
@@ -1704,7 +1748,6 @@ function updateCountdown() {
   }
 }
 
-// تحديث العدّاد كل ثانية
 updateCountdown();
 setInterval(updateCountdown, 1000);
 </script>
