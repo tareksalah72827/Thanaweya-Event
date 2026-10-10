@@ -1034,9 +1034,13 @@ import {
   doc,
   setDoc,
   getDoc,
+  getDocs,
+  query,
+  where,
   onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import FingerprintJS from "https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.js";
 
 // ============================================================
 // إعدادات Firebase الجديدة (القاعدة المحمية)
@@ -1051,12 +1055,15 @@ const firebaseConfig = {
 };
 
 const COLLECTION_NAME = "students";
+const FINGERPRINTS_COLLECTION = "device_fingerprints";
 const STATS_DOC = "metadata/stats"; // مستند فيه إحصائيات فقط (بدون بيانات شخصية) — يقرأه العامّة
 const SHARIA_MAX_SCORE = 210;
 const TOTAL_MAX_SCORE = 650;
+const LOCAL_FP_KEY = "device_fp_registered";
 
 let db = null;
 let firebaseReady = false;
+let deviceFingerprint = null;
 
 try {
   const app = initializeApp(firebaseConfig);
@@ -1065,6 +1072,80 @@ try {
   console.log("Firebase متصل (Firestore)");
 } catch (err) {
   console.error("Firebase init error:", err);
+}
+
+// ============================================================
+// بصمة الجهاز — Device Fingerprint
+// نستخدم FingerprintJS (مكتبة مفتوحة المصدر) بتجمع:
+//   canvas, WebGL, Audio, fonts, screen, timezone, language, plugins
+//   وغيرها من خصائص الجهاز — تنتج visitorId شبه ثابت لكل جهاز
+// ============================================================
+async function initFingerprint() {
+  try {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    deviceFingerprint = result.visitorId;
+    console.log("Device fingerprint loaded:", deviceFingerprint);
+  } catch (err) {
+    console.error("Fingerprint error:", err);
+    // fallback: بيانات بديلة من المتصفح + الشاشة + timezone
+    const parts = [
+      navigator.userAgent || "",
+      navigator.language || "",
+      navigator.platform || "",
+      navigator.hardwareConcurrency || 0,
+      (screen.width || 0) + "x" + (screen.height || 0),
+      (screen.colorDepth || 0),
+      new Date().getTimezoneOffset(),
+      Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+    ].join("|");
+    // hash بسيط
+    let hash = 0;
+    for (let i = 0; i < parts.length; i++) {
+      hash = ((hash << 5) - hash + parts.charCodeAt(i)) | 0;
+    }
+    deviceFingerprint = "fallback_" + Math.abs(hash).toString(36) + "_" + btoa(parts).slice(0, 24);
+    console.warn("Using fallback fingerprint:", deviceFingerprint);
+  }
+}
+
+// التحقق المحلي السريع (طبقة أولى قبل طلب Firestore)
+function checkLocalFingerprint() {
+  try {
+    return localStorage.getItem(LOCAL_FP_KEY) === "1";
+  } catch { return false; }
+}
+function setLocalFingerprint() {
+  try { localStorage.setItem(LOCAL_FP_KEY, "1"); } catch {}
+}
+
+// التحقق من بصمة الجهاز في Firestore (طبقة ثانية — المصدر الرسمي)
+async function checkIfAlreadyRegisteredInDb() {
+  if (!firebaseReady || !deviceFingerprint) return false;
+  try {
+    const q = query(
+      collection(db, FINGERPRINTS_COLLECTION),
+      where("visitorId", "==", deviceFingerprint)
+    );
+    const snap = await getDocs(q);
+    return snap.size > 0;
+  } catch (err) {
+    console.error("Fingerprint DB check error:", err);
+    return false;
+  }
+}
+
+// حفظ بصمة الجهاز في Firestore بعد التسجيل الناجح
+async function saveFingerprintToDb() {
+  if (!firebaseReady || !deviceFingerprint) return;
+  try {
+    await addDoc(collection(db, FINGERPRINTS_COLLECTION), {
+      visitorId: deviceFingerprint,
+      createdAt: serverTimestamp()
+    });
+  } catch (err) {
+    console.error("Fingerprint DB save error:", err);
+  }
 }
 
 // التخزين المحلي البديل (fallback)
@@ -1265,10 +1346,36 @@ document.getElementById("registration-form").addEventListener("submit", async (e
   const submitBtn = document.getElementById("submitBtn");
   const submitText = document.getElementById("submitText");
   submitBtn.disabled = true;
+  submitText.innerHTML = '<span class="loading-spinner"></span> جارٍ التحقق من الجهاز...';
+
+  // === التحقق من بصمة الجهاز — منع التسجيل المزدوج ===
+  // طبقة 1: localStorage (فحص سريع)
+  if (checkLocalFingerprint()) {
+    toast("لقد سجّلت من قبل من هذا الجهاز — لا يمكن التسجيل مرتين", "error");
+    submitBtn.disabled = false;
+    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    return;
+  }
+
+  // طبقة 2: Firestore (المصدر الرسمي — يمنع حتى لو مسح المستخدم localStorage)
+  submitText.innerHTML = '<span class="loading-spinner"></span> جارٍ التحقق من قاعدة البيانات...';
+  const alreadyInDb = await checkIfAlreadyRegisteredInDb();
+  if (alreadyInDb) {
+    // نسجّل البصمة محلياً كمان عشان المرة الجاية يكون الرد أسرع
+    setLocalFingerprint();
+    toast("لقد سجّلت من قبل من هذا الجهاز — لا يمكن التسجيل مرتين", "error");
+    submitBtn.disabled = false;
+    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    return;
+  }
+
   submitText.innerHTML = '<span class="loading-spinner"></span> جارٍ التسجيل...';
 
   try {
     await saveStudent(data);
+    // حفظ بصمة الجهاز بعد التسجيل الناجح (عشان نمنع التسجيل المزدوج مستقبلاً)
+    await saveFingerprintToDb();
+    setLocalFingerprint();
     document.getElementById("success-message").style.display = "block";
     document.getElementById("registration-form").reset();
     updatePercentages();
@@ -1436,6 +1543,8 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 initCustomCursor();
 initParticles();
 startStatsSubscription();
+// تحميل بصمة الجهاز عند فتح الصفحة (يتم تحميلها في الخلفية)
+initFingerprint();
 
 // =========================================================
 // التسجيل مفتوح دائماً — لا يوجد عدّاد تنازلي ولا مواعيد محددة
