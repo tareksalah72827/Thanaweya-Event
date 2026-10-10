@@ -792,7 +792,9 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ============================================================
@@ -823,8 +825,13 @@ try {
   const app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
+  // ضبط الـ persistence ليكون محفوظ دائماً في المتصفح
+  // (يبقى مسجل دخول حتى بعد إغلاق المتصفح أو إعادة تشغيل الجهاز)
+  setPersistence(auth, browserLocalPersistence).catch(err => {
+    console.warn("Persistence setup warning:", err);
+  });
   firebaseReady = true;
-  console.log("Firebase متصل (Firestore + Auth)");
+  console.log("Firebase متصل (Firestore + Auth) — session محفوظ دائماً");
 } catch (err) {
   console.error("Firebase init error:", err);
 }
@@ -918,20 +925,35 @@ onAuthStateChanged(auth, async (user) => {
       const adminSnap = await getDoc(doc(db, ADMINS_COLLECTION, user.uid));
       if (adminSnap.exists()) {
         const profile = adminSnap.data();
-        if (profile.active !== false) {
-          currentUser = user;
-          currentAdminProfile = profile;
-          showAdmin();
+        if (profile.active === false) {
+          // الحساب معطّل
+          toast("هذا الحساب معطّل. تواصل مع المسؤول", "error");
+          await signOut(auth);
+          showLogin();
           return;
         }
+        // أدمن شرعي — اعرض اللوحة
+        currentUser = user;
+        currentAdminProfile = profile;
+        showAdmin();
+        return;
+      } else {
+        // المستخدم موجود في Auth لكن ليس في مجموعة admins
+        toast("هذا الحساب غير مصرح له بالدخول للوحة الإدارة", "error");
+        await signOut(auth);
+        showLogin();
+        return;
       }
-      // ليس أدمن أو معطّل — نسجّل خروجه
-      await signOut(auth);
     } catch (err) {
       console.error("Auth state check error:", err);
+      if (err.code === "permission-denied") {
+        toast("تعذّر الوصول لبيانات الأدمن — تأكد من رفع قواعد Firestore على Firebase Console", "error");
+      } else {
+        toast("تعذّر التحقق من الصلاحيات", "error");
+      }
+      showLogin();
+      return;
     }
-    hideLogin();
-    showAdmin();
   } else {
     currentUser = null;
     currentAdminProfile = null;
@@ -1038,7 +1060,27 @@ function loadAll() {
     renderStats();
   }, (err) => {
     console.error("Firestore subscription error:", err);
-    toast("تعذّر تحميل البيانات. تحقق من الصلاحيات", "error");
+    if (err.code === "permission-denied") {
+      // المشكلة الأكثر شيوعاً — عرض رسالة واضحة بدل لوحة فاضية
+      const container = document.getElementById("students-list");
+      if (container) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-lock"/></svg></div>
+            <p style="font-weight: 700; color: var(--danger);">ممنوع الوصول لبيانات الطلاب</p>
+            <p style="margin-top: 0.75rem; font-size: 0.8rem; line-height: 1.8;">
+              1. تأكد من رفع قواعد Firestore على Firebase Console<br>
+              2. تأكد من إنشاء حساب أدمن في Authentication<br>
+              3. أضف document في <code>admins/{uid}</code> في Firestore<br>
+              4. الـ uid لازم يطابق الـ uid بتاع حساب Authentication
+            </p>
+          </div>
+        `;
+      }
+      toast("ممنوع الوصول — راجع دليل الإعداد (SETUP-GUIDE)", "error");
+    } else {
+      toast("تعذّر تحميل البيانات: " + (err.message || "خطأ غير معروف"), "error");
+    }
   });
 }
 
