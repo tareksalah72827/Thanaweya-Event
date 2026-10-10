@@ -1024,6 +1024,9 @@ body::after {
   </div>
 </footer>
 
+<!-- FingerprintJS (مزروعة محلياً لتفادي مشاكل CDN/CSP) -->
+<script src="assets/vendor/fingerprintjs.min.js"></script>
+
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1040,7 +1043,6 @@ import {
   onSnapshot,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import FingerprintJS from "https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.js";
 
 // ============================================================
 // إعدادات Firebase الجديدة (القاعدة المحمية)
@@ -1082,7 +1084,11 @@ try {
 // ============================================================
 async function initFingerprint() {
   try {
-    const fp = await FingerprintJS.load();
+    // نستخدم النسخة المحلية (window.FingerprintJS) المزروعة قبل الـ module
+    if (typeof window.FingerprintJS === "undefined") {
+      throw new Error("FingerprintJS global not available");
+    }
+    const fp = await window.FingerprintJS.load();
     const result = await fp.get();
     deviceFingerprint = result.visitorId;
     console.log("Device fingerprint loaded:", deviceFingerprint);
