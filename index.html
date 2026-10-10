@@ -733,7 +733,7 @@ body::after {
             <svg class="icon icon-sm"><use href="#i-user"/></svg>
             الاسم الرباعي <span class="required">*</span>
           </label>
-          <input type="text" id="fullName" class="form-input" placeholder="مثال: محمد أحمد علي حسن" required minlength="8">
+          <input type="text" id="fullName" class="form-input" placeholder="مثال: طارق صلاح بن محمد الفارس" required minlength="8">
           <div class="form-error" id="fullName-error" style="display:none"></div>
         </div>
 
@@ -812,7 +812,7 @@ body::after {
         </div>
 
         <button type="submit" class="btn btn-primary btn-large btn-full" id="submitBtn">
-          <span id="submitText"><svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب</span>
+          <span id="submitText"><svg class="icon icon-md"><use href="#i-check-circle"/></svg> تسجيل الطالب</span>
         </button>
       </form>
 
@@ -823,10 +823,6 @@ body::after {
       </div>
     </div>
 
-    <p class="privacy-note">
-      <svg class="icon icon-sm"><use href="#i-shield"/></svg>
-      <span>جميع البيانات محمية بتشفير كامل وتُحفظ في قاعدة بيانات آمنة (Firestore) وتُستخدم لأغراض الحفل التكريمي فقط.</span>
-    </p>
   </div>
 </section>
 
@@ -1353,7 +1349,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
   if (checkLocalFingerprint()) {
     toast("لقد سجّلت من قبل من هذا الجهاز — لا يمكن التسجيل مرتين", "error");
     submitBtn.disabled = false;
-    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    submitText.innerHTML = '<svg class="icon icon-md"><use href="#i-check-circle"/></svg> تسجيل الطالب';
     return;
   }
 
@@ -1365,7 +1361,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     setLocalFingerprint();
     toast("لقد سجّلت من قبل من هذا الجهاز — لا يمكن التسجيل مرتين", "error");
     submitBtn.disabled = false;
-    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    submitText.innerHTML = '<svg class="icon icon-md"><use href="#i-check-circle"/></svg> تسجيل الطالب';
     return;
   }
 
@@ -1387,7 +1383,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     toast("حدث خطأ أثناء التسجيل. حاول مرة أخرى.", "error");
   } finally {
     submitBtn.disabled = false;
-    submitText.innerHTML = '<svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب';
+    submitText.innerHTML = '<svg class="icon icon-md"><use href="#i-check-circle"/></svg> تسجيل الطالب';
   }
 });
 
