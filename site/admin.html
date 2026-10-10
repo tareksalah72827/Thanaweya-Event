@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="لوحة إدارة حفل تكريم المتفوقين - الأستاذ محمد شحاتة">
+<meta name="robots" content="noindex, nofollow">
 <title>لوحة الإدارة | حفل تكريم المتفوقين</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,46 +14,55 @@
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
 
-<!-- لا حاجة لمكتبات خارجية — نستخدم window.print() لدعم عربي كامل -->
-
 <style>
+/* ============================================================
+   نظام الألوان الفاتح — Light Theme
+   ============================================================ */
 :root {
-  --primary: #25B68D;
-  --primary-light: #4EC9A8;
-  --primary-dark: #1A8B6A;
-  --primary-deep: #0F5A45;
+  --primary: #1A8B6A;
+  --primary-light: #25B68D;
+  --primary-dark: #0F5A45;
+  --primary-deep: #0A3D2E;
   --accent: #2EB784;
-  --accent-glow: rgba(37, 182, 141, 0.4);
+  --accent-glow: rgba(37, 182, 141, 0.25);
 
-  --bg-deep: #051E18;
-  --bg-card: #0A2A22;
-  --bg-card-light: #103530;
-  --bg-overlay: rgba(10, 42, 34, 0.7);
+  --bg-base: #F6FBF8;
+  --bg-soft: #ECF6F2;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F8FCFA;
+  --bg-overlay: rgba(255, 255, 255, 0.85);
 
-  --text: #E8F5F0;
-  --text-muted: #7AA89D;
-  --text-dim: #4A6B62;
+  --text: #0A2A22;
+  --text-body: #1F3D34;
+  --text-muted: #5A7A72;
+  --text-dim: #8AA69E;
 
-  --gold: #D4AF37;
-  --gold-light: #F4D58A;
-  --gold-glow: rgba(212, 175, 55, 0.4);
+  --gold: #B8932E;
+  --gold-light: #D4AF37;
+  --gold-glow: rgba(212, 175, 55, 0.25);
 
-  --danger: #FF6B6B;
-  --success: #4EC9A8;
-  --warning: #FFB84D;
+  --danger: #DC3545;
+  --success: #1A8B6A;
+  --warning: #D4920A;
 
-  --grad-primary: linear-gradient(135deg, #4EC9A8 0%, #25B68D 50%, #1A8B6A 100%);
+  --grad-primary: linear-gradient(135deg, #25B68D 0%, #1A8B6A 50%, #0F5A45 100%);
   --grad-gold: linear-gradient(135deg, #F4D58A 0%, #D4AF37 100%);
-  --grad-bg: radial-gradient(ellipse at top, #0A2A22 0%, #051E18 70%);
+  --grad-bg: radial-gradient(ellipse at top, #ECF6F2 0%, #F6FBF8 70%);
 
-  --shadow-glow: 0 0 30px var(--accent-glow), 0 0 60px rgba(37, 182, 141, 0.2);
-  --shadow-glow-gold: 0 0 30px var(--gold-glow), 0 0 60px rgba(212, 175, 55, 0.2);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 24px var(--accent-glow);
+  --shadow-glow: 0 4px 24px var(--accent-glow), 0 8px 32px rgba(37, 182, 141, 0.12);
+  --shadow-glow-gold: 0 4px 24px var(--gold-glow);
+  --shadow-card: 0 4px 24px rgba(15, 90, 69, 0.08);
+  --shadow-card-hover: 0 12px 40px rgba(15, 90, 69, 0.14), 0 4px 16px var(--accent-glow);
+  --shadow-strong: 0 8px 32px rgba(15, 90, 69, 0.16);
 
   --font-cairo: 'Cairo', sans-serif;
   --font-amiri: 'Amiri', serif;
   --font-reem: 'Reem Kufi', 'Cairo', sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,31 +70,27 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-cairo);
   background: var(--grad-bg);
-  color: var(--text);
+  color: var(--text-body);
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.7;
   direction: rtl;
   overflow-x: hidden;
   position: relative;
   -webkit-font-smoothing: antialiased;
 }
+
 body::before {
   content: ''; position: fixed; inset: 0;
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(37, 182, 141, 0.06) 1px, transparent 1px),
-    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+    radial-gradient(circle at 20% 20%, rgba(37, 182, 141, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
   background-size: 60px 60px; pointer-events: none; z-index: 0;
 }
-body::after {
-  content: ''; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%2325B68D' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M40 0 L50 30 L80 40 L50 50 L40 80 L30 50 L0 40 L30 30 Z'/%3E%3C/g%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0;
-}
 
-#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.6; }
+#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.35; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
 
-/* Icons */
+/* === Icons === */
 .icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
 .icon-xs { width: 14px; height: 14px; }
 .icon-sm { width: 18px; height: 18px; }
@@ -94,518 +100,543 @@ body::after {
 
 .btn {
   font-family: var(--font-cairo); font-weight: 600; border: none; cursor: pointer;
-  border-radius: 0.625rem; padding: 0.625rem 1.25rem; font-size: 0.875rem;
+  border-radius: var(--radius-md); padding: 0.625rem 1.25rem; font-size: 0.875rem;
   transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
-.btn-outline { background: transparent; border: 1px solid rgba(37, 182, 141, 0.35); color: rgba(232, 245, 240, 0.85); }
-.btn-outline:hover { color: var(--primary-light); border-color: var(--primary); box-shadow: 0 0 12px var(--accent-glow); }
-.btn-primary { background: var(--grad-primary); color: white; font-weight: 700; box-shadow: 0 4px 16px rgba(37, 182, 141, 0.3); }
+.btn-outline { background: rgba(255,255,255,0.7); border: 1px solid rgba(37, 182, 141, 0.3); color: var(--primary); }
+.btn-outline:hover { color: var(--primary-dark); border-color: var(--primary); background: #fff; box-shadow: 0 4px 16px var(--accent-glow); }
+.btn-primary { background: var(--grad-primary); color: white; font-weight: 700; box-shadow: 0 4px 16px rgba(37, 182, 141, 0.28); }
 .btn-primary:hover { box-shadow: var(--shadow-glow); transform: translateY(-2px); }
 .btn-gold { background: var(--grad-gold); color: #1A1A1A; font-weight: 700; }
 .btn-gold:hover { box-shadow: var(--shadow-glow-gold); transform: translateY(-2px); }
-.btn-danger { background: linear-gradient(135deg, #FF6B6B, #C44545); color: white; font-weight: 700; }
-.btn-danger:hover { box-shadow: 0 0 20px rgba(255, 107, 107, 0.4); }
+.btn-danger { background: rgba(220, 53, 69, 0.1); color: var(--danger); border: 1px solid rgba(220, 53, 69, 0.25); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
 .btn-large { padding: 1rem 2rem; font-size: 1rem; }
 .btn-full { width: 100%; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.loading-spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
-
-/* Login Screen */
+/* === Login Screen === */
 .login-screen {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  padding: 2rem 1.5rem; position: relative; z-index: 1;
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  background: var(--grad-bg);
 }
 .login-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.3);
-  border-radius: 1.5rem; padding: 3rem 2rem;
-  max-width: 420px; width: 100%; text-align: center;
-  box-shadow: var(--shadow-card), 0 0 40px var(--accent-glow);
-  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--bg-card); border-radius: var(--radius-xl);
+  padding: 2.5rem 2rem; max-width: 440px; width: 100%;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(37, 182, 141, 0.15);
+  text-align: center;
+  position: relative; overflow: hidden;
 }
-.login-card .logo { width: 90px; height: 90px; margin: 0 auto 1.5rem; filter: drop-shadow(0 0 16px var(--accent-glow)); }
-.login-card h1 {
-  font-family: var(--font-reem); font-size: 1.875rem; font-weight: 700;
+.login-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
   background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent; margin-bottom: 0.5rem;
 }
-.login-card .subtitle { color: rgba(232, 245, 240, 0.6); font-size: 0.875rem; margin-bottom: 2rem; }
+.login-card .logo {
+  width: 90px; height: 90px; margin: 0 auto 1.5rem;
+  border-radius: 18px; box-shadow: var(--shadow-strong);
+  border: 3px solid #fff;
+}
+.login-card h1 {
+  font-family: var(--font-reem); font-size: 1.75rem; color: var(--text);
+  margin-bottom: 0.5rem; font-weight: 700;
+}
+.login-card .subtitle { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 2rem; }
 .login-card .form-group { text-align: right; margin-bottom: 1.25rem; }
+.login-card .form-label {
+  display: flex; align-items: center; gap: 0.375rem;
+  font-size: 0.875rem; font-weight: 600; color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.login-card .form-input {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1.5px solid rgba(37, 182, 141, 0.18);
+  border-radius: var(--radius-md); background: var(--bg-card-alt);
+  color: var(--text); font-family: var(--font-cairo); font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.login-card .form-input:focus {
+  outline: none; border-color: var(--primary);
+  background: #fff; box-shadow: 0 0 0 4px var(--accent-glow);
+}
+.login-card .form-input::placeholder { color: var(--text-dim); }
 .login-card .back-link {
   display: inline-flex; align-items: center; gap: 0.375rem;
-  margin-top: 1.5rem; font-size: 0.875rem;
-  color: rgba(232, 245, 240, 0.6); text-decoration: none; transition: color 0.3s ease;
+  margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted);
+  text-decoration: none; transition: color 0.3s;
 }
-.login-card .back-link:hover { color: var(--primary-light); }
-
-.form-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 500; color: rgba(232, 245, 240, 0.9); margin-bottom: 0.5rem; }
-.form-label .required { color: var(--gold); }
-.form-label .icon { color: var(--primary-light); }
-.form-input {
-  width: 100%; padding: 0.75rem 1rem;
-  background: rgba(5, 30, 24, 0.5);
-  border: 1px solid rgba(37, 182, 141, 0.15);
-  border-radius: 0.75rem; color: var(--text);
-  font-family: var(--font-cairo); font-size: 0.9375rem;
-  transition: all 0.3s ease; outline: none;
+.login-card .back-link:hover { color: var(--primary); }
+.login-card .security-badge {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  margin-top: 1rem; padding: 0.375rem 0.875rem;
+  background: rgba(37, 182, 141, 0.08);
+  border-radius: 999px; font-size: 0.75rem;
+  color: var(--primary); font-weight: 600;
+  border: 1px solid rgba(37, 182, 141, 0.2);
 }
-.form-input::placeholder { color: var(--text-dim); }
-.form-input:focus { border-color: var(--primary); background: rgba(5, 30, 24, 0.7); box-shadow: 0 0 0 4px rgba(37, 182, 141, 0.15); }
-.form-input:hover:not(:focus) { border-color: rgba(37, 182, 141, 0.3); }
-.form-error { color: var(--danger); font-size: 0.75rem; margin-top: 0.375rem; display: flex; align-items: center; gap: 0.25rem; }
-
-/* Admin Header */
-.admin-header {
-  background: rgba(10, 42, 34, 0.8);
-  backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(37, 182, 141, 0.2);
-  padding: 1rem 0; position: sticky; top: 0; z-index: 50;
+.login-card .dev-credit {
+  margin-top: 1.25rem; padding-top: 1rem;
+  border-top: 1px solid rgba(37, 182, 141, 0.1);
+  font-size: 0.75rem; color: var(--text-muted);
 }
-.admin-header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.admin-header-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-.admin-header-logo img { width: 40px; height: 40px; filter: drop-shadow(0 0 8px var(--accent-glow)); }
-.admin-header-logo .title {
-  font-family: var(--font-reem); font-size: 1.125rem; font-weight: 700;
+.login-card .dev-credit strong { color: var(--gold-light); font-weight: 700; }
+.login-card .dev-credit .uniral-mark {
   background: var(--grad-primary);
   -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
+  -webkit-text-fill-color: transparent; font-weight: 800;
 }
-.admin-header-actions { display: flex; align-items: center; gap: 0.75rem; }
-.admin-main { padding: 2rem 0; position: relative; z-index: 1; }
 
-/* Toolbar */
-.admin-toolbar { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; align-items: center; }
-.search-box { position: relative; flex: 1; min-width: 250px; }
-.search-box input {
-  width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem;
-  background: rgba(5, 30, 24, 0.5);
-  border: 1px solid rgba(37, 182, 141, 0.15);
-  border-radius: 0.625rem; color: var(--text);
-  font-family: var(--font-cairo); font-size: 0.875rem;
-  outline: none; transition: all 0.3s ease;
+.form-error {
+  display: flex; align-items: center; gap: 0.375rem;
+  font-size: 0.8rem; color: var(--danger); margin-top: 0.375rem;
+  background: rgba(220, 53, 69, 0.08); padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-sm); border: 1px solid rgba(220, 53, 69, 0.15);
 }
-.search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 182, 141, 0.1); }
-.search-box .icon { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
-.admin-toolbar select {
-  padding: 0.625rem 1rem;
-  background: rgba(5, 30, 24, 0.5);
-  border: 1px solid rgba(37, 182, 141, 0.15);
-  border-radius: 0.625rem; color: var(--text);
-  font-family: var(--font-cairo); font-size: 0.875rem;
-  outline: none; cursor: pointer;
+.form-info {
+  display: flex; align-items: center; gap: 0.375rem;
+  font-size: 0.8rem; color: var(--primary); margin-top: 0.375rem;
+  background: rgba(37, 182, 141, 0.08); padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-sm); border: 1px solid rgba(37, 182, 141, 0.15);
 }
-.admin-toolbar select option { background: var(--bg-card); }
 
-/* Tabs */
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } }
+
+/* === Admin Dashboard === */
+.admin-header {
+  background: var(--bg-overlay);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(37, 182, 141, 0.15);
+  padding: 1rem 0; position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-card);
+}
+.admin-header-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.admin-header-logo {
+  display: flex; align-items: center; gap: 0.75rem;
+  text-decoration: none;
+}
+.admin-header-logo img { width: 44px; height: 44px; border-radius: 8px; }
+.admin-header-logo .title {
+  font-family: var(--font-reem); font-size: 1.1rem; font-weight: 700;
+  color: var(--text);
+}
+.admin-header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.admin-user-info {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.375rem 0.75rem; background: rgba(37, 182, 141, 0.08);
+  border-radius: 999px; border: 1px solid rgba(37, 182, 141, 0.15);
+  font-size: 0.8rem; color: var(--text-body); font-weight: 600;
+}
+.admin-user-info .avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 0.75rem;
+}
+
+.admin-main { padding: 2rem 0; }
+
 .tabs {
-  display: flex; gap: 0.5rem; margin-bottom: 2rem;
-  background: rgba(10, 42, 34, 0.5); padding: 0.375rem;
-  border-radius: 0.75rem; border: 1px solid rgba(37, 182, 141, 0.2);
-  flex-wrap: wrap;
+  display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+  padding: 0.375rem; background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid rgba(37, 182, 141, 0.12); box-shadow: var(--shadow-card);
 }
 .tab {
   flex: 1; min-width: 120px;
-  padding: 0.625rem 1rem; background: transparent; border: none;
-  color: rgba(232, 245, 240, 0.6);
-  font-family: var(--font-cairo); font-size: 0.875rem; font-weight: 500;
-  cursor: pointer; border-radius: 0.5rem; transition: all 0.3s ease;
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+  padding: 0.625rem 1rem; border: none; background: transparent;
+  border-radius: var(--radius-md); cursor: pointer;
+  font-family: var(--font-cairo); font-weight: 600; font-size: 0.875rem;
+  color: var(--text-muted); transition: all 0.3s ease;
+  display: flex; align-items: center; justify-content: center; gap: 0.375rem;
 }
-.tab.active { background: rgba(37, 182, 141, 0.15); color: var(--primary-light); }
-.tab:hover:not(.active) { color: var(--text); }
+.tab.active {
+  background: var(--grad-primary); color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 182, 141, 0.3);
+}
+.tab:hover:not(.active) { background: rgba(37, 182, 141, 0.06); color: var(--primary); }
+
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Student Card */
-.student-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 0.875rem; padding: 1rem;
-  display: flex; align-items: flex-start; gap: 1rem;
-  transition: all 0.3s ease;
+.admin-toolbar {
+  display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
 }
-.student-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
-.student-card .number {
-  flex-shrink: 0; width: 40px; height: 40px; border-radius: 0.5rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.3), rgba(212, 175, 55, 0.2));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; color: var(--primary-light); font-size: 0.875rem;
-}
-.student-card .info { flex: 1; min-width: 0; }
-.student-card .name { font-weight: 700; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.student-card .meta { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.75rem; color: var(--text-muted); }
-.student-card .meta span { display: inline-flex; align-items: center; gap: 0.25rem; }
-.student-card .notes-text { margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
-.student-card .score-block { text-align: left; flex-shrink: 0; }
-.student-card .score {
-  font-size: 1.125rem; font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-}
-.student-card .score-label { font-size: 0.625rem; color: var(--text-muted); }
-.student-card .badge {
-  display: inline-flex; align-items: center; gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  background: rgba(212, 175, 55, 0.15); color: var(--gold);
-  border-radius: 0.375rem; font-size: 0.6875rem; font-weight: 700;
-}
-.student-card .actions { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-.student-card .delete-btn {
-  background: transparent; border: none; color: var(--text-muted);
-  cursor: pointer; padding: 0.375rem; border-radius: 0.375rem; transition: all 0.3s ease;
-  display: flex; align-items: center; justify-content: center;
-}
-.student-card .delete-btn:hover { background: rgba(255, 107, 107, 0.15); color: var(--danger); }
-
-/* Top Students */
-.top-student-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 0.875rem; padding: 1rem;
-  display: flex; align-items: center; gap: 1rem;
-  transition: all 0.3s ease;
-}
-.top-student-card.top-3 { border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
-.top-student-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
-.top-student-card .medal-wrap {
-  flex-shrink: 0; width: 48px; height: 48px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 0.625rem;
-}
-.top-student-card .medal-wrap.rank-1 { background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(212, 175, 55, 0.15)); color: #FFD700; }
-.top-student-card .medal-wrap.rank-2 { background: linear-gradient(135deg, rgba(192, 192, 192, 0.25), rgba(150, 150, 150, 0.15)); color: #C0C0C0; }
-.top-student-card .medal-wrap.rank-3 { background: linear-gradient(135deg, rgba(205, 127, 50, 0.25), rgba(180, 100, 30, 0.15)); color: #CD7F32; }
-.top-student-card .medal-wrap.rank-other { background: rgba(37, 182, 141, 0.15); color: var(--primary-light); font-weight: 700; font-size: 0.875rem; }
-.top-student-card .info { flex: 1; min-width: 0; }
-.top-student-card .name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.top-student-card .meta { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.top-student-card .meta span { display: inline-flex; align-items: center; gap: 0.25rem; }
-.top-student-card .score {
-  font-size: 1.25rem; font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-}
-.top-student-card .sharia-badge {
-  flex-shrink: 0; padding: 0.25rem 0.625rem;
-  background: rgba(212, 175, 55, 0.15); color: var(--gold);
-  border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700;
-  display: inline-flex; align-items: center; gap: 0.25rem;
-}
-
-/* Empty State */
-.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
-.empty-state .icon-wrap {
-  width: 64px; height: 64px; margin: 0 auto 0.75rem;
-  border-radius: 50%; background: rgba(37, 182, 141, 0.1);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted); opacity: 0.6;
-}
-.empty-state p { font-size: 0.875rem; }
-
-/* Governorate Stats - just show count since all are الشرقية */
-.summary-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;
-  display: flex; align-items: center; gap: 1rem;
-}
-.summary-card .icon-wrap {
-  width: 48px; height: 48px; border-radius: 0.75rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.25), rgba(212, 175, 55, 0.15));
-  display: flex; align-items: center; justify-content: center;
-  color: var(--primary-light); flex-shrink: 0;
-}
-.summary-card .text { flex: 1; }
-.summary-card .text .label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-.summary-card .text .value { font-size: 1.125rem; font-weight: 700; color: var(--primary-light); }
-
-/* Stat Box */
-.stat-box {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 0.875rem; padding: 1rem; text-align: center;
-}
-.stat-box .icon-wrap {
-  width: 40px; height: 40px; margin: 0 auto 0.5rem;
-  border-radius: 0.625rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.2), rgba(212, 175, 55, 0.1));
-  display: flex; align-items: center; justify-content: center;
-  color: var(--primary-light);
-}
-.stat-box .value {
-  font-size: 1.5rem; font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent; margin-bottom: 0.25rem;
-}
-.stat-box .suffix { font-size: 0.625rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-.stat-box .label { font-size: 0.75rem; color: rgba(232, 245, 240, 0.8); font-weight: 500; }
-
-/* Section Card */
-.section-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1rem; padding: 1.25rem; margin-bottom: 1.5rem;
-}
-.section-card h3 {
-  font-family: var(--font-reem); font-size: 1.125rem; font-weight: 700;
-  color: var(--primary-light); margin-bottom: 1rem;
+.search-box {
+  flex: 1; min-width: 220px;
   display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.625rem 0.875rem; background: var(--bg-card);
+  border: 1px solid rgba(37, 182, 141, 0.15);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+  color: var(--text-muted);
 }
-
-.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-@media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-
-/* Toast */
-.toast-container {
-  position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
-  z-index: 1000; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none;
+.search-box input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-family: var(--font-cairo); font-size: 0.875rem; color: var(--text);
 }
-.toast {
-  background: var(--bg-card); backdrop-filter: blur(20px);
-  border: 1px solid var(--primary); border-radius: 0.75rem;
-  padding: 0.875rem 1.25rem; color: var(--text); font-size: 0.875rem; font-weight: 500;
-  box-shadow: var(--shadow-card);
-  display: flex; align-items: center; gap: 0.5rem;
-  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: auto; max-width: 90vw;
+.search-box input::placeholder { color: var(--text-dim); }
+#sort-select {
+  padding: 0.625rem 0.875rem; border: 1px solid rgba(37, 182, 141, 0.15);
+  border-radius: var(--radius-md); background: var(--bg-card);
+  font-family: var(--font-cairo); font-size: 0.875rem; color: var(--text);
+  cursor: pointer; box-shadow: var(--shadow-card);
 }
-.toast.success { border-color: var(--primary); }
-.toast.success .icon { color: var(--primary-light); }
-.toast.error { border-color: var(--danger); }
-.toast.error .icon { color: var(--danger); }
-.toast.info .icon { color: var(--primary-light); }
-
-/* Modal */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px); z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1rem; animation: fadeIn 0.2s ease;
-}
-.modal-card {
-  background: var(--bg-card); border: 1px solid rgba(37, 182, 141, 0.3);
-  border-radius: 1rem; padding: 2rem; max-width: 400px; width: 100%; text-align: center;
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.modal-card .icon-wrap {
-  width: 64px; height: 64px; margin: 0 auto 1rem;
-  border-radius: 50%;
-  background: rgba(255, 107, 107, 0.15);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--danger);
-}
-.modal-card h3 { font-family: var(--font-reem); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
-.modal-card p { color: rgba(232, 245, 240, 0.7); font-size: 0.875rem; margin-bottom: 1.5rem; }
-.modal-card .actions { display: flex; gap: 0.75rem; }
-.modal-card .actions .btn { flex: 1; }
-
-/* Custom Cursor */
-body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important; }
-.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
-.custom-cursor-dot { width: 8px; height: 8px; background: var(--primary-light); border-radius: 50%; transform: translate(-50%, -50%); }
-.custom-cursor-ring {
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(37, 182, 141, 0.6);
-  border-radius: 50%; transform: translate(-50%, -50%);
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease;
-}
-.custom-cursor-ring.hover-active { width: 60px; height: 60px; background: rgba(37, 182, 141, 0.1); border-color: var(--primary); }
-
-@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--gold)); border-radius: 10px; border: 2px solid var(--bg-deep); }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--primary-light), var(--gold-light)); }
 
 .list-container { display: flex; flex-direction: column; gap: 0.75rem; }
 
-@media (max-width: 768px) {
-  .admin-header-logo .title { font-size: 0.875rem; }
-  .admin-header-logo img { width: 32px; height: 32px; }
-  .admin-toolbar { flex-direction: column; align-items: stretch; }
-  .student-card { flex-wrap: wrap; }
-  .student-card .score-block { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-  .top-student-card { flex-wrap: wrap; }
+.student-card {
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem;
+  align-items: center;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(37, 182, 141, 0.1);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+.student-card:hover { box-shadow: var(--shadow-card-hover); border-color: rgba(37, 182, 141, 0.25); }
+.student-card .number {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.15), rgba(37, 182, 141, 0.05));
+  color: var(--primary); font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.875rem;
+}
+.student-card .info { min-width: 0; }
+.student-card .info .name {
+  font-family: var(--font-cairo); font-size: 1rem; font-weight: 700;
+  color: var(--text); margin-bottom: 0.25rem;
+}
+.student-card .info .meta {
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+.student-card .info .meta span {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+}
+.student-card .info .notes-text {
+  margin-top: 0.375rem; font-size: 0.75rem; color: var(--text-body);
+  background: var(--bg-card-alt); padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-sm); border: 1px solid rgba(37, 182, 141, 0.08);
+  display: flex; align-items: center; gap: 0.25rem;
+}
+.student-card .score-block { text-align: center; }
+.student-card .score {
+  font-family: var(--font-reem); font-size: 1.5rem; font-weight: 700;
+  color: var(--primary); line-height: 1;
+}
+.student-card .score-label { font-size: 0.7rem; color: var(--text-muted); }
+.student-card .badge {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0.25rem 0.5rem; border-radius: var(--radius-sm);
+  background: rgba(212, 175, 55, 0.1); color: var(--gold-light);
+  font-size: 0.7rem; font-weight: 600;
+}
+.student-card .actions { display: flex; gap: 0.375rem; }
+.student-card .delete-btn {
+  width: 36px; height: 36px; border: none; cursor: pointer;
+  border-radius: var(--radius-sm);
+  background: rgba(220, 53, 69, 0.08); color: var(--danger);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+}
+.student-card .delete-btn:hover { background: var(--danger); color: #fff; }
+
+.top-student-card {
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem;
+  align-items: center;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: var(--shadow-card);
+}
+.top-student-card.top-3 { border-color: rgba(212, 175, 55, 0.3); }
+.top-student-card .medal-wrap {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-reem); font-size: 1.25rem; font-weight: 700;
+}
+.top-student-card .medal-wrap.rank-1 {
+  background: var(--grad-gold); color: #1A1A1A;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+}
+.top-student-card .medal-wrap.rank-2 {
+  background: linear-gradient(135deg, #E0E0E0, #B0B0B0); color: #1A1A1A;
+}
+.top-student-card .medal-wrap.rank-3 {
+  background: linear-gradient(135deg, #D4A574, #A07050); color: #fff;
+}
+.top-student-card .medal-wrap.rank-other {
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.15), rgba(37, 182, 141, 0.05));
+  color: var(--primary);
+}
+.top-student-card .info .name {
+  font-family: var(--font-cairo); font-size: 1rem; font-weight: 700;
+  color: var(--text); margin-bottom: 0.25rem;
+}
+.top-student-card .info .meta {
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+.top-student-card .info .meta span {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+}
+.top-student-card .score {
+  font-family: var(--font-reem); font-size: 1.5rem; font-weight: 700;
+  color: var(--primary); line-height: 1;
+}
+.top-student-card .sharia-badge {
+  padding: 0.375rem 0.75rem; border-radius: var(--radius-sm);
+  background: rgba(212, 175, 55, 0.12); color: var(--gold-light);
+  font-size: 0.8rem; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 0.25rem;
 }
 
-/* PDF Export - hidden container styling - احترافي ومتناسق */
-.pdf-export-container {
-  position: fixed; top: -99999px; right: -99999px;
-  width: 1100px; padding: 50px;
-  background: #FFFFFF; color: #1A1A1A;
-  font-family: 'Cairo', 'Arial', sans-serif;
-  direction: rtl;
-  box-sizing: border-box;
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;
 }
-.pdf-export-container * { box-sizing: border-box; }
-
-.pdf-export-container .pdf-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 30px; padding-bottom: 20px;
-  border-bottom: 4px solid #25B68D;
-  gap: 20px;
+@media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-box {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.5rem 1rem; text-align: center;
+  border: 1px solid rgba(37, 182, 141, 0.1);
+  box-shadow: var(--shadow-card);
 }
-.pdf-export-container .pdf-header .header-right {
-  display: flex; align-items: center; gap: 18px;
-}
-.pdf-export-container .pdf-header .logo-wrap img {
-  width: 90px; height: 90px;
+.stat-box .icon-wrap {
+  width: 44px; height: 44px; margin: 0 auto 0.75rem;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.15), rgba(37, 182, 141, 0.05));
   border-radius: 12px;
-  background: #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
 }
-.pdf-export-container .pdf-header .header-text h1 {
-  font-size: 32px; color: #1A8B6A; margin: 0 0 6px 0;
-  font-family: 'Reem Kufi', 'Cairo', sans-serif;
-  font-weight: 700; line-height: 1.2;
+.stat-box .value {
+  font-family: var(--font-reem); font-size: 1.75rem; font-weight: 700;
+  color: var(--primary); line-height: 1;
 }
-.pdf-export-container .pdf-header .header-text .subtitle {
-  font-size: 14px; color: #555; margin: 0;
+.stat-box .suffix { font-size: 0.7rem; color: var(--text-muted); margin: 0.25rem 0; }
+.stat-box .label { font-size: 0.8rem; color: var(--text-body); font-weight: 600; }
+
+.summary-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  border: 1px solid rgba(37, 182, 141, 0.1);
+  box-shadow: var(--shadow-card);
 }
-.pdf-export-container .pdf-header .header-left {
-  text-align: left; font-size: 12px; color: #777;
+.summary-card h3 {
+  font-family: var(--font-reem); font-size: 1.1rem; color: var(--text);
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
 }
-.pdf-export-container .pdf-header .header-left .info-item {
-  margin-bottom: 4px;
+.gov-stat { margin-bottom: 1rem; }
+.gov-stat .head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.85rem; color: var(--text-body); margin-bottom: 0.375rem;
 }
-.pdf-export-container .pdf-header .header-left .info-item strong {
-  color: #1A8B6A;
+.gov-stat .head .count { color: var(--primary); font-weight: 700; }
+.gov-stat .bar {
+  height: 10px; background: rgba(15, 90, 69, 0.06);
+  border-radius: 5px; overflow: hidden;
+}
+.gov-stat .bar .fill {
+  height: 100%; border-radius: 5px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pdf-export-container .pdf-info-bar {
-  background: #F0F8F5;
-  border: 1px solid #C8E6D5;
-  border-radius: 8px;
-  padding: 12px 18px;
-  margin-bottom: 24px;
-  display: flex; justify-content: space-around;
-  font-size: 13px; color: #1A8B6A; font-weight: 600;
+.empty-state {
+  text-align: center; padding: 3rem 1rem;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px dashed rgba(37, 182, 141, 0.2);
 }
-.pdf-export-container .pdf-info-bar .info-item {
-  display: flex; align-items: center; gap: 6px;
+.empty-state .icon-wrap {
+  width: 64px; height: 64px; margin: 0 auto 1rem;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.1), rgba(37, 182, 141, 0.03));
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+}
+.empty-state p { color: var(--text-muted); font-size: 0.9rem; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(10, 42, 34, 0.55); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.show { display: flex; }
+.modal-card {
+  background: var(--bg-card); border-radius: var(--radius-xl);
+  padding: 1.75rem; max-width: 420px; width: 100%;
+  box-shadow: var(--shadow-strong);
+  text-align: center; animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-card .icon-wrap {
+  width: 56px; height: 56px; margin: 0 auto 1rem;
+  background: rgba(220, 53, 69, 0.1); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: var(--danger);
+}
+.modal-card h3 { font-family: var(--font-reem); font-size: 1.25rem; color: var(--text); margin-bottom: 0.5rem; }
+.modal-card p { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem; }
+.modal-card .modal-actions { display: flex; gap: 0.5rem; }
+.modal-card .modal-actions .btn { flex: 1; }
+
+/* Loading */
+.loading-spinner {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+.loading-spinner.dark {
+  border-color: rgba(15, 90, 69, 0.2); border-top-color: var(--primary);
 }
 
-.pdf-export-container table {
-  width: 100%; border-collapse: collapse; font-size: 13px;
-  background: white;
+/* Toast */
+.toast-container {
+  position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999;
+  display: flex; flex-direction: column; gap: 0.5rem; max-width: 360px;
 }
-.pdf-export-container thead { display: table-header-group; }
-.pdf-export-container tr { page-break-inside: avoid; }
-.pdf-export-container th {
-  background: #25B68D; color: white;
-  padding: 12px 8px; border: 1px solid #1A8B6A;
-  font-weight: 700; text-align: center;
-  font-size: 13px;
+.toast {
+  background: #fff; padding: 0.75rem 1rem; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-strong); display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.875rem; color: var(--text); border-right: 4px solid var(--primary);
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
-.pdf-export-container td {
-  padding: 10px 8px; border: 1px solid #DDD; text-align: center;
-  color: #333; font-size: 12px;
+.toast.success { border-color: var(--success); }
+.toast.success .icon { color: var(--success); }
+.toast.error { border-color: var(--danger); }
+.toast.error .icon { color: var(--danger); }
+.toast.info .icon { color: var(--primary); }
+@keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Custom cursor */
+.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; opacity: 0; transition: opacity 0.3s ease; }
+.custom-cursor-dot {
+  width: 8px; height: 8px; background: var(--primary); border-radius: 50%;
+  box-shadow: 0 0 8px var(--primary);
 }
-.pdf-export-container td.name-cell {
-  text-align: right; padding-right: 12px;
-  font-weight: 600;
+.custom-cursor-ring {
+  width: 32px; height: 32px; border: 2px solid rgba(37, 182, 141, 0.5); border-radius: 50%;
+  transition: transform 0.15s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
-.pdf-export-container tr:nth-child(even) td { background: #F5FBF9; }
-.pdf-export-container .score-cell {
-  font-weight: 700; color: #1A8B6A;
-}
-.pdf-export-container .sharia-cell {
-  font-weight: 700; color: #D4AF37;
+.custom-cursor-ring.hover-active { border-color: var(--gold-light); transform: scale(1.2); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .student-card, .top-student-card {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+  .student-card .score-block, .top-student-card .score,
+  .student-card .actions, .top-student-card .sharia-badge {
+    grid-column: 1 / -1;
+  }
+  .toast-container { top: 1rem; right: 1rem; left: 1rem; max-width: none; }
+  .admin-user-info { display: none; }
 }
 
-.pdf-export-container .pdf-footer {
-  margin-top: 30px; text-align: center; font-size: 11px; color: #888;
-  border-top: 2px solid #DDD; padding-top: 14px;
-}
-.pdf-export-container .pdf-footer .footer-line { margin-bottom: 4px; }
-.pdf-export-container .pdf-footer .uniral {
-  color: #1A8B6A; font-weight: 700;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #particle-canvas { display: none; }
 }
 </style>
 </head>
 <body>
-
-<!-- SVG Icon Sprite -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
-  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
-  <symbol id="i-graduation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></symbol>
-  <symbol id="i-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
-  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
-  <symbol id="i-sticky-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11l5-5V5a2 2 0 0 0-2-2z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/><path d="M9 13h6"/><path d="M9 17h3"/></symbol>
-  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
-  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
-  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
-  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
-  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
-  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
-  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
-  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></symbol>
-  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
-  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
-  <symbol id="i-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></symbol>
-  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
-  <symbol id="i-file-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></symbol>
-  <symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></symbol>
-  <symbol id="i-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/></symbol>
-  <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></symbol>
-  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
-  <symbol id="i-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></symbol>
-  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></symbol>
-  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></symbol>
-  <symbol id="i-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></symbol>
-</svg>
 
 <canvas id="particle-canvas"></canvas>
 <div id="cursor-dot" class="custom-cursor custom-cursor-dot"></div>
 <div id="cursor-ring" class="custom-cursor custom-cursor-ring"></div>
 <div id="toast-container" class="toast-container"></div>
 
+<!-- SVG Icons -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.5 7.5a5 5 0 1 0-7 7 5 5 0 0 0 7-7zm0 0l3 3m-3-3l5-5"/></symbol>
+  <symbol id="i-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></symbol>
+  <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-sticky-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.13c-.24.67-1.4 1.29-1.94 1.32-.5.03-1.13.21-3.81-.79-3.21-1.21-5.25-4.47-5.42-4.7-.16-.24-1.3-1.74-1.3-3.32s.82-2.36 1.11-2.68c.29-.32.64-.4.85-.4l.61.01c.2.01.46-.08.72.55.24.62.82 2.15.89 2.31.07.16.12.34.02.55-.09.21-.14.34-.27.52-.14.18-.29.4-.41.54-.14.14-.27.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.16-.21.7-.82.89-1.1.18-.28.37-.24.61-.14.24.1 1.54.72 1.8.85.24.13.4.2.46.31.06.11.06.64-.18 1.31z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+  <symbol id="i-graduation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 11 13 22 2 11 2 22 2"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-3-7-3 7-3-7z"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-file-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+</svg>
+
 <!-- Login Screen -->
 <div id="login-screen" class="login-screen">
   <div class="login-card">
     <img src="assets/logo.png" alt="اللوجو" class="logo">
     <h1>لوحة الإدارة</h1>
-    <p class="subtitle">أدخل كلمة المرور للوصول إلى لوحة التحكم</p>
+    <p class="subtitle">سجّل دخولك للوصول إلى لوحة تحكم الطلاب المسجلين</p>
 
     <form id="login-form">
       <div class="form-group">
+        <label class="form-label" for="username">
+          <svg class="icon icon-sm"><use href="#i-user"/></svg>
+          اسم المستخدم <span class="required" style="color:var(--danger)">*</span>
+        </label>
+        <input type="text" id="username" class="form-input" placeholder="مثال: admin" required autocomplete="username" dir="ltr" style="text-align: right">
+        <div class="form-error" id="username-error" style="display:none"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">
+          <svg class="icon icon-sm"><use href="#i-mail"/></svg>
+          البريد الإلكتروني <span class="required" style="color:var(--danger)">*</span>
+        </label>
+        <input type="email" id="email" class="form-input" placeholder="example@uniral.com" required autocomplete="email" dir="ltr" style="text-align: right">
+        <div class="form-error" id="email-error" style="display:none"></div>
+      </div>
+
+      <div class="form-group">
         <label class="form-label" for="password">
           <svg class="icon icon-sm"><use href="#i-key"/></svg>
-          كلمة المرور <span class="required">*</span>
+          كلمة المرور <span class="required" style="color:var(--danger)">*</span>
         </label>
-        <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password" dir="ltr" style="text-align: right">
         <div class="form-error" id="password-error" style="display:none"></div>
       </div>
+
       <button type="submit" class="btn btn-primary btn-large btn-full" id="login-btn">
-        <span id="login-text"><svg class="icon icon-sm"><use href="#i-log-in"/></svg> دخول</span>
+        <span id="login-text"><svg class="icon icon-sm"><use href="#i-log-in"/></svg> دخول آمن</span>
       </button>
     </form>
+
+    <div class="security-badge">
+      <svg class="icon icon-xs"><use href="#i-shield"/></svg>
+      محمي بـ Firebase Authentication
+    </div>
+
+    <div class="dev-credit">
+      تم التطوير بواسطة <strong>د. طارق الفارس</strong> — الرئيس التنفيذي لشركة <span class="uniral-mark">UNIRAL</span>
+    </div>
 
     <a href="index.html" class="back-link">
       <svg class="icon icon-sm"><use href="#i-arrow-right"/></svg>
@@ -623,6 +654,10 @@ body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important
           <img src="assets/logo.png" alt="اللوجو">
           <span class="title">لوحة الإدارة</span>
         </a>
+        <div class="admin-user-info" id="admin-user-info">
+          <div class="avatar" id="admin-avatar">A</div>
+          <span id="admin-name">المدير</span>
+        </div>
         <div class="admin-header-actions">
           <button class="btn btn-outline" id="refresh-btn">
             <svg class="icon icon-sm"><use href="#i-rotate"/></svg>
@@ -712,14 +747,6 @@ body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important
         </div>
 
         <div class="summary-card">
-          <div class="icon-wrap"><svg class="icon icon-md"><use href="#i-map-pin"/></svg></div>
-          <div class="text">
-            <div class="label">المحافظة</div>
-            <div class="value">الشرقية — جميع الطلاب من محافظة الشرقية</div>
-          </div>
-        </div>
-
-        <div class="section-card">
           <h3><svg class="icon icon-sm"><use href="#i-chart"/></svg> توزيع الدرجات</h3>
           <div id="score-distribution"></div>
         </div>
@@ -728,15 +755,14 @@ body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important
   </main>
 </div>
 
-<!-- Confirm Modal -->
-<div id="confirm-modal" class="modal-overlay" style="display:none">
+<!-- Delete Modal -->
+<div class="modal-overlay" id="confirm-modal">
   <div class="modal-card">
     <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-alert"/></svg></div>
     <h3>تأكيد الحذف</h3>
-    <p>هل أنت متأكد من حذف هذا الطالب؟ لا يمكن التراجع عن هذا الإجراء.</p>
-    <div class="actions">
+    <p>هل أنت متأكد من حذف بيانات هذا الطالب؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    <div class="modal-actions">
       <button class="btn btn-outline" id="cancel-delete">
-        <svg class="icon icon-sm"><use href="#i-x"/></svg>
         إلغاء
       </button>
       <button class="btn btn-danger" id="confirm-delete">
@@ -748,108 +774,68 @@ body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important
 </div>
 
 <!-- Hidden PDF Export Container -->
-<div id="pdf-export" class="pdf-export-container" style="display:none"></div>
+<div id="pdf-export" style="display:none"></div>
 
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getDatabase,
-  ref,
-  get,
-  remove,
-  onValue,
-  off
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  getFirestore,
+  collection,
+  doc,
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ============================================================
+// إعدادات Firebase الجديدة (القاعدة المحمية)
+// ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyA7S6uZ1uFWuUsgVXYk9P_uNSLujdHS9eM",
-  authDomain: "party-thanawiah.firebaseapp.com",
-  databaseURL: "https://party-thanawiah-default-rtdb.firebaseio.com",
-  projectId: "party-thanawiah",
-  storageBucket: "party-thanawiah.firebasestorage.app",
-  messagingSenderId: "255296878383",
-  appId: "1:255296878383:web:583ab8f5e3e2bc13c7d3da"
+  apiKey: "AIzaSyDfhdSpt30YS7kNziKkogZnBC1-1jWODeM",
+  authDomain: "party-thanawiah-b98ce.firebaseapp.com",
+  projectId: "party-thanawiah-b98ce",
+  storageBucket: "party-thanawiah-b98ce.firebasestorage.app",
+  messagingSenderId: "466748922191",
+  appId: "1:466748922191:web:a9265cf1bf9774f2304d3a"
 };
 
 const COLLECTION_NAME = "students";
-const ADMIN_PASSWORD = "admin2024";
+const ADMINS_COLLECTION = "admins";
 const SHARIA_MAX_SCORE = 210;
 const TOTAL_MAX_SCORE = 650;
 
 let db = null;
+let auth = null;
 let firebaseReady = false;
-let realtimeListener = null; // مرجع لمستمع التحديث اللحظي
+let realtimeListener = () => {};
+let currentUser = null;
+let currentAdminProfile = null;
 
 try {
   const app = initializeApp(firebaseConfig);
-  db = getDatabase(app);
+  db = getFirestore(app);
+  auth = getAuth(app);
   firebaseReady = true;
-  console.log("Firebase متصل");
+  console.log("Firebase متصل (Firestore + Auth)");
 } catch (err) {
   console.error("Firebase init error:", err);
 }
 
-const LOCAL_KEY = "students_local";
-const SESSION_KEY = "admin_session";
+let allStudents = [];
+let currentTab = "students";
+let searchQuery = "";
+let sortMode = "newest";
+let pendingDeleteId = null;
 
-function getLocalStudents() {
-  try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); }
-  catch { return []; }
-}
-function deleteLocalStudent(id) {
-  const list = getLocalStudents().filter(s => s.id !== id);
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
-}
-
-// جلب البيانات لمرة واحدة (للتصدير)
-async function fetchStudents() {
-  if (firebaseReady) {
-    try {
-      const snap = await get(ref(db, COLLECTION_NAME));
-      if (!snap.exists()) return [];
-      const data = snap.val();
-      return Object.entries(data).map(([id, v]) => ({ id, ...v }));
-    } catch (err) {
-      console.error("Fetch error:", err);
-      return [];
-    }
-  }
-  return getLocalStudents().sort((a, b) => b.totalScore - a.totalScore);
-}
-
-// الاشتراك اللحظي في التحديثات (Real-time sync)
-function subscribeToStudents(callback) {
-  if (!firebaseReady) {
-    // Fallback: تحقق دوري من localStorage
-    callback(getLocalStudents());
-    const interval = setInterval(() => callback(getLocalStudents()), 3000);
-    return () => clearInterval(interval);
-  }
-
-  const studentsRef = ref(db, COLLECTION_NAME);
-  const handler = (snap) => {
-    if (!snap.exists()) {
-      callback([]);
-      return;
-    }
-    const data = snap.val();
-    const list = Object.entries(data).map(([id, v]) => ({ id, ...v }));
-    callback(list);
-  };
-
-  onValue(studentsRef, handler);
-  return () => off(studentsRef, "value", handler);
-}
-
-async function deleteStudent(id) {
-  if (firebaseReady) {
-    await remove(ref(db, COLLECTION_NAME + "/" + id));
-  } else {
-    deleteLocalStudent(id);
-  }
-}
-
+// Toast
 function toast(message, type = "info") {
   const container = document.getElementById("toast-container");
   const el = document.createElement("div");
@@ -859,97 +845,221 @@ function toast(message, type = "info") {
   container.appendChild(el);
   setTimeout(() => {
     el.style.opacity = "0";
-    el.style.transform = "translateY(-20px)";
+    el.style.transform = "translateX(120%)";
     setTimeout(() => el.remove(), 300);
   }, 3500);
 }
 
-function isLoggedIn() {
-  const session = sessionStorage.getItem(SESSION_KEY);
-  if (!session) return false;
-  try {
-    const data = JSON.parse(session);
-    return data.loggedIn === true && data.exp > Date.now();
-  } catch { return false; }
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
 }
-let allStudents = [];
-let currentTab = "students";
-let searchQuery = "";
-let sortMode = "newest";
-let pendingDeleteId = null;
-let unsubscribe = null; // دالة إلغاء الاشتراك اللحظي
 
-function login() {
-  const exp = Date.now() + 24 * 60 * 60 * 1000;
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ loggedIn: true, exp }));
-}
-function logout() {
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
+// ============================================================
+// نظام تسجيل الدخول الآمن عبر Firebase Authentication
+// + التحقق من username في مجموعة admins في Firestore
+// ============================================================
+async function login(username, email, password) {
+  if (!firebaseReady) {
+    throw new Error("Firebase غير مهيأ");
   }
-  sessionStorage.removeItem(SESSION_KEY);
-  location.reload();
+  // التحقق من صحة المدخلات
+  if (!username || username.trim().length < 3) {
+    throw new Error("اسم المستخدم يجب أن يكون 3 أحرف على الأقل");
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("البريد الإلكتروني غير صالح");
+  }
+  if (!password || password.length < 6) {
+    throw new Error("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+  }
+
+  // تسجيل الدخول عبر Firebase Authentication
+  const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+  const user = userCredential.user;
+
+  // التحقق من إن كان المستخدم مسجلاً كأدمن في Firestore
+  // (يحذّر بـ حماية إضافية: حتى لو حد يعرف الإيميل/الباسورد، لازم يكون مسجل كأدمن)
+  const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+  const adminDocRef = doc(db, ADMINS_COLLECTION, user.uid);
+  const adminSnap = await getDoc(adminDocRef);
+
+  if (!adminSnap.exists()) {
+    // المستخدم موجود في Auth لكن ليس أدمن — نسجّل خروجه فوراً
+    await signOut(auth);
+    throw new Error("هذا الحساب غير مصرح له بالدخول للوحة الإدارة");
+  }
+
+  const adminData = adminSnap.data();
+  // التحقق من إن username المدخل يطابق username المسجل في Firestore
+  if (adminData.username && adminData.username.toLowerCase() !== username.trim().toLowerCase()) {
+    await signOut(auth);
+    throw new Error("اسم المستخدم لا يطابق السجل المسجل لهذا الحساب");
+  }
+
+  // التحقق من إن الحساب نشط
+  if (adminData.active === false) {
+    await signOut(auth);
+    throw new Error("هذا الحساب معطّل. تواصل مع المسؤول");
+  }
+
+  return { user, profile: adminData };
 }
 
-document.getElementById("login-form").addEventListener("submit", (e) => {
+// ============================================================
+// مراقب حالة المصادقة (Auth State Observer)
+// ============================================================
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // المستخدم مسجل دخوله — نتحقق إن كان أدمن
+    try {
+      const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const adminSnap = await getDoc(doc(db, ADMINS_COLLECTION, user.uid));
+      if (adminSnap.exists()) {
+        const profile = adminSnap.data();
+        if (profile.active !== false) {
+          currentUser = user;
+          currentAdminProfile = profile;
+          showAdmin();
+          return;
+        }
+      }
+      // ليس أدمن أو معطّل — نسجّل خروجه
+      await signOut(auth);
+    } catch (err) {
+      console.error("Auth state check error:", err);
+    }
+    hideLogin();
+    showAdmin();
+  } else {
+    currentUser = null;
+    currentAdminProfile = null;
+    showLogin();
+  }
+});
+
+function showLogin() {
+  document.getElementById("login-screen").style.display = "flex";
+  document.getElementById("admin-screen").style.display = "none";
+  // إلغاء أي اشتراك لحظي
+  realtimeListener();
+}
+
+function showAdmin() {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("admin-screen").style.display = "block";
+
+  // عرض معلومات الأدمن
+  if (currentAdminProfile) {
+    const name = currentAdminProfile.username || "أدمن";
+    document.getElementById("admin-name").textContent = name;
+    document.getElementById("admin-avatar").textContent = name.charAt(0).toUpperCase();
+  }
+
+  loadAll();
+}
+
+function hideLogin() {
+  document.getElementById("login-screen").style.display = "none";
+}
+
+// معالج نموذج الدخول
+document.getElementById("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const errorEl = document.getElementById("password-error");
-  if (password === ADMIN_PASSWORD) {
-    login();
-    showAdmin();
+  const loginBtn = document.getElementById("login-btn");
+  const loginText = document.getElementById("login-text");
+
+  // إخفاء أي رسالة خطأ سابقة
+  errorEl.style.display = "none";
+  loginBtn.disabled = true;
+  loginText.innerHTML = '<span class="loading-spinner"></span> جارٍ التحقق...';
+
+  try {
+    await login(username, email, password);
     toast("مرحباً بك في لوحة الإدارة", "success");
-  } else {
-    errorEl.textContent = "كلمة المرور غير صحيحة";
+    // onAuthStateChanged هيتولى عرض الـ admin
+  } catch (err) {
+    console.error("Login error:", err);
+    let msg = "فشل تسجيل الدخول";
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+      msg = "بيانات الدخول غير صحيحة";
+    } else if (err.code === "auth/too-many-requests") {
+      msg = "محاولات كثيرة فاشلة. حاول لاحقاً";
+    } else if (err.code === "auth/network-request-failed") {
+      msg = "تحقق من اتصالك بالإنترنت";
+    } else if (err.message) {
+      msg = err.message;
+    }
+    errorEl.textContent = msg;
     errorEl.style.display = "flex";
     const input = document.getElementById("password");
     input.style.borderColor = "var(--danger)";
     input.style.animation = "shake 0.4s";
     setTimeout(() => { input.style.borderColor = ""; input.style.animation = ""; }, 500);
+  } finally {
+    loginBtn.disabled = false;
+    loginText.innerHTML = '<svg class="icon icon-sm"><use href="#i-log-in"/></svg> دخول آمن';
   }
 });
-document.getElementById("logout-btn").addEventListener("click", logout);
 
-function showAdmin() {
-  document.getElementById("login-screen").style.display = "none";
-  document.getElementById("admin-screen").style.display = "block";
-  loadAll();
-}
-
-// تحميل واشتراك لحظي
-function loadAll() {
-  // إلغاء الاشتراك السابق إن وُجد
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
+document.getElementById("logout-btn").addEventListener("click", async () => {
+  realtimeListener();
+  if (firebaseReady) {
+    try { await signOut(auth); } catch (e) { console.error(e); }
   }
+  toast("تم تسجيل الخروج", "info");
+});
 
-  // اشتراك لحظي — كل ما يتغير في قاعدة البيانات ينعكس فوراً
-  unsubscribe = subscribeToStudents((list) => {
-    allStudents = list || [];
+// ============================================================
+// تحميل واشتراك لحظي في بيانات الطلاب من Firestore
+// ============================================================
+function loadAll() {
+  realtimeListener();
+  if (!firebaseReady) {
+    // Fallback: عرض حالة فارغة
     renderStudents();
     renderTop();
     renderStats();
+    return;
+  }
+  const q = query(collection(db, COLLECTION_NAME));
+  realtimeListener = onSnapshot(q, (snap) => {
+    allStudents = [];
+    snap.forEach((docSnap) => {
+      allStudents.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    renderStudents();
+    renderTop();
+    renderStats();
+  }, (err) => {
+    console.error("Firestore subscription error:", err);
+    toast("تعذّر تحميل البيانات. تحقق من الصلاحيات", "error");
   });
 }
 
+async function deleteStudent(id) {
+  if (!firebaseReady) throw new Error("Firebase غير مهيأ");
+  await deleteDoc(doc(db, COLLECTION_NAME, id));
+}
+
+// Refresh
 document.getElementById("refresh-btn").addEventListener("click", async () => {
   const btn = document.getElementById("refresh-btn");
   btn.disabled = true;
-  btn.innerHTML = '<span class="loading-spinner"></span>';
-  // في الـ Realtime DB، البيانات تتحدّث تلقائياً، لكن نُجبر إعادة جلب
+  btn.innerHTML = '<span class="loading-spinner dark"></span>';
   try {
-    allStudents = await fetchStudents();
-    renderStudents();
-    renderTop();
-    renderStats();
+    // في Firestore، البيانات تتحدّث تلقائياً عبر onSnapshot
+    toast("البيانات تتحدّث تلقائياً", "success");
   } catch (err) {
     console.error(err);
   }
   btn.disabled = false;
   btn.innerHTML = '<svg class="icon icon-sm"><use href="#i-rotate"/></svg> تحديث';
-  toast("تم تحديث البيانات", "success");
 });
 
 document.querySelectorAll(".tab").forEach(tab => {
@@ -982,19 +1092,21 @@ function getFilteredSorted() {
     );
   }
   switch (sortMode) {
-    case "newest": list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)); break;
-    case "oldest": list.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)); break;
-    case "highest": list.sort((a, b) => b.totalScore - a.totalScore); break;
-    case "lowest": list.sort((a, b) => a.totalScore - b.totalScore); break;
+    case "newest": list.sort((a, b) => {
+      const aT = a.createdAt?.toMillis?.() || new Date(a.createdAt || 0).getTime() || 0;
+      const bT = b.createdAt?.toMillis?.() || new Date(b.createdAt || 0).getTime() || 0;
+      return bT - aT;
+    }); break;
+    case "oldest": list.sort((a, b) => {
+      const aT = a.createdAt?.toMillis?.() || new Date(a.createdAt || 0).getTime() || 0;
+      const bT = b.createdAt?.toMillis?.() || new Date(b.createdAt || 0).getTime() || 0;
+      return aT - bT;
+    }); break;
+    case "highest": list.sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0)); break;
+    case "lowest": list.sort((a, b) => (a.totalScore || 0) - (b.totalScore || 0)); break;
     case "highest-sharia": list.sort((a, b) => (b.shariaPercent || 0) - (a.shariaPercent || 0)); break;
   }
   return list;
-}
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = String(str);
-  return div.innerHTML;
 }
 
 function renderStudents() {
@@ -1029,7 +1141,7 @@ function renderStudents() {
         <div class="score-label">من 650 (المجموع الكلي)</div>
         <div style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.25rem">
           <span class="badge"><svg class="icon icon-xs"><use href="#i-book"/></svg> شرعية: ${s.shariaScore || 0} / 210</span>
-          <span class="badge" style="background:rgba(37, 182, 141, 0.15); color:var(--primary-light)">
+          <span class="badge" style="background:rgba(37, 182, 141, 0.15); color:var(--primary)">
             <svg class="icon icon-xs"><use href="#i-percent"/></svg> النسبة الشرعية: ${s.shariaPercent || 0}%
           </span>
         </div>
@@ -1044,7 +1156,7 @@ function renderStudents() {
 }
 
 function renderTop() {
-  const list = [...allStudents].sort((a, b) => b.totalScore - a.totalScore).slice(0, 10);
+  const list = [...allStudents].sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0)).slice(0, 10);
   const container = document.getElementById("top-list");
 
   if (list.length === 0) {
@@ -1088,11 +1200,10 @@ function renderStats() {
   document.getElementById("stat-avg-sharia").textContent = `${Math.round(avgSharia * 100) / 100}%`;
   document.getElementById("stat-top-score").textContent = topScore;
 
-  // Score distribution instead of governorates (since all are الشرقية)
   const ranges = [
     { label: "ممتاز (90%+)", min: 585, max: 650, color: "var(--primary)" },
     { label: "جيد جداً (80-90%)", min: 520, max: 584, color: "var(--primary-light)" },
-    { label: "جيد (70-80%)", min: 455, max: 519, color: "var(--gold)" },
+    { label: "جيد (70-80%)", min: 455, max: 519, color: "var(--gold-light)" },
     { label: "مقبول (أقل من 70%)", min: 0, max: 454, color: "var(--warning)" },
   ];
 
@@ -1119,21 +1230,20 @@ function renderStats() {
 
 window.confirmDelete = function(id) {
   pendingDeleteId = id;
-  document.getElementById("confirm-modal").style.display = "flex";
+  document.getElementById("confirm-modal").classList.add("show");
 };
 document.getElementById("cancel-delete").addEventListener("click", () => {
   pendingDeleteId = null;
-  document.getElementById("confirm-modal").style.display = "none";
+  document.getElementById("confirm-modal").classList.remove("show");
 });
 document.getElementById("confirm-delete").addEventListener("click", async () => {
   if (!pendingDeleteId) return;
   const id = pendingDeleteId;
   pendingDeleteId = null;
-  document.getElementById("confirm-modal").style.display = "none";
+  document.getElementById("confirm-modal").classList.remove("show");
   try {
     await deleteStudent(id);
-    allStudents = allStudents.filter(s => s.id !== id);
-    renderStudents(); renderTop(); renderStats();
+    // الـ onSnapshot هيتولى تحديث القائمة تلقائياً
     toast("تم حذف الطالب", "success");
   } catch (err) {
     console.error(err);
@@ -1143,11 +1253,11 @@ document.getElementById("confirm-delete").addEventListener("click", async () => 
 document.getElementById("confirm-modal").addEventListener("click", (e) => {
   if (e.target.id === "confirm-modal") {
     pendingDeleteId = null;
-    document.getElementById("confirm-modal").style.display = "none";
+    document.getElementById("confirm-modal").classList.remove("show");
   }
 });
 
-// === تصدير PDF عبر window.print() — نص حقيقي قابل للبحث والنسخ + دعم عربي كامل ===
+// === تصدير PDF عبر window.print() ===
 async function exportPDF() {
   if (allStudents.length === 0) {
     toast("لا يوجد طلاب للتصدير", "error");
@@ -1159,10 +1269,9 @@ async function exportPDF() {
   btn.innerHTML = '<span class="loading-spinner"></span> جارٍ التحضير...';
 
   try {
-    const sorted = [...allStudents].sort((a, b) => b.totalScore - a.totalScore);
+    const sorted = [...allStudents].sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
     const dateStr = new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
 
-    // تحميل اللوجو كـ base64 ليعمل في النافذة المنبثقة (about:blank)
     let logoDataUrl = "";
     try {
       const logoBlob = await fetch("assets/logo-white.png").then(r => r.blob());
@@ -1176,7 +1285,6 @@ async function exportPDF() {
       console.warn("Logo load failed:", e);
     }
 
-    // بناء صفوف الجدول
     const rowsHtml = sorted.map((s, i) => {
       const totalPercent = Math.round((s.totalScore / TOTAL_MAX_SCORE) * 10000) / 100;
       return `
@@ -1193,7 +1301,6 @@ async function exportPDF() {
       `;
     }).join("");
 
-    // فتح نافذة طباعة جديدة بـ HTML كامل
     const printWin = window.open("", "_blank");
     if (!printWin) {
       toast("الرجاء السماح بالنوافذ المنبثقة لتصدير PDF", "error");
@@ -1211,70 +1318,36 @@ async function exportPDF() {
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Cairo', sans-serif;
-    background: #FFFFFF;
-    color: #0A1F1A;
-    padding: 30px;
-    direction: rtl;
-  }
-  .header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 20px; padding-bottom: 20px; margin-bottom: 24px;
-    border-bottom: 4px solid #25B68D;
-  }
+  body { font-family: 'Cairo', sans-serif; background: #FFFFFF; color: #0A1F1A; padding: 30px; direction: rtl; }
+  .header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 20px; margin-bottom: 24px; border-bottom: 4px solid #25B68D; }
   .header-right { display: flex; align-items: center; gap: 18px; }
   .header-right img { width: 90px; height: 90px; border-radius: 12px; background: #FFFFFF; }
-  .header-text h1 {
-    font-family: 'Reem Kufi', sans-serif;
-    font-size: 28px; color: #1A8B6A; margin: 0 0 6px 0; font-weight: 700;
-  }
+  .header-text h1 { font-family: 'Reem Kufi', sans-serif; font-size: 28px; color: #1A8B6A; margin: 0 0 6px 0; font-weight: 700; }
   .header-text .subtitle { font-size: 14px; color: #555; margin: 0; }
   .header-left { text-align: left; font-size: 12px; color: #555; }
   .header-left .info-item { margin-bottom: 4px; }
   .header-left .info-item strong { color: #1A8B6A; }
 
-  .info-bar {
-    background: #F0F8F5; border: 1px solid #C8E6D5;
-    border-radius: 8px; padding: 12px 18px; margin-bottom: 20px;
-    display: flex; justify-content: space-around;
-    font-size: 13px; color: #1A8B6A; font-weight: 600;
-  }
+  .info-bar { background: #F0F8F5; border: 1px solid #C8E6D5; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; justify-content: space-around; font-size: 13px; color: #1A8B6A; font-weight: 600; }
   .info-bar .info-item { display: flex; align-items: center; gap: 6px; }
 
-  table {
-    width: 100%; border-collapse: collapse; font-size: 13px; background: white;
-  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
   thead { display: table-header-group; }
   tr { page-break-inside: avoid; }
-  th {
-    background: #25B68D; color: white;
-    padding: 12px 8px; border: 1px solid #1A8B6A;
-    font-weight: 700; text-align: center; font-size: 13px;
-  }
-  td {
-    padding: 10px 8px; border: 1px solid #DDD; text-align: center;
-    color: #333; font-size: 12px;
-  }
+  th { background: #25B68D; color: white; padding: 12px 8px; border: 1px solid #1A8B6A; font-weight: 700; text-align: center; font-size: 13px; }
+  td { padding: 10px 8px; border: 1px solid #DDD; text-align: center; color: #333; font-size: 12px; }
   td.name { text-align: right; padding-right: 12px; font-weight: 600; }
   td.ltr { direction: ltr; }
   td.score { font-weight: 700; color: #1A8B6A; }
   td.sharia { font-weight: 700; color: #D4AF37; }
   tr:nth-child(even) td { background: #F5FBF9; }
 
-  .footer {
-    margin-top: 30px; text-align: center; font-size: 11px; color: #888;
-    border-top: 2px solid #DDD; padding-top: 14px;
-  }
+  .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #888; border-top: 2px solid #DDD; padding-top: 14px; }
   .footer .footer-line { margin-bottom: 4px; }
   .footer .uniral { color: #1A8B6A; font-weight: 700; }
 
   @page { size: A4; margin: 12mm; }
-  @media print {
-    body { padding: 0; }
-    thead { display: table-header-group; }
-    tr { page-break-inside: avoid; }
-  }
+  @media print { body { padding: 0; } thead { display: table-header-group; } tr { page-break-inside: avoid; } }
 </style>
 </head>
 <body>
@@ -1322,20 +1395,17 @@ async function exportPDF() {
 
   <div class="footer">
     <div class="footer-line">تم إنشاء هذا التقرير تلقائياً من لوحة إدارة حفل تكريم المتفوقين — الأستاذ محمد شحاتة</div>
-    <div class="footer-line">حقوق التطوير محفوظة لشركة <span class="uniral">UNIRAL</span> — أسسها طارق الفارس</div>
+    <div class="footer-line">حقوق التطوير محفوظة لشركة <span class="uniral">UNIRAL</span> — الرئيس التنفيذي: د. طارق الفارس</div>
   </div>
 </body>
 </html>
     `);
 
     printWin.document.close();
-
-    // انتظار تحميل الصفحة والخطوط ثم فتح نافذة الطباعة
     printWin.onload = () => {
       setTimeout(() => {
         printWin.focus();
         printWin.print();
-        // إغلاق النافذة بعد الطباعة (بعض المتصفحات تحتاج وقت)
         setTimeout(() => {
           if (!printWin.closed) printWin.close();
         }, 500);
@@ -1354,7 +1424,7 @@ async function exportPDF() {
 
 document.getElementById("export-btn").addEventListener("click", exportPDF);
 
-
+// Custom cursor & particles
 function initCustomCursor() {
   if (window.matchMedia("(pointer: coarse)").matches) return;
   document.body.classList.add("custom-cursor-active");
@@ -1397,7 +1467,7 @@ function initParticles() {
     ctx.scale(dpr, dpr);
   }
   function createParticles() {
-    const count = Math.min(40, Math.floor((window.innerWidth * window.innerHeight) / 30000));
+    const count = Math.min(35, Math.floor((window.innerWidth * window.innerHeight) / 30000));
     particles = [];
     for (let i = 0; i < count; i++) {
       const isPrimary = Math.random() > 0.3;
@@ -1445,7 +1515,7 @@ function initParticles() {
 
 initCustomCursor();
 initParticles();
-if (isLoggedIn()) showAdmin();
+// onAuthStateChanged يتولى عرض الـ login أو admin تلقائياً
 </script>
 </body>
 </html>

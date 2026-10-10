@@ -15,45 +15,53 @@
 
 <style>
 /* ============================================================
-   الألوان المستخرجة من اللوجو
+   نظام الألوان الفاتح — Light Theme
    ============================================================ */
 :root {
-  --primary: #25B68D;
-  --primary-light: #4EC9A8;
-  --primary-dark: #1A8B6A;
-  --primary-deep: #0F5A45;
+  --primary: #1A8B6A;
+  --primary-light: #25B68D;
+  --primary-dark: #0F5A45;
+  --primary-deep: #0A3D2E;
   --accent: #2EB784;
-  --accent-glow: rgba(37, 182, 141, 0.4);
+  --accent-glow: rgba(37, 182, 141, 0.25);
 
-  --bg-deep: #051E18;
-  --bg-card: #0A2A22;
-  --bg-card-light: #103530;
-  --bg-overlay: rgba(10, 42, 34, 0.7);
+  --bg-base: #F6FBF8;
+  --bg-soft: #ECF6F2;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F8FCFA;
+  --bg-overlay: rgba(255, 255, 255, 0.85);
 
-  --text: #E8F5F0;
-  --text-muted: #7AA89D;
-  --text-dim: #4A6B62;
+  --text: #0A2A22;
+  --text-body: #1F3D34;
+  --text-muted: #5A7A72;
+  --text-dim: #8AA69E;
 
-  --gold: #D4AF37;
-  --gold-light: #F4D58A;
-  --gold-glow: rgba(212, 175, 55, 0.4);
+  --gold: #B8932E;
+  --gold-light: #D4AF37;
+  --gold-glow: rgba(212, 175, 55, 0.25);
 
-  --danger: #FF6B6B;
-  --success: #4EC9A8;
-  --warning: #FFB84D;
+  --danger: #DC3545;
+  --success: #1A8B6A;
+  --warning: #D4920A;
 
-  --grad-primary: linear-gradient(135deg, #4EC9A8 0%, #25B68D 50%, #1A8B6A 100%);
+  --grad-primary: linear-gradient(135deg, #25B68D 0%, #1A8B6A 50%, #0F5A45 100%);
   --grad-gold: linear-gradient(135deg, #F4D58A 0%, #D4AF37 100%);
-  --grad-bg: radial-gradient(ellipse at top, #0A2A22 0%, #051E18 70%);
+  --grad-bg: radial-gradient(ellipse at top, #ECF6F2 0%, #F6FBF8 70%);
 
-  --shadow-glow: 0 0 30px var(--accent-glow), 0 0 60px rgba(37, 182, 141, 0.2);
-  --shadow-glow-gold: 0 0 30px var(--gold-glow), 0 0 60px rgba(212, 175, 55, 0.2);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 24px var(--accent-glow);
+  --shadow-glow: 0 4px 24px var(--accent-glow), 0 8px 32px rgba(37, 182, 141, 0.12);
+  --shadow-glow-gold: 0 4px 24px var(--gold-glow);
+  --shadow-card: 0 4px 24px rgba(15, 90, 69, 0.08);
+  --shadow-card-hover: 0 12px 40px rgba(15, 90, 69, 0.14), 0 4px 16px var(--accent-glow);
+  --shadow-strong: 0 8px 32px rgba(15, 90, 69, 0.16);
 
   --font-cairo: 'Cairo', sans-serif;
   --font-amiri: 'Amiri', serif;
   --font-reem: 'Reem Kufi', 'Cairo', sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,9 +69,9 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-cairo);
   background: var(--grad-bg);
-  color: var(--text);
+  color: var(--text-body);
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.7;
   direction: rtl;
   overflow-x: hidden;
   position: relative;
@@ -73,17 +81,17 @@ body {
 body::before {
   content: ''; position: fixed; inset: 0;
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(37, 182, 141, 0.06) 1px, transparent 1px),
-    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+    radial-gradient(circle at 20% 20%, rgba(37, 182, 141, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
   background-size: 60px 60px; pointer-events: none; z-index: 0;
 }
 body::after {
   content: ''; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%2325B68D' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M40 0 L50 30 L80 40 L50 50 L40 80 L30 50 L0 40 L30 30 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%231A8B6A' stroke-opacity='0.04' stroke-width='1'%3E%3Cpath d='M40 0 L50 30 L80 40 L50 50 L40 80 L30 50 L0 40 L30 30 Z'/%3E%3C/g%3E%3C/svg%3E");
   pointer-events: none; z-index: 0;
 }
 
-#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.6; }
+#particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.45; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
 
 /* === Icons === */
@@ -94,7 +102,7 @@ body::after {
 .icon-lg { width: 32px; height: 32px; }
 .icon-xl { width: 48px; height: 48px; }
 .icon-2xl { width: 64px; height: 64px; }
-.icon-text { color: var(--primary-light); }
+.icon-text { color: var(--primary); }
 .icon-gold { color: var(--gold); }
 .icon-current { color: currentColor; }
 
@@ -108,14 +116,14 @@ body::after {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   background: var(--bg-overlay);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1rem;
+  border: 1px solid rgba(37, 182, 141, 0.18);
+  border-radius: var(--radius-lg);
   padding: 0.75rem 1.5rem;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   box-shadow: var(--shadow-card);
 }
 .header-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; flex-shrink: 0; }
-.header-logo img { width: 44px; height: 44px; filter: drop-shadow(0 0 8px var(--accent-glow)); }
+.header-logo img { width: 44px; height: 44px; filter: drop-shadow(0 2px 8px var(--accent-glow)); border-radius: 8px; }
 .header-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
 .header-logo-text .label { font-size: 0.625rem; color: var(--text-muted); letter-spacing: 0.2em; }
 .header-logo-text .name {
@@ -126,11 +134,11 @@ body::after {
 }
 .header-nav { display: flex; align-items: center; gap: 1.75rem; }
 .header-nav a {
-  color: rgba(232, 245, 240, 0.75); text-decoration: none; font-size: 0.875rem;
+  color: var(--text-body); text-decoration: none; font-size: 0.875rem; font-weight: 600;
   display: inline-flex; align-items: center; gap: 0.375rem;
   position: relative; transition: color 0.3s ease;
 }
-.header-nav a:hover { color: var(--primary-light); }
+.header-nav a:hover { color: var(--primary); }
 .header-nav a::after {
   content: ''; position: absolute; bottom: -6px; right: 0;
   width: 0; height: 2px;
@@ -143,19 +151,61 @@ body::after {
 
 .btn {
   font-family: var(--font-cairo); font-weight: 600; border: none; cursor: pointer;
-  border-radius: 0.625rem; padding: 0.625rem 1.25rem; font-size: 0.875rem;
+  border-radius: var(--radius-md); padding: 0.625rem 1.25rem; font-size: 0.875rem;
   transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
-.btn-outline { background: transparent; border: 1px solid rgba(37, 182, 141, 0.35); color: rgba(232, 245, 240, 0.85); }
-.btn-outline:hover { color: var(--primary-light); border-color: var(--primary); box-shadow: 0 0 12px var(--accent-glow); }
-.btn-primary { background: var(--grad-primary); color: white; font-weight: 700; box-shadow: 0 4px 16px rgba(37, 182, 141, 0.3); }
+.btn-outline { background: rgba(255,255,255,0.7); border: 1px solid rgba(37, 182, 141, 0.3); color: var(--primary); }
+.btn-outline:hover { color: var(--primary-dark); border-color: var(--primary); background: #fff; box-shadow: 0 4px 16px var(--accent-glow); }
+.btn-primary { background: var(--grad-primary); color: white; font-weight: 700; box-shadow: 0 4px 16px rgba(37, 182, 141, 0.28); }
 .btn-primary:hover { box-shadow: var(--shadow-glow); transform: translateY(-2px); }
 .btn-gold { background: var(--grad-gold); color: #1A1A1A; font-weight: 700; }
 .btn-gold:hover { box-shadow: var(--shadow-glow-gold); transform: translateY(-2px); }
 .btn-large { padding: 1rem 2rem; font-size: 1rem; }
 .btn-full { width: 100%; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* === Developer banner فوق الاستمارة === */
+.dev-banner {
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFF 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  flex-wrap: wrap; text-align: center;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.12);
+  position: relative; overflow: hidden;
+}
+.dev-banner::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(212,175,55,0.06) 50%, transparent 70%);
+  animation: shimmer 4s linear infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.dev-banner .dev-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--grad-gold);
+  display: flex; align-items: center; justify-content: center;
+  color: #1A1A1A; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+.dev-banner .dev-text {
+  font-size: 0.95rem; color: var(--text-body); line-height: 1.4;
+  position: relative; z-index: 1;
+}
+.dev-banner .dev-text strong { color: var(--gold-light); font-weight: 700; }
+.dev-banner .dev-text .dev-role { color: var(--text-muted); font-size: 0.8rem; }
+.dev-banner .dev-text .uniral-mark {
+  display: inline-block;
+  background: var(--grad-primary);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800; letter-spacing: 0.05em;
+}
 
 /* === Hero === */
 .hero {
@@ -177,10 +227,11 @@ body::after {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.5rem 1.25rem; border-radius: 999px;
   backdrop-filter: blur(20px);
-  background: var(--bg-overlay);
+  background: rgba(255,255,255,0.85);
   border: 1px solid rgba(37, 182, 141, 0.25);
   margin-bottom: 2rem; font-size: 0.875rem;
-  color: rgba(232, 245, 240, 0.85);
+  color: var(--text-body); font-weight: 600;
+  box-shadow: var(--shadow-card);
 }
 .hero-badge .pulse {
   width: 8px; height: 8px; border-radius: 50%;
@@ -190,6 +241,7 @@ body::after {
 .hero h1 {
   font-family: var(--font-reem);
   font-size: clamp(3rem, 8vw, 6rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem;
+  color: var(--text);
 }
 .hero h1 .accent {
   display: block;
@@ -198,654 +250,440 @@ body::after {
   -webkit-text-fill-color: transparent; color: transparent;
 }
 .gold-divider {
-  height: 1px; width: 200px; margin: 2rem auto;
-  background: linear-gradient(90deg, transparent, var(--primary) 50%, transparent);
-  box-shadow: 0 0 8px var(--accent-glow);
+  width: 80px; height: 4px; border-radius: 2px;
+  background: var(--grad-gold); margin: 1.25rem auto;
+  box-shadow: 0 0 16px var(--gold-glow);
 }
 .hero p {
-  font-size: 1.125rem; color: rgba(232, 245, 240, 0.75);
-  max-width: 700px; margin: 0 auto 2.5rem; line-height: 1.9;
+  font-size: 1.125rem; color: var(--text-body); max-width: 700px; margin: 0 auto 2rem;
+  line-height: 1.8;
 }
-.hero p .name { color: var(--primary-light); font-weight: 700; }
-.hero p .gold-text { color: var(--gold); font-weight: 700; }
+.hero p .name { color: var(--primary); font-weight: 700; }
+.hero p .gold-text { color: var(--gold-light); font-weight: 700; }
 .hero-actions { display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center; }
 @media (min-width: 640px) { .hero-actions { flex-direction: row; } }
+
+/* === Countdown === */
+.countdown-section {
+  margin-top: 2.5rem; padding: 1.5rem; border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.7); border: 1px solid rgba(37, 182, 141, 0.15);
+  backdrop-filter: blur(12px); box-shadow: var(--shadow-card);
+}
+.countdown-title {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  color: var(--primary); font-weight: 700; margin-bottom: 0.75rem; font-size: 0.95rem;
+}
+.countdown-status {
+  text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;
+  font-weight: 500;
+}
+.countdown-status.active { color: var(--primary); }
+.countdown-status.waiting { color: var(--warning); }
+.countdown-status.ended { color: var(--danger); }
+.countdown-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;
+  max-width: 480px; margin: 0 auto;
+}
+.countdown-box {
+  background: #fff; border-radius: var(--radius-md);
+  padding: 0.75rem 0.25rem; text-align: center;
+  border: 1px solid rgba(37, 182, 141, 0.12);
+  box-shadow: 0 2px 8px rgba(15, 90, 69, 0.06);
+}
+.countdown-box .value {
+  font-family: var(--font-reem); font-size: 1.75rem; font-weight: 700;
+  color: var(--primary); line-height: 1;
+}
+.countdown-box .label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+.countdown-ended-msg {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  color: var(--danger); font-weight: 600; padding: 1rem; font-size: 0.95rem;
+}
 
 .scroll-hint {
   position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  color: rgba(232, 245, 240, 0.4); font-size: 0.75rem; letter-spacing: 0.2em;
+  color: var(--text-muted); font-size: 0.75rem; animation: bounce 2s ease-in-out infinite;
 }
 .scroll-hint .mouse {
-  width: 20px; height: 36px; border: 1px solid rgba(232, 245, 240, 0.3);
-  border-radius: 999px; display: flex; justify-content: center; padding-top: 6px;
+  width: 22px; height: 36px; border: 2px solid var(--text-muted); border-radius: 12px;
+  position: relative;
 }
-.scroll-hint .mouse::after {
-  content: ''; width: 4px; height: 8px; border-radius: 999px;
-  background: var(--primary); animation: bounce 2s ease-in-out infinite;
+.scroll-hint .mouse::before {
+  content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 3px; height: 6px; border-radius: 2px; background: var(--text-muted);
+  animation: scroll-wheel 2s ease-in-out infinite;
 }
 
-/* === Sections === */
-section { padding: 6rem 0; position: relative; }
-.section-title { text-align: center; max-width: 800px; margin: 0 auto 4rem; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } }
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes rotate-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-6px); } }
+@keyframes scroll-wheel { 0% { opacity: 1; top: 6px; } 100% { opacity: 0; top: 18px; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* === Section title === */
+.section-title { text-align: center; margin-bottom: 3rem; }
 .section-title .label {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  font-size: 0.75rem; letter-spacing: 0.3em;
-  color: var(--primary-light); margin-bottom: 1rem;
+  padding: 0.375rem 1rem; border-radius: 999px;
+  background: rgba(37, 182, 141, 0.1); color: var(--primary);
+  font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+  border: 1px solid rgba(37, 182, 141, 0.2);
 }
 .section-title h2 {
-  font-family: var(--font-reem); font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700; margin-bottom: 1.5rem;
+  font-family: var(--font-reem); font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700; color: var(--text); margin-bottom: 1rem; line-height: 1.2;
 }
 .section-title h2 .accent {
   background: var(--grad-primary);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
 }
-.section-title p { color: rgba(232, 245, 240, 0.75); font-size: 1.125rem; line-height: 1.9; }
+.section-title p {
+  font-size: 1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto;
+  line-height: 1.8;
+}
 
-/* === Features === */
-.features-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-@media (min-width: 768px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1024px) { .features-grid { grid-template-columns: repeat(4, 1fr); } }
-.feature-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1rem; padding: 1.75rem;
-  transition: all 0.3s ease; position: relative; overflow: hidden;
-}
-.feature-card::before {
-  content: ''; position: absolute; top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(circle, rgba(37, 182, 141, 0.1) 0%, transparent 50%);
-  opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
-}
-.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); border-color: var(--primary); }
-.feature-card:hover::before { opacity: 1; }
-.feature-card .icon-wrap {
-  width: 56px; height: 56px; border-radius: 0.875rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.2), rgba(212, 175, 55, 0.1));
-  border: 1px solid rgba(37, 182, 141, 0.25);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 1rem; color: var(--primary-light);
-  filter: drop-shadow(0 0 12px var(--accent-glow));
-}
-.feature-card h3 {
-  font-family: var(--font-reem); font-size: 1.25rem; font-weight: 700;
-  color: var(--primary-light); margin-bottom: 0.75rem;
-}
-.feature-card p { color: rgba(232, 245, 240, 0.7); font-size: 0.875rem; line-height: 1.7; }
-
-/* === Teacher Card === */
-.teacher-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.3);
-  border-radius: 1.5rem; padding: 2rem;
-  max-width: 900px; margin: 4rem auto 0;
-  box-shadow: var(--shadow-card), 0 0 40px var(--accent-glow);
-  display: flex; flex-direction: column; align-items: center; gap: 2rem; text-align: center;
-}
-@media (min-width: 768px) { .teacher-card { flex-direction: row; text-align: right; padding: 3rem; } }
-.teacher-avatar { position: relative; flex-shrink: 0; }
-.teacher-avatar img { width: 128px; height: 128px; border-radius: 1rem; box-shadow: var(--shadow-glow); }
-.teacher-avatar .ring {
-  position: absolute; inset: -8px;
-  border: 1px solid rgba(37, 182, 141, 0.5);
-  border-radius: 1.5rem; animation: rotate 30s linear infinite;
-}
-.teacher-info .label {
-  display: inline-flex; align-items: center; gap: 0.375rem;
-  font-size: 0.75rem; letter-spacing: 0.3em; color: var(--gold);
-  margin-bottom: 0.5rem;
-}
-.teacher-info h3 {
-  font-family: var(--font-reem); font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent; margin-bottom: 1rem;
-}
-.teacher-info p { color: rgba(232, 245, 240, 0.75); line-height: 1.9; }
+/* === Reveal animation === */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
 /* === Form === */
 .form-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.3);
-  border-radius: 1.5rem; padding: 2rem;
-  max-width: 800px; margin: 0 auto;
-  box-shadow: var(--shadow-card), 0 0 40px var(--accent-glow);
+  background: var(--bg-card); border-radius: var(--radius-xl);
+  padding: 2rem; box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(37, 182, 141, 0.12); max-width: 820px; margin: 0 auto;
 }
-@media (min-width: 768px) { .form-card { padding: 3rem; } }
-.form-group { margin-bottom: 1.5rem; }
-.form-group:last-child { margin-bottom: 0; }
-.form-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-@media (min-width: 768px) { .form-row { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 768px) { .form-card { padding: 2.5rem; } }
+.form-group { margin-bottom: 1.25rem; }
+.form-row { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+@media (min-width: 640px) { .form-row { grid-template-columns: 1fr 1fr; } }
 .form-label {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-size: 0.875rem; font-weight: 500;
-  color: rgba(232, 245, 240, 0.9); margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.375rem;
+  font-size: 0.875rem; font-weight: 600; color: var(--text);
+  margin-bottom: 0.5rem;
 }
-.form-label .required { color: var(--gold); margin-right: 0.125rem; }
-.form-label .icon { color: var(--primary-light); }
-
-.form-input, .form-select, .form-textarea, .form-display {
+.form-label .required { color: var(--danger); }
+.form-input, .form-textarea {
   width: 100%; padding: 0.75rem 1rem;
-  background: rgba(5, 30, 24, 0.5);
-  border: 1px solid rgba(37, 182, 141, 0.15);
-  border-radius: 0.75rem; color: var(--text);
-  font-family: var(--font-cairo); font-size: 0.9375rem;
-  transition: all 0.3s ease; outline: none;
+  border: 1.5px solid rgba(37, 182, 141, 0.18);
+  border-radius: var(--radius-md); background: var(--bg-card-alt);
+  color: var(--text); font-family: var(--font-cairo); font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.form-input:focus, .form-textarea:focus {
+  outline: none; border-color: var(--primary);
+  background: #fff; box-shadow: 0 0 0 4px var(--accent-glow);
 }
 .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--primary);
-  background: rgba(5, 30, 24, 0.7);
-  box-shadow: 0 0 0 4px rgba(37, 182, 141, 0.15);
-}
-.form-input:hover:not(:focus), .form-select:hover:not(:focus), .form-textarea:hover:not(:focus) { border-color: rgba(37, 182, 141, 0.3); }
-.form-textarea { resize: vertical; min-height: 100px; }
-
-/* Display field (fixed value) */
-.form-display {
-  display: flex; align-items: center; gap: 0.5rem;
-  background: rgba(37, 182, 141, 0.08);
-  border-color: rgba(37, 182, 141, 0.3);
-  font-weight: 600; color: var(--primary-light);
-  cursor: not-allowed;
-}
-.form-display .icon { color: var(--primary); }
-.form-display .lock-icon { margin-right: auto; color: var(--text-muted); opacity: 0.5; }
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2325B68D' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: left 1rem center; background-size: 12px;
-  padding-left: 2.5rem;
-}
-.form-select option { background: var(--bg-card); color: var(--text); }
-.form-error {
-  color: var(--danger); font-size: 0.75rem; margin-top: 0.375rem;
-  display: flex; align-items: center; gap: 0.25rem;
-}
+.form-textarea { resize: vertical; min-height: 90px; }
 .form-hint {
-  color: var(--primary-light); font-size: 0.75rem; margin-top: 0.5rem;
   display: flex; align-items: center; gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  background: rgba(37, 182, 141, 0.08);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 0.5rem;
+  font-size: 0.75rem; color: var(--text-muted); margin-top: 0.375rem;
 }
-.form-hint .icon { color: var(--primary); flex-shrink: 0; }
+.form-error {
+  display: flex; align-items: center; gap: 0.375rem;
+  font-size: 0.8rem; color: var(--danger); margin-top: 0.375rem;
+  background: rgba(220, 53, 69, 0.08); padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-sm); border: 1px solid rgba(220, 53, 69, 0.15);
+}
 .form-percentage {
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(5, 30, 24, 0.5);
-  border: 1px solid rgba(37, 182, 141, 0.15);
-  border-radius: 0.75rem; padding: 0.75rem 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.625rem 0.875rem; background: var(--bg-card-alt);
+  border-radius: var(--radius-md); border: 1px solid rgba(37, 182, 141, 0.12);
 }
-.form-percentage .value { font-size: 1.5rem; font-weight: 700; }
-.form-percentage .value.primary {
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
+.form-percentage .value {
+  font-family: var(--font-reem); font-size: 1.25rem; font-weight: 700;
+  min-width: 60px; text-align: center;
 }
-.form-percentage .value.gold {
-  background: var(--grad-gold);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
+.form-percentage .value.primary { color: var(--primary); }
+.form-percentage .value.gold { color: var(--gold-light); }
+.form-percentage .bar {
+  flex: 1; height: 8px; background: rgba(15, 90, 69, 0.08);
+  border-radius: 4px; overflow: hidden;
 }
-.form-percentage .bar { width: 96px; height: 8px; background: rgba(37, 182, 141, 0.15); border-radius: 999px; overflow: hidden; }
-.form-percentage .bar .fill { height: 100%; background: var(--grad-primary); border-radius: 999px; transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-.form-percentage .bar.gold { background: rgba(212, 175, 55, 0.15); }
+.form-percentage .bar .fill {
+  height: 100%; background: var(--grad-primary); border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 .form-percentage .bar.gold .fill { background: var(--grad-gold); }
-
 .success-message {
-  margin-top: 1.5rem; padding: 1.5rem; border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.2), rgba(212, 175, 55, 0.15));
-  border: 1px solid var(--primary);
-  text-align: center; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center; padding: 2rem 1rem;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.08), rgba(212, 175, 55, 0.05));
+  border-radius: var(--radius-lg); border: 1px solid rgba(37, 182, 141, 0.2);
 }
 .success-message .icon-wrap {
-  width: 64px; height: 64px; margin: 0 auto 0.75rem;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  width: 64px; height: 64px; margin: 0 auto 1rem;
+  background: var(--grad-primary); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: white; box-shadow: var(--shadow-glow);
 }
 .success-message h3 {
-  font-family: var(--font-reem); font-size: 1.5rem; font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent; margin-bottom: 0.5rem;
+  font-family: var(--font-reem); font-size: 1.5rem; color: var(--primary);
+  margin-bottom: 0.5rem;
 }
-.success-message p { color: rgba(232, 245, 240, 0.85); font-size: 0.875rem; }
+.success-message p { color: var(--text-body); }
+
+/* === Features === */
+.features-grid {
+  display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin: 2.5rem 0;
+}
+@media (min-width: 640px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .features-grid { grid-template-columns: repeat(4, 1fr); } }
+.feature-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.75rem 1.25rem; text-align: center;
+  border: 1px solid rgba(37, 182, 141, 0.1);
+  box-shadow: var(--shadow-card); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.feature-card:hover {
+  transform: translateY(-6px); box-shadow: var(--shadow-card-hover);
+  border-color: rgba(37, 182, 141, 0.3);
+}
+.feature-card .icon-wrap {
+  width: 56px; height: 56px; margin: 0 auto 1.25rem;
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.12), rgba(37, 182, 141, 0.04));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
+}
+.feature-card h3 { font-family: var(--font-reem); font-size: 1.1rem; color: var(--text); margin-bottom: 0.5rem; }
+.feature-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+/* === Teacher card === */
+.teacher-card {
+  display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+  background: var(--bg-card); border-radius: var(--radius-xl);
+  padding: 2rem; border: 1px solid rgba(37, 182, 141, 0.12);
+  box-shadow: var(--shadow-strong); margin-top: 2rem;
+  align-items: center;
+}
+@media (min-width: 768px) { .teacher-card { grid-template-columns: auto 1fr; padding: 2.5rem; } }
+.teacher-avatar {
+  position: relative; width: 140px; height: 140px; margin: 0 auto;
+}
+.teacher-avatar img {
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+  border: 4px solid #fff; box-shadow: var(--shadow-strong);
+}
+.teacher-avatar .ring {
+  position: absolute; inset: -10px; border-radius: 50%;
+  border: 2px dashed rgba(212, 175, 55, 0.4); animation: rotate 30s linear infinite;
+}
+.teacher-info .label {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.375rem 0.875rem; border-radius: 999px;
+  background: rgba(212, 175, 55, 0.1); color: var(--gold-light);
+  font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem;
+}
+.teacher-info h3 {
+  font-family: var(--font-reem); font-size: 1.75rem; color: var(--text);
+  margin-bottom: 0.75rem;
+}
+.teacher-info p { color: var(--text-body); line-height: 1.8; }
 
 /* === Stats === */
-.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-@media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
-.stat-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1rem; padding: 1.5rem; text-align: center;
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-box {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.75rem 1rem; text-align: center;
+  border: 1px solid rgba(37, 182, 141, 0.1);
+  box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
 }
-.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); border-color: var(--primary); }
-.stat-card .icon-wrap {
+.stat-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+.stat-box .icon-wrap {
   width: 48px; height: 48px; margin: 0 auto 0.75rem;
-  border-radius: 0.75rem;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.2), rgba(212, 175, 55, 0.1));
+  background: linear-gradient(135deg, rgba(37, 182, 141, 0.12), rgba(37, 182, 141, 0.04));
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  color: var(--primary-light);
-  filter: drop-shadow(0 0 8px var(--accent-glow));
+  color: var(--primary);
 }
-.stat-card .value { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-.stat-card .value.primary {
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
+.stat-box .value {
+  font-family: var(--font-reem); font-size: 2rem; font-weight: 700;
+  color: var(--primary); line-height: 1;
 }
-.stat-card .value.gold {
-  background: var(--grad-gold);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-}
-.stat-card .suffix { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-.stat-card .label { font-size: 0.875rem; color: rgba(232, 245, 240, 0.85); font-weight: 500; }
+.stat-box .suffix { font-size: 0.75rem; color: var(--text-muted); margin: 0.25rem 0; }
+.stat-box .label { font-size: 0.85rem; color: var(--text-body); font-weight: 600; }
 
 /* === Footer === */
-.site-footer { margin-top: auto; padding: 5rem 0 2.5rem; position: relative; }
+.site-footer {
+  padding: 4rem 0 2rem; margin-top: 4rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(37, 182, 141, 0.04) 100%);
+  position: relative; z-index: 1;
+}
 .footer-card {
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.2);
-  border-radius: 1.5rem; padding: 2rem;
-  text-align: center; max-width: 900px; margin: 0 auto;
+  background: var(--bg-card); border-radius: var(--radius-xl);
+  padding: 2rem; text-align: center;
+  border: 1px solid rgba(37, 182, 141, 0.15);
+  box-shadow: var(--shadow-strong); max-width: 760px; margin: 0 auto;
 }
-@media (min-width: 768px) { .footer-card { padding: 3rem; } }
-.footer-logo { width: 80px; height: 80px; margin: 0 auto 1.5rem; filter: drop-shadow(0 0 16px var(--accent-glow)); }
-.footer-card h3 {
-  font-family: var(--font-reem); font-size: 1.75rem; font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent; margin-bottom: 0.75rem;
-}
-.footer-card .subtitle { color: rgba(232, 245, 240, 0.75); margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.footer-logo { width: 80px; height: 80px; border-radius: 16px; margin: 0 auto 1rem; box-shadow: var(--shadow-card); }
+.footer-card h3 { font-family: var(--font-reem); font-size: 1.5rem; color: var(--text); margin-bottom: 0.25rem; }
+.footer-card .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
 .footer-meta {
-  display: grid; grid-template-columns: 1fr; gap: 1rem;
-  margin-top: 2rem; padding-top: 2rem;
-  border-top: 1px solid rgba(37, 182, 141, 0.2);
+  display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 1.5rem;
 }
 @media (min-width: 640px) { .footer-meta { grid-template-columns: repeat(3, 1fr); } }
-.footer-meta-item .label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
-.footer-meta-item .value { font-size: 0.875rem; color: rgba(232, 245, 240, 0.9); font-weight: 500; }
-.footer-meta-item .value.accent { color: var(--primary-light); }
-.footer-copy { text-align: center; font-size: 0.75rem; color: rgba(232, 245, 240, 0.4); margin-top: 2rem; }
-
-/* === Countdown Timer === */
-.countdown-section {
-  margin: 3rem auto 0;
-  max-width: 700px;
-  text-align: center;
-  padding: 1.75rem 1.25rem;
-  background: var(--bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(37, 182, 141, 0.25);
-  border-radius: 1.25rem;
-  box-shadow: var(--shadow-card);
+.footer-meta-item {
+  padding: 0.75rem; background: var(--bg-card-alt);
+  border-radius: var(--radius-md); border: 1px solid rgba(37, 182, 141, 0.08);
 }
-.countdown-section .countdown-title {
-  font-size: 0.875rem;
-  color: var(--primary-light);
-  margin-bottom: 1rem;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+.footer-meta-item .label {
+  display: flex; align-items: center; justify-content: center; gap: 0.375rem;
+  font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.25rem;
 }
-.countdown-section .countdown-status {
-  font-size: 1.125rem;
-  color: var(--text);
-  margin-bottom: 1.25rem;
-  font-weight: 600;
-}
-.countdown-section .countdown-status.ended { color: var(--danger); }
-.countdown-section .countdown-status.active { color: var(--gold-light); }
-.countdown-section .countdown-status.waiting { color: var(--primary-light); }
-.countdown-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  max-width: 480px;
-  margin: 0 auto;
-}
-.countdown-box {
-  background: rgba(5, 30, 24, 0.6);
-  border: 1px solid rgba(37, 182, 141, 0.3);
-  border-radius: 0.875rem;
-  padding: 0.875rem 0.5rem;
-  position: relative;
-  overflow: hidden;
-}
-.countdown-box::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(37, 182, 141, 0.08), transparent);
-  pointer-events: none;
-}
-.countdown-box .value {
-  font-family: var(--font-reem);
-  font-size: 2rem;
-  font-weight: 700;
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  line-height: 1;
-  margin-bottom: 0.375rem;
-}
-.countdown-box .label {
-  font-size: 0.6875rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-@media (max-width: 480px) {
-  .countdown-box .value { font-size: 1.5rem; }
-  .countdown-box .label { font-size: 0.625rem; }
-  .countdown-grid { gap: 0.5rem; }
-}
-.countdown-ended-msg {
-  font-size: 1.125rem;
-  color: var(--danger);
-  padding: 1rem;
-  background: rgba(255, 107, 107, 0.08);
-  border: 1px solid rgba(255, 107, 107, 0.25);
-  border-radius: 0.625rem;
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-/* === Developer Section === */
+.footer-meta-item .value { font-size: 0.9rem; color: var(--text); font-weight: 600; }
+.footer-meta-item .value.accent { color: var(--primary); }
 .footer-developer {
-  margin-top: 2rem; padding-top: 2rem;
-  border-top: 1px solid rgba(37, 182, 141, 0.2);
-  text-align: center;
+  padding: 1.25rem; background: linear-gradient(135deg, rgba(212, 175, 55, 0.06), rgba(37, 182, 141, 0.04));
+  border-radius: var(--radius-md); border: 1px solid rgba(212, 175, 55, 0.15);
 }
-.footer-developer .dev-label {
-  font-size: 0.75rem; color: var(--text-muted);
-  letter-spacing: 0.15em; margin-bottom: 0.5rem;
-}
+.footer-developer .dev-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.375rem; }
 .footer-developer .dev-name {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  text-decoration: none; padding: 0.5rem 1.25rem;
-  border-radius: 999px;
-  background: rgba(37, 182, 141, 0.08);
-  border: 1px solid rgba(37, 182, 141, 0.25);
-  transition: all 0.3s ease;
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  text-decoration: none; font-family: var(--font-reem); font-weight: 700;
+  font-size: 1.25rem;
 }
-.footer-developer .dev-name:hover {
-  background: rgba(37, 182, 141, 0.15);
-  border-color: var(--primary);
-  transform: translateY(-2px);
+.footer-developer .uniral-text {
+  background: var(--grad-primary);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  letter-spacing: 0.08em;
 }
-.footer-developer .dev-name .icon { color: var(--primary-light); }
-.footer-developer .dev-desc {
-  font-size: 0.8125rem; color: rgba(232, 245, 240, 0.6);
-  margin-top: 0.75rem;
+.footer-developer .dev-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.375rem; }
+.footer-developer .dev-founder { font-size: 0.8rem; color: var(--gold-light); font-weight: 600; margin-top: 0.25rem; }
+.footer-copy {
+  text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid rgba(37, 182, 141, 0.1);
 }
-.footer-developer .dev-founder {
-  font-size: 0.75rem; color: var(--gold);
-  margin-top: 0.375rem; font-weight: 500;
-}
-
-/* === UNIRAL glowing text === */
-.uniral-text {
-  font-family: var(--font-reem);
-  font-size: 1.25rem; font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--primary-light);
-  text-shadow:
-    0 0 8px rgba(37, 182, 141, 0.8),
-    0 0 16px rgba(37, 182, 141, 0.6),
-    0 0 24px rgba(37, 182, 141, 0.4),
-    0 0 32px rgba(37, 182, 141, 0.2);
-  animation: uniralGlow 2.5s ease-in-out infinite alternate;
-}
-.footer-copy .uniral-text {
-  font-size: 0.875rem;
-  text-shadow:
-    0 0 6px rgba(37, 182, 141, 0.7),
-    0 0 12px rgba(37, 182, 141, 0.5);
-}
-@keyframes uniralGlow {
-  from {
-    text-shadow:
-      0 0 8px rgba(37, 182, 141, 0.8),
-      0 0 16px rgba(37, 182, 141, 0.6),
-      0 0 24px rgba(37, 182, 141, 0.4),
-      0 0 32px rgba(37, 182, 141, 0.2);
-  }
-  to {
-    text-shadow:
-      0 0 12px rgba(37, 182, 141, 1),
-      0 0 24px rgba(37, 182, 141, 0.8),
-      0 0 36px rgba(37, 182, 141, 0.6),
-      0 0 48px rgba(37, 182, 141, 0.3);
-  }
-}
+.footer-copy .uniral-text { color: var(--primary); font-weight: 700; }
 
 /* === Toast === */
 .toast-container {
-  position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
-  z-index: 1000; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none;
+  position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999;
+  display: flex; flex-direction: column; gap: 0.5rem; max-width: 360px;
 }
 .toast {
-  background: var(--bg-card); backdrop-filter: blur(20px);
-  border: 1px solid var(--primary); border-radius: 0.75rem;
-  padding: 0.875rem 1.25rem; color: var(--text); font-size: 0.875rem; font-weight: 500;
-  box-shadow: var(--shadow-card);
-  display: flex; align-items: center; gap: 0.5rem;
-  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: auto; max-width: 90vw;
+  background: #fff; padding: 0.75rem 1rem; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-strong); display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.875rem; color: var(--text); border-right: 4px solid var(--primary);
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
-.toast.success { border-color: var(--primary); }
-.toast.success .icon { color: var(--primary-light); }
+.toast.success { border-color: var(--success); }
+.toast.success .icon { color: var(--success); }
 .toast.error { border-color: var(--danger); }
 .toast.error .icon { color: var(--danger); }
-.toast.info .icon { color: var(--primary-light); }
+.toast.info .icon { color: var(--primary); }
+@keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+/* === Custom cursor === */
+.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; opacity: 0; transition: opacity 0.3s ease; }
+.custom-cursor-dot {
+  width: 8px; height: 8px; background: var(--primary); border-radius: 50%;
+  box-shadow: 0 0 8px var(--primary);
+}
+.custom-cursor-ring {
+  width: 32px; height: 32px; border: 2px solid rgba(37, 182, 141, 0.5); border-radius: 50%;
+  transition: transform 0.15s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+.custom-cursor-ring.hover-active {
+  border-color: var(--gold-light); transform: scale(1.2);
+}
+
+/* === Loading spinner === */
 .loading-spinner {
-  display: inline-block; width: 18px; height: 18px;
-  border: 2px solid currentColor; border-top-color: transparent;
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
   border-radius: 50%; animation: spin 0.8s linear infinite;
 }
-
-/* === Animations === */
-@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes rotate-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* === Custom Cursor === */
-body.custom-cursor-active, body.custom-cursor-active * { cursor: none !important; }
-.custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
-.custom-cursor-dot { width: 8px; height: 8px; background: var(--primary-light); border-radius: 50%; transform: translate(-50%, -50%); }
-.custom-cursor-ring {
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(37, 182, 141, 0.6);
-  border-radius: 50%; transform: translate(-50%, -50%);
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease;
+/* === Privacy note === */
+.privacy-note {
+  text-align: center; font-size: 0.8rem; color: var(--text-muted);
+  margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.625rem 1rem; background: rgba(37, 182, 141, 0.06);
+  border-radius: var(--radius-md); border: 1px solid rgba(37, 182, 141, 0.12);
 }
-.custom-cursor-ring.hover-active { width: 60px; height: 60px; background: rgba(37, 182, 141, 0.1); border-color: var(--primary); }
+.privacy-note .icon { color: var(--primary); }
 
-/* === Scrollbar === */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--gold)); border-radius: 10px; border: 2px solid var(--bg-deep); }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--primary-light), var(--gold-light)); }
-
-input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type="number"] { -moz-appearance: textfield; }
+/* === Security badge === */
+.security-badge {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.375rem 0.75rem; border-radius: 999px;
+  background: rgba(37, 182, 141, 0.1); color: var(--primary);
+  font-size: 0.75rem; font-weight: 600;
+  border: 1px solid rgba(37, 182, 141, 0.2);
+}
+.security-badge .icon { color: var(--primary); }
 
 /* === Mobile === */
 @media (max-width: 768px) {
   .header-nav { display: none; }
-  .header-actions .btn-outline { padding: 0.5rem 0.875rem; font-size: 0.75rem; }
-  .header-actions .btn-primary { padding: 0.5rem 1rem; font-size: 0.75rem; }
-  .header-logo-text { display: none; }
-  section { padding: 4rem 0; }
+  .hero { padding: 7rem 1rem 3rem; }
+  .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-card { padding: 1.25rem; }
+  .toast-container { top: 1rem; right: 1rem; left: 1rem; max-width: none; }
+}
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  #particle-canvas { display: none; }
 }
 </style>
 </head>
 <body>
 
-<!-- ====== SVG Icon Sprite ====== -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-    <path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-  </symbol>
-  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
-  </symbol>
-  <symbol id="i-graduation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-  </symbol>
-  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </symbol>
-  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-  </symbol>
-  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/>
-    <rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>
-  </symbol>
-  <symbol id="i-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
-  </symbol>
-  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-  </symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-  </symbol>
-  <symbol id="i-sticky-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11l5-5V5a2 2 0 0 0-2-2z"/>
-    <path d="M15 3v4a2 2 0 0 0 2 2h4"/><path d="M9 13h6"/><path d="M9 17h3"/>
-  </symbol>
-  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
-  </symbol>
-  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-  </symbol>
-  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-  </symbol>
-  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-  </symbol>
-  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="6 9 12 15 18 9"/>
-  </symbol>
-  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z"/>
-    <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
-  </symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
-  </symbol>
-  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-  </symbol>
-  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-  </symbol>
-  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
-  </symbol>
-  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  </symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-  </symbol>
-  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-    <line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/>
-  </symbol>
-  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
-  </symbol>
-  <symbol id="i-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
-  </symbol>
-  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-  </symbol>
-  <symbol id="i-file-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
-    <path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>
-  </symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-    <line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
-  </symbol>
-  <symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
-  </symbol>
-  <symbol id="i-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/>
-    <path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/>
-    <circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>
-  </symbol>
-  <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
-  </symbol>
-  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/>
-    <path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>
-  </symbol>
-  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-  </symbol>
-  <symbol id="i-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/>
-    <line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/>
-  </symbol>
-  <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-  </symbol>
-  <symbol id="i-qr-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect width="5" height="5" x="3" y="3" rx="1"/><path d="M4 8h1"/><path d="M8 4v1"/><path d="M16 4v1"/><path d="M20 8h-1"/>
-    <rect width="5" height="5" x="16" y="3" rx="1"/><path d="M4 16v-.01"/><path d="M4 20h1"/><path d="M8 20v-1"/><path d="M16 20v-1"/>
-    <rect width="5" height="5" x="3" y="16" rx="1"/><path d="M16 16h.01"/><path d="M20 16v.01"/><path d="M16 20h.01"/><path d="M20 20h.01"/>
-    <path d="M10 8h4v4h-4z"/><path d="M10 16h4"/><path d="M16 12h4"/><path d="M14 16v4"/>
-  </symbol>
-</svg>
-
 <canvas id="particle-canvas"></canvas>
 <div id="cursor-dot" class="custom-cursor custom-cursor-dot"></div>
 <div id="cursor-ring" class="custom-cursor custom-cursor-ring"></div>
 <div id="toast-container" class="toast-container"></div>
+
+<!-- SVG Icons (Sprite) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.5 7.5a5 5 0 1 0-7 7 5 5 0 0 0 7-7zm0 0l3 3m-3-3l5-5"/></symbol>
+  <symbol id="i-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></symbol>
+  <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-sticky-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.13c-.24.67-1.4 1.29-1.94 1.32-.5.03-1.13.21-3.81-.79-3.21-1.21-5.25-4.47-5.42-4.7-.16-.24-1.3-1.74-1.3-3.32s.82-2.36 1.11-2.68c.29-.32.64-.4.85-.4l.61.01c.2.01.46-.08.72.55.24.62.82 2.15.89 2.31.07.16.12.34.02.55-.09.21-.14.34-.27.52-.14.18-.29.4-.41.54-.14.14-.27.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.16-.21.7-.82.89-1.1.18-.28.37-.24.61-.14.24.1 1.54.72 1.8.85.24.13.4.2.46.31.06.11.06.64-.18 1.31z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+  <symbol id="i-graduation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 11 13 22 2 11 2 22 2"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-3-7-3 7-3-7z"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-file-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></symbol>
+</svg>
 
 <!-- Header -->
 <header class="site-header" id="header">
@@ -854,22 +692,149 @@ input[type="number"] { -moz-appearance: textfield; }
       <a href="#" class="header-logo">
         <img src="assets/logo.png" alt="لوجو الأستاذ محمد شحاتة">
         <div class="header-logo-text">
-          <span class="label">حفل التكريم</span>
-          <span class="name">أ/ محمد شحاتة</span>
+          <span class="label">منصة الأستاذ</span>
+          <span class="name">محمد شحاتة</span>
         </div>
       </a>
       <nav class="header-nav">
+        <a href="#form"><svg class="icon icon-sm"><use href="#i-sticky-note"/></svg> التسجيل</a>
         <a href="#about"><svg class="icon icon-sm"><use href="#i-info"/></svg> عن الحفل</a>
-        <a href="#form"><svg class="icon icon-sm"><use href="#i-sticky-note"/></svg> الاستمارة</a>
         <a href="#stats"><svg class="icon icon-sm"><use href="#i-chart"/></svg> الإحصائيات</a>
-        <a href="#contact"><svg class="icon icon-sm"><use href="#i-phone"/></svg> تواصل</a>
       </nav>
       <div class="header-actions">
-        <button class="btn btn-primary" onclick="scrollToForm()"><svg class="icon icon-sm"><use href="#i-sparkles"/></svg> سجّل الآن</button>
+        <a href="admin.html" class="btn btn-outline">
+          <svg class="icon icon-sm"><use href="#i-log-in"/></svg>
+          لوحة الإدارة
+        </a>
       </div>
     </div>
   </div>
 </header>
+
+<!-- Form Section — في الوش فوق (مكان بارز) -->
+<section id="form" class="reveal" style="padding-top: 7rem; padding-bottom: 2rem;">
+  <div class="container">
+    <div class="section-title">
+      <span class="label"><svg class="icon icon-sm"><use href="#i-sticky-note"/></svg> استمارة التسجيل</span>
+      <h2><span class="accent">سجّل</span> تفوّقك</h2>
+      <div class="gold-divider"></div>
+      <p>املأ البيانات التالية بدقّة، وسيتم احتساب النسبة المئوية في المواد الشرعية تلقائياً.</p>
+    </div>
+
+    <!-- بانر: تم التطوير بواسطة د. طارق الفارس -->
+    <div class="dev-banner" role="banner" aria-label="مطوّر المنصة">
+      <div class="dev-icon">
+        <svg class="icon icon-md"><use href="#i-award"/></svg>
+      </div>
+      <div class="dev-text">
+        تم التطوير بواسطة <strong>د. طارق الفارس</strong>
+        <div class="dev-role">الرئيس التنفيذي لشركة <span class="uniral-mark">UNIRAL</span> للتطوير التقني وهندسة الذكاء الاصطناعي</div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <form id="registration-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="fullName">
+            <svg class="icon icon-sm"><use href="#i-user"/></svg>
+            الاسم الرباعي <span class="required">*</span>
+          </label>
+          <input type="text" id="fullName" class="form-input" placeholder="مثال: محمد أحمد علي حسن" required minlength="8">
+          <div class="form-error" id="fullName-error" style="display:none"></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="totalScore">
+              <svg class="icon icon-sm"><use href="#i-chart"/></svg>
+              المجموع الكلي (من 650) <span class="required">*</span>
+            </label>
+            <input type="number" id="totalScore" class="form-input" placeholder="مثال: 580" step="0.5" min="0" max="650" required>
+            <div class="form-error" id="totalScore-error" style="display:none"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <svg class="icon icon-sm"><use href="#i-percent"/></svg>
+              النسبة المئوية الكلية
+            </label>
+            <div class="form-percentage">
+              <span class="value primary" id="totalPercent">—</span>
+              <div class="bar"><div class="fill" id="totalBar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="shariaScore">
+              <svg class="icon icon-sm"><use href="#i-book"/></svg>
+              مجموع المواد الشرعية (من 210) <span class="required">*</span>
+            </label>
+            <input type="number" id="shariaScore" class="form-input" placeholder="مثال: 180" step="0.5" min="0" max="210" required>
+            <div class="form-error" id="shariaScore-error" style="display:none"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <svg class="icon icon-sm"><use href="#i-percent"/></svg>
+              النسبة المئوية الشرعية
+            </label>
+            <div class="form-percentage">
+              <span class="value gold" id="shariaPercent">—</span>
+              <div class="bar gold"><div class="fill" id="shariaBar" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="seatNumber">
+            <svg class="icon icon-sm"><use href="#i-hash"/></svg>
+            رقم الجلوس <span class="required">*</span>
+          </label>
+          <input type="text" id="seatNumber" class="form-input" placeholder="مثال: 123456" required dir="ltr" style="text-align: right">
+          <div class="form-error" id="seatNumber-error" style="display:none"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">
+            <svg class="icon icon-sm"><use href="#i-whatsapp"/></svg>
+            رقم الهاتف <span class="required">*</span>
+          </label>
+          <input type="tel" id="phone" class="form-input" placeholder="مثال: 01012345678" required dir="ltr" style="text-align: right">
+          <div class="form-hint">
+            <svg class="icon icon-xs"><use href="#i-whatsapp"/></svg>
+            يجب أن يكون الرقم مرتبطاً بواتساب لاستلام تأكيد التسجيل.
+          </div>
+          <div class="form-error" id="phone-error" style="display:none"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="notes">
+            <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
+            ملاحظات (اختياري)
+          </label>
+          <textarea id="notes" class="form-textarea" placeholder="أي ملاحظات تودّ إضافتها..." rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large btn-full" id="submitBtn">
+          <span id="submitText"><svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب</span>
+        </button>
+      </form>
+
+      <div id="success-message" class="success-message" style="display:none">
+        <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-check-circle"/></svg></div>
+        <h3>مبارك لك تفوّقك!</h3>
+        <p>تم تسجيل بياناتك بنجاح، نتمنى لك التوفيق في حفل التكريم.</p>
+      </div>
+    </div>
+
+    <p class="privacy-note">
+      <svg class="icon icon-sm"><use href="#i-shield"/></svg>
+      <span>جميع البيانات محمية بتشفير كامل وتُحفظ في قاعدة بيانات آمنة (Firestore) وتُستخدم لأغراض الحفل التكريمي فقط.</span>
+    </p>
+  </div>
+</section>
 
 <!-- Hero -->
 <section class="hero">
@@ -998,152 +963,38 @@ input[type="number"] { -moz-appearance: textfield; }
   </div>
 </section>
 
-<!-- Form -->
-<section id="form" class="reveal">
-  <div class="container">
-    <div class="section-title">
-      <span class="label"><svg class="icon icon-sm"><use href="#i-sticky-note"/></svg> استمارة التسجيل</span>
-      <h2><span class="accent">سجّل</span> تفوّقك</h2>
-      <div class="gold-divider"></div>
-      <p>املأ البيانات التالية بدقّة، وسيتم احتساب النسبة المئوية في المواد الشرعية تلقائياً.</p>
-    </div>
-
-    <div class="form-card">
-      <form id="registration-form" novalidate>
-        <div class="form-group">
-          <label class="form-label" for="fullName">
-            <svg class="icon icon-sm"><use href="#i-user"/></svg>
-            الاسم الرباعي <span class="required">*</span>
-          </label>
-          <input type="text" id="fullName" class="form-input" placeholder="مثال: محمد أحمد علي حسن" required minlength="8">
-          <div class="form-error" id="fullName-error" style="display:none"></div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="totalScore">
-              <svg class="icon icon-sm"><use href="#i-chart"/></svg>
-              المجموع الكلي (من 650) <span class="required">*</span>
-            </label>
-            <input type="number" id="totalScore" class="form-input" placeholder="مثال: 580" step="0.5" min="0" max="650" required>
-            <div class="form-error" id="totalScore-error" style="display:none"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">
-              <svg class="icon icon-sm"><use href="#i-percent"/></svg>
-              النسبة المئوية الكلية
-            </label>
-            <div class="form-percentage">
-              <span class="value primary" id="totalPercent">—</span>
-              <div class="bar"><div class="fill" id="totalBar" style="width:0%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="shariaScore">
-              <svg class="icon icon-sm"><use href="#i-book"/></svg>
-              مجموع المواد الشرعية (من 210) <span class="required">*</span>
-            </label>
-            <input type="number" id="shariaScore" class="form-input" placeholder="مثال: 180" step="0.5" min="0" max="210" required>
-            <div class="form-error" id="shariaScore-error" style="display:none"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">
-              <svg class="icon icon-sm"><use href="#i-percent"/></svg>
-              النسبة المئوية الشرعية
-            </label>
-            <div class="form-percentage">
-              <span class="value gold" id="shariaPercent">—</span>
-              <div class="bar gold"><div class="fill" id="shariaBar" style="width:0%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="seatNumber">
-            <svg class="icon icon-sm"><use href="#i-hash"/></svg>
-            رقم الجلوس <span class="required">*</span>
-          </label>
-          <input type="text" id="seatNumber" class="form-input" placeholder="مثال: 123456" required dir="ltr" style="text-align: right">
-          <div class="form-error" id="seatNumber-error" style="display:none"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="phone">
-            <svg class="icon icon-sm"><use href="#i-whatsapp"/></svg>
-            رقم الهاتف <span class="required">*</span>
-          </label>
-          <input type="tel" id="phone" class="form-input" placeholder="مثال: 01012345678" required dir="ltr" style="text-align: right">
-          <div class="form-hint">
-            <svg class="icon icon-xs"><use href="#i-whatsapp"/></svg>
-            يجب أن يكون الرقم مرتبطاً بواتساب لاستلام تأكيد التسجيل.
-          </div>
-          <div class="form-error" id="phone-error" style="display:none"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="notes">
-            <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
-            ملاحظات (اختياري)
-          </label>
-          <textarea id="notes" class="form-textarea" placeholder="أي ملاحظات تودّ إضافتها..." rows="3"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-large btn-full" id="submitBtn">
-          <span id="submitText"><svg class="icon icon-sm"><use href="#i-send"/></svg> تسجيل الطالب</span>
-        </button>
-      </form>
-
-      <div id="success-message" class="success-message" style="display:none">
-        <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-check-circle"/></svg></div>
-        <h3>مبارك لك تفوّقك!</h3>
-        <p>تم تسجيل بياناتك بنجاح، نتمنى لك التوفيق في حفل التكريم.</p>
-      </div>
-    </div>
-
-    <p style="text-align:center; font-size:0.875rem; color:var(--text-muted); margin-top:1.5rem; display:flex; align-items:center; justify-content:center; gap:0.5rem">
-      <svg class="icon icon-sm"><use href="#i-lock"/></svg>
-      جميع البيانات تُحفظ بأمان وتُستخدم لأغراض الحفل التكريمي فقط.
-    </p>
-  </div>
-</section>
-
 <!-- Stats -->
 <section id="stats" class="reveal">
   <div class="container">
     <div class="section-title">
-      <span class="label"><svg class="icon icon-sm"><use href="#i-chart"/></svg> إحصائيات حفل التكريم</span>
-      <h2><span class="accent">أرقام</span> تُعبّر عن التميّز</h2>
+      <span class="label"><svg class="icon icon-sm"><use href="#i-chart"/></svg> إحصائيات</span>
+      <h2>أرقام <span class="accent">الحفل</span></h2>
       <div class="gold-divider"></div>
-      <p>تُحدّث هذه الإحصائيات لحظياً كلّما سُجّل طالب جديد.</p>
+      <p>تتحدّث الأرقام عن حجم التفوّق وتُحفّز الجميع لمواصلة العطاء.</p>
     </div>
 
     <div class="stats-grid">
-      <div class="stat-card">
+      <div class="stat-box">
         <div class="icon-wrap"><svg class="icon icon-md"><use href="#i-users"/></svg></div>
-        <div class="value primary" id="stat-total">0</div>
+        <div class="value" id="stat-total">0</div>
         <div class="suffix">طالب</div>
         <div class="label">إجمالي المسجلين</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-box">
         <div class="icon-wrap"><svg class="icon icon-md"><use href="#i-trending-up"/></svg></div>
-        <div class="value gold" id="stat-avg-score">0</div>
+        <div class="value" id="stat-avg-score">0</div>
         <div class="suffix">من 650</div>
         <div class="label">متوسط المجموع</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-box">
         <div class="icon-wrap"><svg class="icon icon-md"><use href="#i-book"/></svg></div>
-        <div class="value primary" id="stat-avg-sharia">0%</div>
-        <div class="suffix">في المواد الشرعية</div>
+        <div class="value" id="stat-avg-sharia">0%</div>
+        <div class="suffix">في الشرعية</div>
         <div class="label">متوسط النسبة الشرعية</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-box">
         <div class="icon-wrap"><svg class="icon icon-md"><use href="#i-award"/></svg></div>
-        <div class="value gold" id="stat-top-score">0</div>
+        <div class="value" id="stat-top-score">0</div>
         <div class="suffix">من 650</div>
         <div class="label">أعلى مجموع</div>
       </div>
@@ -1180,13 +1031,13 @@ input[type="number"] { -moz-appearance: textfield; }
           <svg class="icon icon-sm"><use href="#i-whatsapp"/></svg>
           <span class="uniral-text">UNIRAL</span>
         </a>
-        <div class="dev-desc">للتطوير التقني والعلمي وهندسة الذكاء الصناعي</div>
-        <div class="dev-founder">أسسها / طارق الفارس</div>
+        <div class="dev-desc">للتطوير التقني والعلمي وهندسة الذكاء الاصطناعي</div>
+        <div class="dev-founder">الرئيس التنفيذي: د. طارق الفارس</div>
       </div>
     </div>
 
     <p class="footer-copy">
-      © <span id="year">2027</span> — حقوق التطوير محفوظة لشركة <span class="uniral-text">UNIRAL</span> ومنصة الأستاذ محمد شحاتة للعلوم الشرعية
+      © <span id="year">2025</span> — حقوق التطوير محفوظة لشركة <span class="uniral-text">UNIRAL</span> ومنصة الأستاذ محمد شحاتة للعلوم الشرعية
     </p>
   </div>
 </footer>
@@ -1195,28 +1046,30 @@ input[type="number"] { -moz-appearance: textfield; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  get,
-  child,
-  onValue,
-  off,
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  getDoc,
+  onSnapshot,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ============================================================
+// إعدادات Firebase الجديدة (القاعدة المحمية)
+// ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyA7S6uZ1uFWuUsgVXYk9P_uNSLujdHS9eM",
-  authDomain: "party-thanawiah.firebaseapp.com",
-  databaseURL: "https://party-thanawiah-default-rtdb.firebaseio.com",
-  projectId: "party-thanawiah",
-  storageBucket: "party-thanawiah.firebasestorage.app",
-  messagingSenderId: "255296878383",
-  appId: "1:255296878383:web:583ab8f5e3e2bc13c7d3da"
+  apiKey: "AIzaSyDfhdSpt30YS7kNziKkogZnBC1-1jWODeM",
+  authDomain: "party-thanawiah-b98ce.firebaseapp.com",
+  projectId: "party-thanawiah-b98ce",
+  storageBucket: "party-thanawiah-b98ce.firebasestorage.app",
+  messagingSenderId: "466748922191",
+  appId: "1:466748922191:web:a9265cf1bf9774f2304d3a"
 };
 
 const COLLECTION_NAME = "students";
+const STATS_DOC = "metadata/stats"; // مستند فيه إحصائيات فقط (بدون بيانات شخصية) — يقرأه العامّة
 const SHARIA_MAX_SCORE = 210;
 const TOTAL_MAX_SCORE = 650;
 
@@ -1225,13 +1078,14 @@ let firebaseReady = false;
 
 try {
   const app = initializeApp(firebaseConfig);
-  db = getDatabase(app);
+  db = getFirestore(app);
   firebaseReady = true;
-  console.log("Firebase متصل");
+  console.log("Firebase متصل (Firestore)");
 } catch (err) {
   console.error("Firebase init error:", err);
 }
 
+// التخزين المحلي البديل (fallback)
 const LOCAL_KEY = "students_local";
 function getLocalStudents() {
   try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); }
@@ -1243,34 +1097,101 @@ function addLocalStudent(student) {
   localStorage.setItem(LOCAL_KEY, JSON.stringify(list));
 }
 
+// ============================================================
+// حفظ بيانات الطالب في Firestore (إضافة فقط — للأمان)
+// + تحديث مستند الإحصائيات المُجمّعة (بدون بيانات شخصية)
+// ============================================================
 async function saveStudent(data) {
-  if (firebaseReady) {
-    // حفظ في Realtime Database باستخدام push (مفتاح فريد تلقائي)
-    const newRef = push(ref(db, COLLECTION_NAME));
-    await set(newRef, {
-      ...data,
-      createdAt: serverTimestamp()
-    });
-    return { id: newRef.key, ...data };
-  } else {
+  if (!firebaseReady) {
     addLocalStudent(data);
     return { id: Date.now().toString(), ...data };
   }
+
+  // إضافة المستند لمجموعة الطلاب (الأمان: create فقط للعامة)
+  const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+    fullName: data.fullName,
+    totalScore: data.totalScore,
+    shariaScore: data.shariaScore,
+    shariaPercent: data.shariaPercent,
+    seatNumber: data.seatNumber,
+    governorate: data.governorate,
+    phone: data.phone,           // يُخزّن في Firestore تحت قواعد أمان صارمة
+    notes: data.notes || null,
+    createdAt: serverTimestamp()
+  });
+
+  // تحديث مستند الإحصائيات المُجمّعة (يقرأه العامّة بدون كشف بيانات الطلاب)
+  try {
+    const statsRef = doc(db, "metadata", "stats");
+    const statsSnap = await getDoc(statsRef);
+    let current = statsSnap.exists() ? statsSnap.data() : { total: 0, sumTotal: 0, sumSharia: 0, topScore: 0 };
+
+    const newTotal = (current.total || 0) + 1;
+    const newSumTotal = (current.sumTotal || 0) + (data.totalScore || 0);
+    const newSumSharia = (current.sumSharia || 0) + (data.shariaPercent || 0);
+    const newTopScore = Math.max(current.topScore || 0, data.totalScore || 0);
+    const avgScore = newSumTotal / newTotal;
+    const avgSharia = newSumSharia / newTotal;
+
+    await setDoc(statsRef, {
+      total: newTotal,
+      sumTotal: newSumTotal,
+      sumSharia: newSumSharia,
+      avgScore: Math.round(avgScore * 100) / 100,
+      avgSharia: Math.round(avgSharia * 100) / 100,
+      topScore: newTopScore,
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+  } catch (e) {
+    // لو القواعد الأمنية بتسمح للعامة بـ create فقط على metadata، الـ setDoc هيفشل
+    // لكنه مش يؤثر على تسجيل الطالب (الأهم)
+    console.warn("Stats update skipped:", e);
+  }
+
+  return { id: docRef.id, ...data };
 }
 
-async function fetchStudents() {
-  if (firebaseReady) {
-    try {
-      const snap = await get(child(ref(db), COLLECTION_NAME));
-      if (!snap.exists()) return [];
-      const data = snap.val();
-      return Object.entries(data).map(([id, v]) => ({ id, ...v }));
-    } catch (err) {
-      console.error("Fetch error:", err);
-      return [];
-    }
+// ============================================================
+// قراءة الإحصائيات المُجمّعة (بدون كشف بيانات الطلاب الشخصية)
+// ============================================================
+function subscribeToStats(callback) {
+  if (!firebaseReady) {
+    const local = getLocalStudents();
+    callback({
+      total: local.length,
+      avgScore: local.length > 0 ? local.reduce((s,x)=>s+(x.totalScore||0),0)/local.length : 0,
+      avgSharia: local.length > 0 ? local.reduce((s,x)=>s+(x.shariaPercent||0),0)/local.length : 0,
+      topScore: local.length > 0 ? Math.max(...local.map(x=>x.totalScore||0)) : 0
+    });
+    const interval = setInterval(() => {
+      const l = getLocalStudents();
+      callback({
+        total: l.length,
+        avgScore: l.length > 0 ? l.reduce((s,x)=>s+(x.totalScore||0),0)/l.length : 0,
+        avgSharia: l.length > 0 ? l.reduce((s,x)=>s+(x.shariaPercent||0),0)/l.length : 0,
+        topScore: l.length > 0 ? Math.max(...l.map(x=>x.totalScore||0)) : 0
+      });
+    }, 3000);
+    return () => clearInterval(interval);
   }
-  return getLocalStudents().sort((a, b) => b.totalScore - a.totalScore);
+
+  const statsRef = doc(db, "metadata", "stats");
+  return onSnapshot(statsRef, (snap) => {
+    if (!snap.exists()) {
+      callback({ total: 0, avgScore: 0, avgSharia: 0, topScore: 0 });
+      return;
+    }
+    const d = snap.data();
+    callback({
+      total: d.total || 0,
+      avgScore: d.avgScore || 0,
+      avgSharia: d.avgSharia || 0,
+      topScore: d.topScore || 0
+    });
+  }, (err) => {
+    console.error("Stats subscription error:", err);
+    callback({ total: 0, avgScore: 0, avgSharia: 0, topScore: 0 });
+  });
 }
 
 // Toast
@@ -1283,7 +1204,7 @@ function toast(message, type = "info") {
   container.appendChild(el);
   setTimeout(() => {
     el.style.opacity = "0";
-    el.style.transform = "translateY(-20px)";
+    el.style.transform = "translateX(120%)";
     setTimeout(() => el.remove(), 300);
   }, 3500);
 }
@@ -1351,7 +1272,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     return;
   }
   if (now >= endDate) {
-    toast("انتهت فترة التسجيل — يبدأ الحفل يوم الأربعاء", "error");
+    toast("انتهت فترة التسجيل", "error");
     return;
   }
 
@@ -1381,7 +1302,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
     updatePercentages();
     toast("تم تسجيل الطالب بنجاح!", "success");
     setTimeout(() => { document.getElementById("success-message").style.display = "none"; }, 6000);
-    // الإحصائيات تتحدّث تلقائياً عبر اشتراك onValue — لا حاجة لاستدعاء يدوي
+    // الإحصائيات تتحدّث تلقائياً عبر اشتراك onSnapshot
   } catch (err) {
     console.error(err);
     toast("حدث خطأ أثناء التسجيل. حاول مرة أخرى.", "error");
@@ -1391,58 +1312,29 @@ document.getElementById("registration-form").addEventListener("submit", async (e
   }
 });
 
-// ====== الإحصائيات: تحديث لحظي (Real-time) ======
-// نخلي العدّاد المتحرك يشتغل بس أول مرة، وبعدها نحدّث القيمم مباشرة عشان منعش الإزعاج
+// ====== الإحصائيات: تحديث لحظي (Real-time) من مستند metadata/stats ======
 let statsFirstLoad = true;
 let statsUnsubscribe = null;
 
-function subscribeToStats() {
-  // إلغاء أي اشتراك سابق
+function startStatsSubscription() {
   if (statsUnsubscribe) {
     statsUnsubscribe();
     statsUnsubscribe = null;
   }
-
-  if (firebaseReady) {
-    const studentsRef = ref(db, COLLECTION_NAME);
-    const handler = (snap) => {
-      let students = [];
-      if (snap.exists()) {
-        const data = snap.val();
-        students = Object.entries(data).map(([id, v]) => ({ id, ...v }));
-      }
-      updateStatsUI(students);
-    };
-    onValue(studentsRef, handler);
-    statsUnsubscribe = () => off(studentsRef, "value", handler);
-  } else {
-    // Fallback: تحقق دوري من localStorage
-    updateStatsUI(getLocalStudents());
-    const interval = setInterval(() => updateStatsUI(getLocalStudents()), 3000);
-    statsUnsubscribe = () => clearInterval(interval);
-  }
-}
-
-function updateStatsUI(students) {
-  const total = students.length;
-  const avgScore = total > 0 ? students.reduce((s, x) => s + (x.totalScore || 0), 0) / total : 0;
-  const avgSharia = total > 0 ? students.reduce((s, x) => s + (x.shariaPercent || 0), 0) / total : 0;
-  const topScore = total > 0 ? Math.max(...students.map(s => s.totalScore || 0)) : 0;
-
-  if (statsFirstLoad) {
-    // أول مرة: حركة سلسة من 0 للقيمة
-    animateCounter("stat-total", total);
-    animateCounter("stat-avg-score", Math.round(avgScore * 100) / 100);
-    animateCounter("stat-avg-sharia", `${Math.round(avgSharia * 100) / 100}%`);
-    animateCounter("stat-top-score", topScore);
-    statsFirstLoad = false;
-  } else {
-    // التحديثات اللاحقة: عرض القيمة مباشرة (بدون أنميشن)
-    document.getElementById("stat-total").textContent = total;
-    document.getElementById("stat-avg-score").textContent = Math.round(avgScore * 100) / 100;
-    document.getElementById("stat-avg-sharia").textContent = `${Math.round(avgSharia * 100) / 100}%`;
-    document.getElementById("stat-top-score").textContent = topScore;
-  }
+  statsUnsubscribe = subscribeToStats((s) => {
+    if (statsFirstLoad) {
+      animateCounter("stat-total", s.total);
+      animateCounter("stat-avg-score", Math.round(s.avgScore * 100) / 100);
+      animateCounter("stat-avg-sharia", `${Math.round(s.avgSharia * 100) / 100}%`);
+      animateCounter("stat-top-score", s.topScore);
+      statsFirstLoad = false;
+    } else {
+      document.getElementById("stat-total").textContent = s.total;
+      document.getElementById("stat-avg-score").textContent = Math.round(s.avgScore * 100) / 100;
+      document.getElementById("stat-avg-sharia").textContent = `${Math.round(s.avgSharia * 100) / 100}%`;
+      document.getElementById("stat-top-score").textContent = s.topScore;
+    }
+  });
 }
 
 function animateCounter(id, target) {
@@ -1515,7 +1407,7 @@ function initParticles() {
     ctx.scale(dpr, dpr);
   }
   function createParticles() {
-    const count = Math.min(60, Math.floor((window.innerWidth * window.innerHeight) / 30000));
+    const count = Math.min(50, Math.floor((window.innerWidth * window.innerHeight) / 30000));
     particles = [];
     for (let i = 0; i < count; i++) {
       const isPrimary = Math.random() > 0.3;
@@ -1571,45 +1463,27 @@ const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 initCustomCursor();
 initParticles();
-// اشتراك لحظي في إحصائيات الطلاب — يتحدّث تلقائياً عند كل تسجيل جديد
-subscribeToStats();
+startStatsSubscription();
 
 // =========================================================
-// ⏰ مواعيد التسجيل: مفتوح دلوقتي وينتهي بداية يوم الأربعاء
+// مواعيد التسجيل
 // =========================================================
-
-// إعدادات المواعيد — يتم حسابها ديناميكياً
-// بداية التسجيل: فات — التسجيل مفتوح دلوقتي
-// نهاية التسجيل: بداية يوم الأربعاء القادم (00:00 منتصف الليل)
 function getRegistrationSchedule() {
   const now = new Date();
-
-  // 0=الأحد، 1=الإثنين، 2=الثلاثاء، 3=الأربعاء، 4=الخميس، 5=الجمعة، 6=السبت
   const currentDay = now.getDay();
   const WEDNESDAY = 3;
-
-  // نهاية التسجيل: بداية يوم الأربعاء القادم (00:00:00)
-  // - لو حالياً قبل الأربعاء (أحد/إثنين/ثلاثاء) → الأربعاء القادم ده هو نهايتنا
-  // - لو حالياً أربعاء أو بعده → الأربعاء اللي بعده هو نهايتنا (التسجيل فات خلاص ومفيش جديد)
   let daysUntilWednesday = (WEDNESDAY - currentDay + 7) % 7;
-
   let endDate = new Date(now);
   endDate.setDate(now.getDate() + daysUntilWednesday);
-  endDate.setHours(0, 0, 0, 0); // بداية اليوم (00:00 منتصف الليل)
-
-  // بداية التسجيل: التسجيل مفتوح دلوقتي، نستخدم تاريخ قبل كده كبداية
-  // بنستخدم أول الأسبوع (السبت أو حد) كبداية رمزية
+  endDate.setHours(0, 0, 0, 0);
   let startDate = new Date(now);
-  startDate.setDate(now.getDate() - 7); // أسبوع قبل — التسجيل فات ومفتوح
+  startDate.setDate(now.getDate() - 7);
   startDate.setHours(0, 0, 0, 0);
-
   return { startDate, endDate, now };
 }
 
-// تنسيق الأرقام بعلامة صفر بادية
 function pad(n) { return String(n).padStart(2, "0"); }
 
-// تحديث العدّاد التنازلي
 function updateCountdown() {
   const { startDate, endDate } = getRegistrationSchedule();
   const now = new Date();
@@ -1619,10 +1493,8 @@ function updateCountdown() {
   const gridEl = document.getElementById("countdownGrid");
   const heroBtn = document.getElementById("heroRegisterBtn");
   const submitBtn = document.getElementById("submitBtn");
-  const formSection = document.getElementById("form");
 
   if (now < startDate) {
-    // === مرحلة قبل بدء التسجيل ===
     const diff = startDate - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -1636,12 +1508,11 @@ function updateCountdown() {
 
     if (titleEl) titleEl.textContent = "يبدأ التسجيل خلال";
     if (statusEl) {
-      statusEl.textContent = `التسجيل يبدأ يوم الأربعاء ${startDate.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })} الساعة 12 ظهراً`;
+      statusEl.textContent = `التسجيل يبدأ قريباً`;
       statusEl.className = "countdown-status waiting";
     }
     if (gridEl) gridEl.style.display = "grid";
 
-    // تعطيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = true;
       heroBtn.style.opacity = "0.5";
@@ -1649,7 +1520,6 @@ function updateCountdown() {
     }
     if (submitBtn) submitBtn.disabled = true;
   } else if (now >= startDate && now < endDate) {
-    // === مرحلة التسجيل المفتوح ===
     const diff = endDate - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -1663,15 +1533,13 @@ function updateCountdown() {
 
     if (titleEl) titleEl.textContent = "ينتهي التسجيل خلال";
     if (statusEl) {
-      // بنعرض تاريخ يوم الثلاثاء (اليوم اللي قبل الأربعاء) لأن نهاية التسجيل هي بداية الأربعاء
       const lastDay = new Date(endDate);
-      lastDay.setDate(lastDay.getDate() - 1); // الثلاثاء (اليوم اللي قبل الأربعاء)
+      lastDay.setDate(lastDay.getDate() - 1);
       statusEl.textContent = `التسجيل مفتوح حتى نهاية يوم ${lastDay.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })}`;
       statusEl.className = "countdown-status active";
     }
     if (gridEl) gridEl.style.display = "grid";
 
-    // تفعيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = false;
       heroBtn.style.opacity = "";
@@ -1679,7 +1547,6 @@ function updateCountdown() {
     }
     if (submitBtn) submitBtn.disabled = false;
   } else {
-    // === مرحلة انتهاء التسجيل ===
     if (titleEl) titleEl.textContent = "انتهى التسجيل";
     if (statusEl) {
       statusEl.textContent = "انتهت فترة التسجيل — شكراً لكل الطلاب المُكرَّمين";
@@ -1693,8 +1560,6 @@ function updateCountdown() {
         </div>
       `;
     }
-
-    // تعطيل زر التسجيل
     if (heroBtn) {
       heroBtn.disabled = true;
       heroBtn.style.opacity = "0.5";
@@ -1704,7 +1569,6 @@ function updateCountdown() {
   }
 }
 
-// تحديث العدّاد كل ثانية
 updateCountdown();
 setInterval(updateCountdown, 1000);
 </script>
