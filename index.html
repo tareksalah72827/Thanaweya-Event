@@ -875,31 +875,13 @@ body::after {
       </a>
     </div>
 
-    <!-- عدّاد تنازلي للتسجيل -->
-    <div class="countdown-section" id="countdownSection">
+    <!-- بانر: التسجيل مفتوح دائماً -->
+    <div class="countdown-section" id="openBanner">
       <div class="countdown-title">
-        <svg class="icon icon-sm"><use href="#i-clock"/></svg>
-        <span id="countdownTitle">مواعيد التسجيل</span>
+        <svg class="icon icon-sm"><use href="#i-check-circle"/></svg>
+        <span>التسجيل مفتوح</span>
       </div>
-      <div class="countdown-status" id="countdownStatus">جارٍ التحضير...</div>
-      <div class="countdown-grid" id="countdownGrid">
-        <div class="countdown-box">
-          <div class="value" id="cdDays">0</div>
-          <div class="label">يوم</div>
-        </div>
-        <div class="countdown-box">
-          <div class="value" id="cdHours">0</div>
-          <div class="label">ساعة</div>
-        </div>
-        <div class="countdown-box">
-          <div class="value" id="cdMinutes">0</div>
-          <div class="label">دقيقة</div>
-        </div>
-        <div class="countdown-box">
-          <div class="value" id="cdSeconds">0</div>
-          <div class="label">ثانية</div>
-        </div>
-      </div>
+      <div class="countdown-status active">التسجيل مفتوح دائماً — لا وقت محدد للتسجيل</div>
     </div>
   </div>
 
@@ -1264,17 +1246,7 @@ function validateForm(data) {
 document.getElementById("registration-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // التحقق من فترة التسجيل
-  const { startDate, endDate } = getRegistrationSchedule();
-  const now = new Date();
-  if (now < startDate) {
-    toast("لم يبدأ التسجيل بعد", "error");
-    return;
-  }
-  if (now >= endDate) {
-    toast("انتهت فترة التسجيل", "error");
-    return;
-  }
+  // التسجيل مفتوح دائماً بدون تقييد زمني
 
   const data = {
     fullName: document.getElementById("fullName").value.trim(),
@@ -1466,111 +1438,8 @@ initParticles();
 startStatsSubscription();
 
 // =========================================================
-// مواعيد التسجيل
+// التسجيل مفتوح دائماً — لا يوجد عدّاد تنازلي ولا مواعيد محددة
 // =========================================================
-function getRegistrationSchedule() {
-  const now = new Date();
-  const currentDay = now.getDay();
-  const WEDNESDAY = 3;
-  let daysUntilWednesday = (WEDNESDAY - currentDay + 7) % 7;
-  let endDate = new Date(now);
-  endDate.setDate(now.getDate() + daysUntilWednesday);
-  endDate.setHours(0, 0, 0, 0);
-  let startDate = new Date(now);
-  startDate.setDate(now.getDate() - 7);
-  startDate.setHours(0, 0, 0, 0);
-  return { startDate, endDate, now };
-}
-
-function pad(n) { return String(n).padStart(2, "0"); }
-
-function updateCountdown() {
-  const { startDate, endDate } = getRegistrationSchedule();
-  const now = new Date();
-
-  const statusEl = document.getElementById("countdownStatus");
-  const titleEl = document.getElementById("countdownTitle");
-  const gridEl = document.getElementById("countdownGrid");
-  const heroBtn = document.getElementById("heroRegisterBtn");
-  const submitBtn = document.getElementById("submitBtn");
-
-  if (now < startDate) {
-    const diff = startDate - now;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    document.getElementById("cdDays").textContent = days;
-    document.getElementById("cdHours").textContent = pad(hours);
-    document.getElementById("cdMinutes").textContent = pad(minutes);
-    document.getElementById("cdSeconds").textContent = pad(seconds);
-
-    if (titleEl) titleEl.textContent = "يبدأ التسجيل خلال";
-    if (statusEl) {
-      statusEl.textContent = `التسجيل يبدأ قريباً`;
-      statusEl.className = "countdown-status waiting";
-    }
-    if (gridEl) gridEl.style.display = "grid";
-
-    if (heroBtn) {
-      heroBtn.disabled = true;
-      heroBtn.style.opacity = "0.5";
-      heroBtn.style.cursor = "not-allowed";
-    }
-    if (submitBtn) submitBtn.disabled = true;
-  } else if (now >= startDate && now < endDate) {
-    const diff = endDate - now;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    document.getElementById("cdDays").textContent = days;
-    document.getElementById("cdHours").textContent = pad(hours);
-    document.getElementById("cdMinutes").textContent = pad(minutes);
-    document.getElementById("cdSeconds").textContent = pad(seconds);
-
-    if (titleEl) titleEl.textContent = "ينتهي التسجيل خلال";
-    if (statusEl) {
-      const lastDay = new Date(endDate);
-      lastDay.setDate(lastDay.getDate() - 1);
-      statusEl.textContent = `التسجيل مفتوح حتى نهاية يوم ${lastDay.toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })}`;
-      statusEl.className = "countdown-status active";
-    }
-    if (gridEl) gridEl.style.display = "grid";
-
-    if (heroBtn) {
-      heroBtn.disabled = false;
-      heroBtn.style.opacity = "";
-      heroBtn.style.cursor = "";
-    }
-    if (submitBtn) submitBtn.disabled = false;
-  } else {
-    if (titleEl) titleEl.textContent = "انتهى التسجيل";
-    if (statusEl) {
-      statusEl.textContent = "انتهت فترة التسجيل — شكراً لكل الطلاب المُكرَّمين";
-      statusEl.className = "countdown-status ended";
-    }
-    if (gridEl) {
-      gridEl.innerHTML = `
-        <div class="countdown-ended-msg" style="grid-column: 1 / -1">
-          <svg class="icon icon-md"><use href="#i-lock"/></svg>
-          <span>التسجيل مغلق</span>
-        </div>
-      `;
-    }
-    if (heroBtn) {
-      heroBtn.disabled = true;
-      heroBtn.style.opacity = "0.5";
-      heroBtn.style.cursor = "not-allowed";
-    }
-    if (submitBtn) submitBtn.disabled = true;
-  }
-}
-
-updateCountdown();
-setInterval(updateCountdown, 1000);
 </script>
 </body>
 </html>
