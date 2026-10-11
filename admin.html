@@ -1341,9 +1341,28 @@ function renderStats() {
 // تبويب ملاحظات الطلاب — عرض كل الطلاب اللي عندهم ملاحظات
 // الاسم فوق والملاحظة تحته في كرت منفصل
 // ============================================================
+// دالة مساعدة: تجيب الملاحظة من أي field محتمل (notes, note, description, comment, ملاحظات, ملاحظة)
+function getStudentNote(s) {
+  if (!s) return null;
+  const candidates = ["notes", "note", "description", "comment", "ملاحظات", "ملاحظة", "mola7zat", "molahezat"];
+  for (const k of candidates) {
+    if (s[k] != null && String(s[k]).trim().length > 0) return String(s[k]).trim();
+  }
+  return null;
+}
+
 function renderNotes() {
-  // فلترة الطلاب اللي عندهم ملاحظات بس
-  let list = allStudents.filter(s => s.notes && String(s.notes).trim().length > 0);
+  // diagnostic: نطبع عدد الطلاب الكلي وأسماء الـ fields في أول طالب (للـ debug في console المتصفح)
+  console.log("=== renderNotes diagnostic ===");
+  console.log("Total students:", allStudents.length);
+  if (allStudents.length > 0) {
+    console.log("First student keys:", Object.keys(allStudents[0]));
+    console.log("First student full data:", allStudents[0]);
+  }
+
+  // فلترة الطلاب اللي عندهم ملاحظات (من أي field محتمل)
+  let list = allStudents.filter(s => getStudentNote(s) !== null);
+  console.log("Students with notes:", list.length);
 
   // تطبيق البحث لو موجود
   if (notesSearchQuery) {
@@ -1365,15 +1384,19 @@ function renderNotes() {
     container.innerHTML = `
       <div class="empty-state">
         <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-sticky-note"/></svg></div>
-        <p>${allStudents.length === 0 ? "لا يوجد طلاب مسجّلون بعد" : (notesSearchQuery ? "لا نتائج مطابقة لبحثك" : "لا توجد ملاحظات من الطلاب حتى الآن")}</p>
+        <p>${allStudents.length === 0 ? "لا يوجد طلاب مسجّلون في Firestore بعد" : (notesSearchQuery ? "لا نتائج مطابقة لبحثك" : "لا توجد ملاحظات من الطلاب حتى الآن")}</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); line-height: 1.8;">
+          لو فيه طلاب سجلو قبل ما نظبط الكود الحالي، بياناتهم ممكن تكون في Realtime Database القديمة.<br>
+          افتح <strong>Firebase Console → Firestore Database → Data → students</strong> عشان تتأكد إن البيانات موجودة هناك.
+        </p>
       </div>
     `;
     return;
   }
 
   container.innerHTML = list.map(s => {
+    const noteText = getStudentNote(s);
     const nameInitial = (s.fullName || "؟").charAt(0);
-    const seatShort = (s.seatNumber || "—").slice(-6);
     const dateStr = s.createdAt?.toDate
       ? s.createdAt.toDate().toLocaleDateString("ar-EG", { day: "numeric", month: "short", year: "numeric" })
       : "—";
@@ -1392,7 +1415,7 @@ function renderNotes() {
         </div>
         <div class="note-body">
           <svg class="icon icon-sm note-icon"><use href="#i-sticky-note"/></svg>
-          <div>${escapeHtml(s.notes)}</div>
+          <div>${escapeHtml(noteText)}</div>
         </div>
       </div>
     `;
