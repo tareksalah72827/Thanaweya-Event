@@ -326,6 +326,52 @@ body::before {
   border-radius: var(--radius-sm); border: 1px solid rgba(37, 182, 141, 0.08);
   display: flex; align-items: center; gap: 0.25rem;
 }
+
+/* === Notes Cards (لتبويب ملاحظات الطلاب) === */
+.note-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+  position: relative; overflow: hidden;
+}
+.note-card::before {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 0;
+  width: 4px; background: var(--grad-gold);
+}
+.note-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+.note-card .note-header {
+  display: flex; align-items: center; gap: 0.625rem; margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.note-card .note-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--grad-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1rem; flex-shrink: 0;
+}
+.note-card .note-name {
+  font-family: var(--font-cairo); font-size: 1.05rem; font-weight: 700;
+  color: var(--text); flex: 1; min-width: 0;
+}
+.note-card .note-meta {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  font-size: 0.72rem; color: var(--text-muted); margin-top: 0.125rem;
+}
+.note-card .note-meta span {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+}
+.note-card .note-body {
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  font-size: 0.9rem; color: var(--text-body);
+  line-height: 1.8; white-space: pre-wrap;
+  display: flex; gap: 0.5rem; align-items: flex-start;
+}
+.note-card .note-body .note-icon { color: var(--gold-light); flex-shrink: 0; margin-top: 0.125rem; }
 .student-card .score-block { text-align: center; }
 .student-card .score {
   font-family: var(--font-reem); font-size: 1.5rem; font-weight: 700;
@@ -687,6 +733,10 @@ body::before {
           <svg class="icon icon-sm"><use href="#i-chart"/></svg>
           إحصائيات
         </button>
+        <button class="tab" data-tab="notes">
+          <svg class="icon icon-sm"><use href="#i-sticky-note"/></svg>
+          ملاحظات الطلاب
+        </button>
       </div>
 
       <!-- Students Tab -->
@@ -715,6 +765,21 @@ body::before {
       <!-- Top Students Tab -->
       <div class="tab-content" id="tab-top">
         <div id="top-list" class="list-container"></div>
+      </div>
+
+      <!-- Notes Tab — ملاحظات الطلاب -->
+      <div class="tab-content" id="tab-notes">
+        <div class="admin-toolbar">
+          <div class="search-box">
+            <svg class="icon icon-sm"><use href="#i-search"/></svg>
+            <input type="text" id="notes-search-input" placeholder="ابحث باسم الطالب...">
+          </div>
+          <div class="security-badge">
+            <svg class="icon icon-xs"><use href="#i-sticky-note"/></svg>
+            <span id="notes-count">0</span> طالب عنده ملاحظات
+          </div>
+        </div>
+        <div id="notes-list" class="list-container"></div>
       </div>
 
       <!-- Stats Tab -->
@@ -1047,6 +1112,7 @@ function loadAll() {
     renderStudents();
     renderTop();
     renderStats();
+    renderNotes();
     return;
   }
   const q = query(collection(db, COLLECTION_NAME));
@@ -1058,6 +1124,7 @@ function loadAll() {
     renderStudents();
     renderTop();
     renderStats();
+    renderNotes();
   }, (err) => {
     console.error("Firestore subscription error:", err);
     if (err.code === "permission-denied") {
@@ -1265,6 +1332,68 @@ function renderStats() {
           <span class="count">${count} (${percent}%)</span>
         </div>
         <div class="bar"><div class="fill" style="width:${percent}%; background:${r.color}"></div></div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ============================================================
+// تبويب ملاحظات الطلاب — عرض كل الطلاب اللي عندهم ملاحظات
+// الاسم فوق والملاحظة تحته في كرت منفصل
+// ============================================================
+function renderNotes() {
+  // فلترة الطلاب اللي عندهم ملاحظات بس
+  let list = allStudents.filter(s => s.notes && String(s.notes).trim().length > 0);
+
+  // تطبيق البحث لو موجود
+  if (notesSearchQuery) {
+    const q = notesSearchQuery.toLowerCase();
+    list = list.filter(s => (s.fullName || "").toLowerCase().includes(q));
+  }
+
+  // ترتيب: الأحدث تسجيلاً
+  list.sort((a, b) => {
+    const aT = a.createdAt?.toMillis?.() || new Date(a.createdAt || 0).getTime() || 0;
+    const bT = b.createdAt?.toMillis?.() || new Date(b.createdAt || 0).getTime() || 0;
+    return bT - aT;
+  });
+
+  const container = document.getElementById("notes-list");
+  document.getElementById("notes-count").textContent = list.length;
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon-wrap"><svg class="icon icon-lg"><use href="#i-sticky-note"/></svg></div>
+        <p>${allStudents.length === 0 ? "لا يوجد طلاب مسجّلون بعد" : (notesSearchQuery ? "لا نتائج مطابقة لبحثك" : "لا توجد ملاحظات من الطلاب حتى الآن")}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(s => {
+    const nameInitial = (s.fullName || "؟").charAt(0);
+    const seatShort = (s.seatNumber || "—").slice(-6);
+    const dateStr = s.createdAt?.toDate
+      ? s.createdAt.toDate().toLocaleDateString("ar-EG", { day: "numeric", month: "short", year: "numeric" })
+      : "—";
+    return `
+      <div class="note-card">
+        <div class="note-header">
+          <div class="note-avatar">${escapeHtml(nameInitial)}</div>
+          <div style="flex: 1; min-width: 0;">
+            <div class="note-name">${escapeHtml(s.fullName || "—")}</div>
+            <div class="note-meta">
+              <span><svg class="icon icon-xs"><use href="#i-hash"/></svg> ${escapeHtml(s.seatNumber || "—")}</span>
+              <span><svg class="icon icon-xs"><use href="#i-chart"/></svg> ${s.totalScore || 0} / 650</span>
+              <span><svg class="icon icon-xs"><use href="#i-clock"/></svg> ${dateStr}</span>
+            </div>
+          </div>
+        </div>
+        <div class="note-body">
+          <svg class="icon icon-sm note-icon"><use href="#i-sticky-note"/></svg>
+          <div>${escapeHtml(s.notes)}</div>
+        </div>
       </div>
     `;
   }).join("");
